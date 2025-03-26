@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct LockScreen: View {
+    @State private var numberInput: String = ""
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            // Title Of Page
+            Text("Enter Password")
+                .font(.title)
+                .fontWeight(.semibold)
+            
+            // Create a Custom NumPad
+        }
+        .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
     }
 }
 
 #Preview {
-    LockScreen()
+    LockScreen().preferredColorScheme(.dark)
 }
