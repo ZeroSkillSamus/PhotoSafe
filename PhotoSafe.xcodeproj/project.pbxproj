@@ -14,6 +14,7 @@
 		0215FDCA2D933EAC00E2B546 /* PhotoSafeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDC92D933EAC00E2B546 /* PhotoSafeTests.swift */; };
 		0215FDD42D933EAC00E2B546 /* PhotoSafeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDD32D933EAC00E2B546 /* PhotoSafeUITests.swift */; };
 		0215FDD62D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDD52D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift */; };
+		0215FDE42D94414C00E2B546 /* LockScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDE32D94414C00E2B546 /* LockScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		0215FDCF2D933EAC00E2B546 /* PhotoSafeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoSafeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0215FDD32D933EAC00E2B546 /* PhotoSafeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeUITests.swift; sourceTree = "<group>"; };
 		0215FDD52D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		0215FDE32D94414C00E2B546 /* LockScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +96,9 @@
 		0215FDB72D933EA800E2B546 /* PhotoSafe */ = {
 			isa = PBXGroup;
 			children = (
+				0215FDE22D934B4E00E2B546 /* Viewmodels */,
 				0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */,
+				0215FDE32D94414C00E2B546 /* LockScreen.swift */,
 				0215FDBA2D933EA800E2B546 /* ContentView.swift */,
 				0215FDBC2D933EAB00E2B546 /* Assets.xcassets */,
 				0215FDBE2D933EAB00E2B546 /* Preview Content */,
@@ -125,6 +129,13 @@
 				0215FDD52D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift */,
 			);
 			path = PhotoSafeUITests;
+			sourceTree = "<group>";
+		};
+		0215FDE22D934B4E00E2B546 /* Viewmodels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Viewmodels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0215FDBB2D933EA800E2B546 /* ContentView.swift in Sources */,
+				0215FDE42D94414C00E2B546 /* LockScreen.swift in Sources */,
 				0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
