@@ -14,6 +14,7 @@ class AlbumViewModel: ObservableObject {
     private let context: NSManagedObjectContext
     
     @Published private(set) var albums: [AlbumEntity] = []
+    @Published private(set) var media_entity: [MediaEntity] = []
     
     init(){
         self.container = NSPersistentContainer(name: "Container")
@@ -29,11 +30,12 @@ class AlbumViewModel: ObservableObject {
         self.fetch_albums()
     }
     
-    func create_album(name: String, image_data: Data?, is_locked: Bool) {
+    func create_album(name: String, image_data: Data?, is_locked: Bool, password: String?) {
         let album = AlbumEntity(context: self.context)
         album.is_locked = is_locked
         album.name = name
         album.image = image_data
+        album.password = password
         
         self.save()
     }
@@ -58,26 +60,7 @@ class AlbumViewModel: ObservableObject {
             print("Failed To Fetch albums \(error.localizedDescription)")
         }
     }
-    
-    
-//    private func download_image(poster_uri: String) async -> NSData? {
-//        guard let url = URL(string: poster_uri) else { return nil }
-//        var request = URLRequest(url: url)
-//        if let referer = referer {
-//            request.addValue(referer, forHTTPHeaderField: "REFERER")
-//        }
-//        do {
-//            let (data, _) = try await URLSession.shared.data(for: request)
-//            guard let uimage = UIImage(data: data) else {
-//                return nil
-//            }
-//            return uimage.jpegData(compressionQuality: 1) as NSData?
-//        } catch let error {
-//            print(error)
-//        }
-//        return nil
-//    }
-    
+
     private func save() {
         do {
             try self.context.save()
