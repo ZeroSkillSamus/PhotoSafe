@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct MediaDisplay: View {
+    var name: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("Content Displayed Here")
+        }
+        .navigationTitle(name)
     }
 }
 
 #Preview {
-    MediaDisplay()
+    MediaDisplay(name: "Fun")
 }
