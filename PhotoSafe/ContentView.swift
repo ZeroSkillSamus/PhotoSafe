@@ -18,17 +18,12 @@ struct CreateAlbum: View {
     @State private var avatar: PhotosPickerItem?
     @State private var avatar_data: Data?
     @State private var name: String = ""
-    @State private var is_locked: Bool = false
     @State private var password: String = ""
     
     @ObservedObject var album_vm: AlbumViewModel
     
     func determine_if_button_disabled() -> Bool {
-        if self.name.isEmpty || (self.is_locked && self.password.isEmpty) {
-            return true
-        }
-        
-        return false
+        self.name.isEmpty
     }
     
     private struct TextBox: View {
@@ -91,20 +86,12 @@ struct CreateAlbum: View {
                 VStack {
                     TextBox(header: "Name", type: .Name, text: self.$name)
                     
-                    if self.is_locked {
-                        TextBox(header: "Password", type: .Password, text: self.$password)
-                    }
-                    
-                    Toggle(isOn: self.$is_locked) {
-                        Text("Make Private")
-                            .font(.system(size: 18,weight: .semibold,design: .rounded))
-                    }
-          
+                    TextBox(header: "Password", type: .Password, text: self.$password)
+
                     Button {
                         self.album_vm.create_album(
                             name: self.name,
                             image_data: self.avatar_data,
-                            is_locked: self.is_locked,
                             password: self.password
                         )
                         self.dismiss() // Close Sheet
@@ -234,7 +221,7 @@ struct ContentView: View {
                                 } label: {
                                     AlbumDisplay(album: album)
                                 }
-                                .alert("Enter Password For \(album.name!)",
+                                .alert("Enter Password For \(album.name)",
                                        isPresented: self.$display_alert)
                                 {
                                     TextField("Enter Your Password", text: self.$password)
@@ -258,12 +245,12 @@ struct ContentView: View {
                         }
                     }
                 }
-                
+               
                 // Ensure Everything Starts At Top of Page
                 Spacer()
             }
             .navigationDestination(for: AlbumEntity.self) { album in
-                MediaDisplay(name: album.name!)
+                MediaDisplay(album: album, album_vm: self.album_VM)
             }
         }
     }
@@ -273,19 +260,24 @@ struct ContentView: View {
 
         var body: some View {
             HStack {
-                if let data = album.image, let ui_image = UIImage(data: data) {
-                    Image(uiImage: ui_image)
-                        .resizable()
-                        .frame(width: 100, height: 125)
-                    
-                } else {
-                    Image("NoImageFound")
-                        .resizable()
-                        .frame(width: 100, height: 125)
+                VStack {
+                    if let data = album.image, let ui_image = UIImage(data: data) {
+                        Image(uiImage: ui_image)
+                            .resizable()
+                            .scaledToFill()
+                        
+                    } else {
+                        Image("NoImageFound")
+                            .resizable()
+                            .scaledToFill()
+                            //.frame(width: 100, height: 125)
+                    }
                 }
+                .frame(width: 130, height:120)
+                .clipShape(RoundedRectangle(cornerRadius: 2))
                 
                 HStack {
-                    Text(album.name!)
+                    Text(album.name)
                         .foregroundStyle(.white)
                         .padding(.leading,20)
                         .font(.system(size: 18,weight: .medium,design: .rounded))
@@ -306,6 +298,6 @@ struct ContentView: View {
     
 }
 
-#Preview {
-    ContentView().preferredColorScheme(.dark)
-}
+//#Preview {
+//    ContentView().preferredColorScheme(.dark)
+//}
