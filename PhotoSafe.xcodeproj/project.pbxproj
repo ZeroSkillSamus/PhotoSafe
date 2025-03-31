@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		020A8D6E2D976D6C00FFCABE /* MediaDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D6D2D976D6C00FFCABE /* MediaDisplayView.swift */; };
+		020A8D6E2D976D6C00FFCABE /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D6D2D976D6C00FFCABE /* MediaView.swift */; };
 		020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */; };
 		020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */; };
 		0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */; };
@@ -19,9 +19,15 @@
 		0215FDD62D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDD52D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift */; };
 		0215FDE42D94414C00E2B546 /* LockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDE32D94414C00E2B546 /* LockView.swift */; };
 		0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDE52D963E6D00E2B546 /* Container.xcdatamodeld */; };
-		027250CE2D9B12A000280DB2 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 027250CD2D9B12A000280DB2 /* SDWebImageSwiftUI */; };
+		0248E94E2D9B4B8100272924 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0248E94D2D9B4B8100272924 /* SDWebImageSwiftUI */; };
+		0248E9512D9B4C7300272924 /* FullCoverSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248E9502D9B4C7300272924 /* FullCoverSheet.swift */; };
+		0248E9532D9B4CC100272924 /* VideoFileTranferable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248E9522D9B4CC100272924 /* VideoFileTranferable.swift */; };
+		0248E9552D9B4D0500272924 /* BottomHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248E9542D9B4D0500272924 /* BottomHeader.swift */; };
+		0248E9582D9B56D700272924 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248E9572D9B56D600272924 /* ImageGridView.swift */; };
 		027250D92D9B291C00280DB2 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250D82D9B291C00280DB2 /* CoreDataManager.swift */; };
 		027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250DB2D9B2A6E00280DB2 /* AlbumService.swift */; };
+		027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250DE2D9B308D00280DB2 /* MediaService.swift */; };
+		027250E12D9B327E00280DB2 /* MediaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250E02D9B327E00280DB2 /* MediaViewModel.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		020A8D6D2D976D6C00FFCABE /* MediaDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDisplayView.swift; sourceTree = "<group>"; };
+		020A8D6D2D976D6C00FFCABE /* MediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
 		020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0215FDB52D933EA800E2B546 /* PhotoSafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,8 +64,14 @@
 		0215FDD52D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		0215FDE32D94414C00E2B546 /* LockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockView.swift; sourceTree = "<group>"; };
 		0215FDE62D963E6D00E2B546 /* AlbumDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlbumDataModel.xcdatamodel; sourceTree = "<group>"; };
+		0248E9502D9B4C7300272924 /* FullCoverSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullCoverSheet.swift; sourceTree = "<group>"; };
+		0248E9522D9B4CC100272924 /* VideoFileTranferable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFileTranferable.swift; sourceTree = "<group>"; };
+		0248E9542D9B4D0500272924 /* BottomHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomHeader.swift; sourceTree = "<group>"; };
+		0248E9572D9B56D600272924 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
 		027250D82D9B291C00280DB2 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		027250DB2D9B2A6E00280DB2 /* AlbumService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumService.swift; sourceTree = "<group>"; };
+		027250DE2D9B308D00280DB2 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
+		027250E02D9B327E00280DB2 /* MediaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewModel.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				027250CE2D9B12A000280DB2 /* SDWebImageSwiftUI in Frameworks */,
+				0248E94E2D9B4B8100272924 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -153,14 +165,26 @@
 			isa = PBXGroup;
 			children = (
 				02B397002D96436B00952274 /* AlbumViewModel.swift */,
+				027250E02D9B327E00280DB2 /* MediaViewModel.swift */,
 			);
 			path = Viewmodels;
+			sourceTree = "<group>";
+		};
+		0248E94F2D9B4C5500272924 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0248E9502D9B4C7300272924 /* FullCoverSheet.swift */,
+				0248E9522D9B4CC100272924 /* VideoFileTranferable.swift */,
+				0248E9542D9B4D0500272924 /* BottomHeader.swift */,
+				0248E9572D9B56D600272924 /* ImageGridView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		027250D02D9B268000280DB2 /* Feature Targets */ = {
 			isa = PBXGroup;
 			children = (
-				027250D32D9B277500280DB2 /* Media Display */,
+				027250D32D9B277500280DB2 /* Media */,
 				027250D22D9B272300280DB2 /* Album */,
 				027250D12D9B26F100280DB2 /* Lock */,
 			);
@@ -183,12 +207,13 @@
 			path = Album;
 			sourceTree = "<group>";
 		};
-		027250D32D9B277500280DB2 /* Media Display */ = {
+		027250D32D9B277500280DB2 /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				020A8D6D2D976D6C00FFCABE /* MediaDisplayView.swift */,
+				0248E94F2D9B4C5500272924 /* Components */,
+				020A8D6D2D976D6C00FFCABE /* MediaView.swift */,
 			);
-			path = "Media Display";
+			path = Media;
 			sourceTree = "<group>";
 		};
 		027250D42D9B27A800280DB2 /* Supporting Files */ = {
@@ -221,6 +246,7 @@
 			isa = PBXGroup;
 			children = (
 				027250DB2D9B2A6E00280DB2 /* AlbumService.swift */,
+				027250DE2D9B308D00280DB2 /* MediaService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -242,7 +268,7 @@
 			);
 			name = PhotoSafe;
 			packageProductDependencies = (
-				027250CD2D9B12A000280DB2 /* SDWebImageSwiftUI */,
+				0248E94D2D9B4B8100272924 /* SDWebImageSwiftUI */,
 			);
 			productName = PhotoSafe;
 			productReference = 0215FDB52D933EA800E2B546 /* PhotoSafe.app */;
@@ -317,8 +343,7 @@
 			);
 			mainGroup = 0215FDAC2D933EA800E2B546;
 			packageReferences = (
-				027250CC2D9B12A000280DB2 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
-				027250CF2D9B20D400280DB2 /* XCRemoteSwiftPackageReference "mobile-ffmpeg" */,
+				0248E94C2D9B4B8100272924 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 0215FDB62D933EA800E2B546 /* Products */;
 			projectDirPath = "";
@@ -362,14 +387,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */,
 				020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */,
+				0248E9582D9B56D700272924 /* ImageGridView.swift in Sources */,
 				0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */,
 				020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */,
+				0248E9532D9B4CC100272924 /* VideoFileTranferable.swift in Sources */,
 				027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */,
+				0248E9552D9B4D0500272924 /* BottomHeader.swift in Sources */,
 				0215FDE42D94414C00E2B546 /* LockView.swift in Sources */,
 				0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */,
-				020A8D6E2D976D6C00FFCABE /* MediaDisplayView.swift in Sources */,
+				027250E12D9B327E00280DB2 /* MediaViewModel.swift in Sources */,
+				020A8D6E2D976D6C00FFCABE /* MediaView.swift in Sources */,
 				027250D92D9B291C00280DB2 /* CoreDataManager.swift in Sources */,
+				0248E9512D9B4C7300272924 /* FullCoverSheet.swift in Sources */,
 				02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
 			);
@@ -703,7 +734,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		027250CC2D9B12A000280DB2 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+		0248E94C2D9B4B8100272924 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
 			requirement = {
@@ -711,20 +742,12 @@
 				minimumVersion = 3.1.3;
 			};
 		};
-		027250CF2D9B20D400280DB2 /* XCRemoteSwiftPackageReference "mobile-ffmpeg" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tanersener/mobile-ffmpeg";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		027250CD2D9B12A000280DB2 /* SDWebImageSwiftUI */ = {
+		0248E94D2D9B4B8100272924 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 027250CC2D9B12A000280DB2 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			package = 0248E94C2D9B4B8100272924 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */

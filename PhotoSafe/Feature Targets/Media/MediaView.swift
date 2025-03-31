@@ -16,16 +16,6 @@ enum MediaType: String {
     case GIF = "GIF"
 }
 
-struct SelectMediaEntity: Hashable {
-    enum Select {
-        case checked
-        case blank
-    }
-    
-    var media: MediaEntity
-    var select: Select = .blank
-}
-
 struct FullScreenModalView: View {
     @Environment(\.dismiss) var dismiss
 
@@ -78,7 +68,8 @@ struct FullScreenModalView: View {
 
 struct MediaDisplayView: View {
     var album: AlbumEntity
-    @ObservedObject var album_vm: AlbumViewModel
+    @StateObject private var media_VM: MediaViewModel = MediaViewModel()
+    //@ObservedObject var album_vm: AlbumViewModel
     
     @State private var media_selected: [PhotosPickerItem] = []
     @State private var isPresented = false
@@ -274,15 +265,15 @@ struct MediaDisplayView: View {
                 for item in self.media_selected {
                     if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
                         if let thumbnail = video_url.generateVideoThumbnail() {
-                            let media = self.album_vm.create_album(
-                                album: self.album,
+                            if let media = self.media_VM.add_media(
+                                to: self.album,
                                 type: MediaType.Video,
                                 image_data: thumbnail,
                                 video_path: video_url.absoluteString
-                            )
-                            
-                            self.album_media.append(SelectMediaEntity(media: media))
-                            self.video_count = self.video_count + 1
+                            ) {
+                                self.album_media.append(SelectMediaEntity(media: media))
+                                self.video_count = self.video_count + 1
+                            }
                         }
                     }
                     else if let image_data = try? await item.loadTransferable(type: Data.self) {
@@ -291,9 +282,10 @@ struct MediaDisplayView: View {
                         let isGIF = supported_types.contains(UTType.gif)
                         let type = isGIF ? MediaType.GIF : MediaType.Photo
                         
-                        let media = self.album_vm.add_media(album: self.album, type: type, image_data: image_data)
-                        self.album_media.append(SelectMediaEntity(media: media))
-                        self.photo_count = self.photo_count + 1
+                        if let media = self.media_VM.add_media(to: self.album, type: type, image_data: image_data) {
+                            self.album_media.append(SelectMediaEntity(media: media))
+                            self.photo_count = self.photo_count + 1
+                        }
                         
                     }
                 }
