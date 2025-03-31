@@ -250,7 +250,7 @@ struct AlbumView: View {
                 Spacer()
             }
             .navigationDestination(for: AlbumEntity.self) { album in
-                MediaDisplayView(album: album, album_vm: self.album_VM)
+                MediaView(album: album)
             }
         }
     }
