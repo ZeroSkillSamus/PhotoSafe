@@ -8,11 +8,148 @@
 import SwiftUI
 import PhotosUI
 import AVKit
-//import AVFoundation
+import SDWebImageSwiftUI
+
+//struct GIFPlayerWithProgress: View {
+//    let gifData: Data
+//    @State private var currentFrame: Int = 0
+//    @State private var progress: Double = 0
+//    @State private var frames: [UIImage] = []
+//    @State private var isPlaying = false
+//
+//    var body: some View {
+//        VStack {
+//            // Display current frame
+//            if !frames.isEmpty {
+//                Image(uiImage: frames[currentFrame])
+//                    .resizable()
+//                    .scaledToFit()
+//            }
+//
+//            // Progress slider
+//            Slider(
+//                value: $progress,
+//                in: 0...1,
+//                onEditingChanged: { editing in
+//                    if !editing {
+//                        updateFrameFromProgress()
+//                    }
+//                }
+//            )
+//            .padding()
+//
+//            // Play/Pause button
+//            Button(isPlaying ? "Pause" : "Play") {
+//                isPlaying.toggle()
+//            }
+//        }
+//        .onAppear {
+//            loadFrames()
+//        }
+//        .onChange(of: isPlaying) { _, _  in
+//            handlePlayback()
+//        }
+//    }
+//
+//    private func loadFrames() {
+//        guard let animatedImage = SDAnimatedImage(data: gifData) else { return }
+//        frames = (0..<animatedImage.animatedImageFrameCount).map {
+//            animatedImage.animatedImageFrame(at: $0) ?? UIImage()
+//        }
+//    }
+//
+//    private func updateFrameFromProgress() {
+//        currentFrame = Int(progress * Double(frames.count - 1))
+//    }
+//
+//    private func handlePlayback() {
+//        guard isPlaying else { return }
+//        guard var animatedImage = SDAnimatedImage(data: gifData) else { return }
+//        let totalDuration = frames.enumerated().reduce(0) { sum, item in
+//            sum + animatedImage.animatedImageDuration(at: UInt(item.offset))
+//        }
+//
+//        // Simple timer-based playback (replace with CADisplayLink for smoother scrubbing)
+//        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+//            guard isPlaying else {
+//                timer.invalidate()
+//                return
+//            }
+//            
+//            progress = min(progress + 0.01, 1)
+//            updateFrameFromProgress()
+//            
+//            if progress >= 1 {
+//                isPlaying = false
+//            }
+//        }
+//    }
+//}
 
 enum MediaType: String {
     case Photo = "Photo"
-    case Movie = "Movie"
+    case Video = "Video"
+    case GIF = "GIF"
+}
+
+struct SelectMediaEntity: Hashable {
+    enum Select {
+        case checked
+        case blank
+    }
+    
+    var media: MediaEntity
+    var select: Select = .blank
+}
+
+struct FullScreenModalView: View {
+    @Environment(\.dismiss) var dismiss
+
+    var media: MediaEntity
+    var list: [SelectMediaEntity]
+    
+    var body: some View {
+        ZStack {
+            VStack {
+                Button {
+                   dismiss()
+                } label: {
+                   Image(systemName: "x.circle")
+                        .font(.title)
+                        
+                }
+                .frame(maxWidth: .infinity, maxHeight: 60,alignment: .topLeading)
+                .foregroundStyle(.primary)
+                .padding(5)
+                
+                VStack {
+                    switch media.type {
+                    case MediaType.Photo.rawValue:
+                        if let image = media.image {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    case MediaType.Video.rawValue:
+                        if let video_path = media.video_path, let url = URL(string: video_path) {
+                            VideoPlayer(player: AVPlayer(url: url))
+                        }
+                    case MediaType.GIF.rawValue:
+                        AnimatedImage(data: media.image_data)
+                            .resizable()
+                            .customLoopCount(0)
+                            .scaledToFit()
+                            
+                    default:
+                        EmptyView()
+                    }
+                }
+                .frame(maxWidth: .infinity,maxHeight: .infinity)
+            }
+            .padding(5)
+        }
+        .preferredColorScheme(.dark)
+    }
 }
 
 struct MediaDisplay: View {
@@ -20,8 +157,8 @@ struct MediaDisplay: View {
     @ObservedObject var album_vm: AlbumViewModel
     
     @State private var media_selected: [PhotosPickerItem] = []
-  
-    @State private var album_media: [MediaEntity] = []
+    @State private var isPresented = false
+    @State private var album_media: [SelectMediaEntity] = []
  
     @State private var photo_count: Int = 0
     @State private var video_count: Int = 0
@@ -29,6 +166,33 @@ struct MediaDisplay: View {
     @State private var is_selected: Bool = false
     var gridItemLayout = Array(repeating: GridItem(.flexible(minimum: 40), spacing: 3), count: 4)
 
+    @State private var select_count: Int = 0
+    @State var selectedItem: MediaEntity?
+    
+    func determine_color(media: SelectMediaEntity) -> Color {
+        if self.is_selected {
+            switch media.select {
+            case .blank:
+                return .clear
+            case .checked:
+                return .green
+            }
+        } else {
+            return .clear
+        }
+    }
+    
+    var header: Text {
+        if self.is_selected {
+            if select_count == 0 {
+                return Text("Select Media")
+            } else {
+                return Text("^[\(self.select_count) Item](inflect: true) Selected")
+            }
+        }
+        return Text(self.album.name)
+    }
+    
     var body: some View {
         VStack {
             ScrollView {
@@ -54,8 +218,8 @@ struct MediaDisplay: View {
                 }
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
-                    ForEach(self.album_media, id: \.self) { media in
-                        if let ui_image = media.image {
+                    ForEach(Array(self.album_media.enumerated()), id: \.offset) { index, file in
+                        if let ui_image = self.album_media[index].media.image {
                             Image(uiImage: ui_image)
                                 .resizable()
                                 .aspectRatio(1, contentMode: .fill)
@@ -63,13 +227,32 @@ struct MediaDisplay: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                                 .overlay(alignment: .topLeading) {
                                     VStack {
-                                        if media.type == MediaType.Movie.rawValue {
+                                        if file.media.type == MediaType.Video.rawValue {
                                             Image(systemName: "video.fill")
                                                 .font(.caption)
                                         }
                                     }
                                     .padding(5)
                                 }
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(determine_color(media: file), lineWidth: 2)
+                                )
+                                .onTapGesture {
+                                    if is_selected {
+                                        switch file.select {
+                                        case .blank:
+                                            self.album_media[index].select = .checked
+                                            self.select_count = select_count + 1
+                                        case .checked:
+                                            self.album_media[index].select = .blank
+                                            self.select_count = select_count - 1
+                                        }
+                                    } else {
+                                        self.selectedItem = file.media
+                                    }
+                                }
+                                
                         }
                     }
                 }
@@ -115,15 +298,23 @@ struct MediaDisplay: View {
                 .background(.bar)
             }
         }
+        .fullScreenCover(item: $selectedItem) { item in
+            FullScreenModalView(media: item, list: self.album_media)
+        }
         .onAppear {
             // Load Photos
             if let media = album.media, let album_media = media.allObjects as? [MediaEntity] {
-                self.album_media = album_media.sorted(by: { a, b in
+                let sorted_media = album_media.sorted(by: { a, b in
                     a.date_added < b.date_added
                 })
                 
-                self.photo_count = album_media.filter({$0.type == MediaType.Photo.rawValue}).count
-                self.video_count = album_media.filter({$0.type == MediaType.Movie.rawValue}).count
+                self.album_media = sorted_media.map { element in
+                    SelectMediaEntity(media: element)
+                }
+                
+                
+                self.photo_count = self.album_media.filter({$0.media.type == MediaType.Photo.rawValue}).count
+                self.video_count = self.album_media.filter({$0.media.type == MediaType.Video.rawValue}).count
             }
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity)
@@ -131,10 +322,10 @@ struct MediaDisplay: View {
             // Title of Album
             ToolbarItem(placement: .principal) {
                 VStack {
-                    Text(self.is_selected ? "Select Media" : album.name)
+                    header
                         .font(.title2.bold())
-                        .transition(.opacity) // Slides in/out
                         .id("text-\(self.is_selected ? "Select Media" : album.name )")
+                        .animation(.easeInOut, value: self.is_selected)
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -143,8 +334,10 @@ struct MediaDisplay: View {
             // pieces of media
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    withAnimation(.easeIn) {
-                        self.is_selected.toggle()
+                    if !self.album_media.isEmpty {
+                        withAnimation(.easeInOut) {
+                            self.is_selected.toggle()
+                        }
                     }
                 } label: {
                     Text(self.is_selected ? "Finish" : "Select")
@@ -159,19 +352,25 @@ struct MediaDisplay: View {
                         if let thumbnail = video_url.generateVideoThumbnail() {
                             let media = self.album_vm.add_media(
                                 album: self.album,
-                                type: MediaType.Movie,
+                                type: MediaType.Video,
                                 image_data: thumbnail,
                                 video_path: video_url.absoluteString
                             )
                             
-                            self.album_media.append(media)
+                            self.album_media.append(SelectMediaEntity(media: media))
                             self.video_count = self.video_count + 1
                         }
                     }
                     else if let image_data = try? await item.loadTransferable(type: Data.self) {
-                        let media = self.album_vm.add_media(album: self.album, type: MediaType.Photo, image_data: image_data)
-                        self.album_media.append(media)
+                        // Code determines if image is either a gif
+                        let supported_types = item.supportedContentTypes
+                        let isGIF = supported_types.contains(UTType.gif)
+                        let type = isGIF ? MediaType.GIF : MediaType.Photo
+                        
+                        let media = self.album_vm.add_media(album: self.album, type: type, image_data: image_data)
+                        self.album_media.append(SelectMediaEntity(media: media))
                         self.photo_count = self.photo_count + 1
+                        
                     }
                 }
             }
@@ -202,7 +401,7 @@ struct MediaDisplay: View {
 
 struct VideoFileTranferable: Transferable {
     let url: URL
-    
+
     static var get_application_support_dir: URL {
         let urls = FileManager.default.urls(
             for: .applicationSupportDirectory,
@@ -222,29 +421,43 @@ struct VideoFileTranferable: Transferable {
     
     static var transferRepresentation: some TransferRepresentation {
         FileRepresentation(contentType: .movie) { file in
+            // Use COPY instead of MOVE to preserve original
             let tempURL = FileManager.default.temporaryDirectory
                 .appendingPathComponent(UUID().uuidString)
                 .appendingPathExtension("mov")
             try FileManager.default.copyItem(at: file.url, to: tempURL)
             return SentTransferredFile(tempURL)
         } importing: { received in
-            // Define the destination in Application Support
-            let appSupportURL = get_application_support_dir
-            let videoURL = appSupportURL
-                .appendingPathComponent("Videos")  // Optional subfolder
-                .appendingPathComponent(UUID().uuidString)
-                .appendingPathExtension("mov")
+            // 1. Get Application Support directory
+            let appSupportURL = FileManager.default.urls(
+                for: .applicationSupportDirectory,
+                in: .userDomainMask
+            ).first!
             
-            // Ensure the "Videos" subfolder exists
+            // 2. Create Videos subdirectory if needed
+            let videosDir = appSupportURL.appendingPathComponent("Videos")
             try? FileManager.default.createDirectory(
-                at: appSupportURL.appendingPathComponent("Videos"),
+                at: videosDir,
                 withIntermediateDirectories: true
             )
             
-            // Move the file (not copy) to Application Support
-            try FileManager.default.moveItem(at: received.file, to: videoURL)
+            // 3. Create permanent destination URL
+            var permanentURL = videosDir
+                .appendingPathComponent(UUID().uuidString)
+                .appendingPathExtension("mov")
             
-            return Self(url: videoURL)  // Return your model with the new URL
+            // 4. COPY (not move) from received location
+            try FileManager.default.copyItem(at: received.file, to: permanentURL)
+
+            // 5. Clean up: Remove the temporary file
+            try? FileManager.default.removeItem(at: received.file)
+            
+            // 6. Mark as non-temporary for persistence
+            var resourceValues = URLResourceValues()
+            resourceValues.isExcludedFromBackup = false
+            try? permanentURL.setResourceValues(resourceValues)
+            
+            return Self(url: permanentURL)
         }
     }
 }
