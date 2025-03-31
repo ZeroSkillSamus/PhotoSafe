@@ -7,19 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		020A8D6E2D976D6C00FFCABE /* MediaDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D6D2D976D6C00FFCABE /* MediaDisplay.swift */; };
+		020A8D6E2D976D6C00FFCABE /* MediaDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D6D2D976D6C00FFCABE /* MediaDisplayView.swift */; };
 		020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */; };
 		020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */; };
 		0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */; };
-		0215FDBB2D933EA800E2B546 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDBA2D933EA800E2B546 /* ContentView.swift */; };
+		0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDBA2D933EA800E2B546 /* AlbumView.swift */; };
 		0215FDBD2D933EAB00E2B546 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0215FDBC2D933EAB00E2B546 /* Assets.xcassets */; };
 		0215FDC02D933EAB00E2B546 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0215FDBF2D933EAB00E2B546 /* Preview Assets.xcassets */; };
 		0215FDCA2D933EAC00E2B546 /* PhotoSafeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDC92D933EAC00E2B546 /* PhotoSafeTests.swift */; };
 		0215FDD42D933EAC00E2B546 /* PhotoSafeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDD32D933EAC00E2B546 /* PhotoSafeUITests.swift */; };
 		0215FDD62D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDD52D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift */; };
-		0215FDE42D94414C00E2B546 /* LockScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDE32D94414C00E2B546 /* LockScreen.swift */; };
+		0215FDE42D94414C00E2B546 /* LockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDE32D94414C00E2B546 /* LockView.swift */; };
 		0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDE52D963E6D00E2B546 /* Container.xcdatamodeld */; };
 		027250CE2D9B12A000280DB2 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 027250CD2D9B12A000280DB2 /* SDWebImageSwiftUI */; };
+		027250D92D9B291C00280DB2 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250D82D9B291C00280DB2 /* CoreDataManager.swift */; };
+		027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250DB2D9B2A6E00280DB2 /* AlbumService.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,12 +43,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		020A8D6D2D976D6C00FFCABE /* MediaDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDisplay.swift; sourceTree = "<group>"; };
+		020A8D6D2D976D6C00FFCABE /* MediaDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDisplayView.swift; sourceTree = "<group>"; };
 		020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0215FDB52D933EA800E2B546 /* PhotoSafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeApp.swift; sourceTree = "<group>"; };
-		0215FDBA2D933EA800E2B546 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0215FDBA2D933EA800E2B546 /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0215FDBC2D933EAB00E2B546 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0215FDBF2D933EAB00E2B546 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0215FDC52D933EAC00E2B546 /* PhotoSafeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoSafeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,8 +56,10 @@
 		0215FDCF2D933EAC00E2B546 /* PhotoSafeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoSafeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0215FDD32D933EAC00E2B546 /* PhotoSafeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeUITests.swift; sourceTree = "<group>"; };
 		0215FDD52D933EAC00E2B546 /* PhotoSafeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		0215FDE32D94414C00E2B546 /* LockScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreen.swift; sourceTree = "<group>"; };
+		0215FDE32D94414C00E2B546 /* LockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockView.swift; sourceTree = "<group>"; };
 		0215FDE62D963E6D00E2B546 /* AlbumDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlbumDataModel.xcdatamodel; sourceTree = "<group>"; };
+		027250D82D9B291C00280DB2 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		027250DB2D9B2A6E00280DB2 /* AlbumService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumService.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,13 +112,14 @@
 		0215FDB72D933EA800E2B546 /* PhotoSafe */ = {
 			isa = PBXGroup;
 			children = (
+				027250DA2D9B2A5900280DB2 /* Services */,
+				027250D62D9B28A800280DB2 /* Models */,
+				027250D42D9B27A800280DB2 /* Supporting Files */,
+				027250D02D9B268000280DB2 /* Feature Targets */,
 				0215FDE22D934B4E00E2B546 /* Viewmodels */,
 				0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */,
-				0215FDE32D94414C00E2B546 /* LockScreen.swift */,
-				0215FDBA2D933EA800E2B546 /* ContentView.swift */,
 				0215FDBC2D933EAB00E2B546 /* Assets.xcassets */,
 				0215FDBE2D933EAB00E2B546 /* Preview Content */,
-				020A8D6D2D976D6C00FFCABE /* MediaDisplay.swift */,
 			);
 			path = PhotoSafe;
 			sourceTree = "<group>";
@@ -147,12 +152,77 @@
 		0215FDE22D934B4E00E2B546 /* Viewmodels */ = {
 			isa = PBXGroup;
 			children = (
-				0215FDE52D963E6D00E2B546 /* Container.xcdatamodeld */,
-				020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */,
-				020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */,
 				02B397002D96436B00952274 /* AlbumViewModel.swift */,
 			);
 			path = Viewmodels;
+			sourceTree = "<group>";
+		};
+		027250D02D9B268000280DB2 /* Feature Targets */ = {
+			isa = PBXGroup;
+			children = (
+				027250D32D9B277500280DB2 /* Media Display */,
+				027250D22D9B272300280DB2 /* Album */,
+				027250D12D9B26F100280DB2 /* Lock */,
+			);
+			path = "Feature Targets";
+			sourceTree = "<group>";
+		};
+		027250D12D9B26F100280DB2 /* Lock */ = {
+			isa = PBXGroup;
+			children = (
+				0215FDE32D94414C00E2B546 /* LockView.swift */,
+			);
+			path = Lock;
+			sourceTree = "<group>";
+		};
+		027250D22D9B272300280DB2 /* Album */ = {
+			isa = PBXGroup;
+			children = (
+				0215FDBA2D933EA800E2B546 /* AlbumView.swift */,
+			);
+			path = Album;
+			sourceTree = "<group>";
+		};
+		027250D32D9B277500280DB2 /* Media Display */ = {
+			isa = PBXGroup;
+			children = (
+				020A8D6D2D976D6C00FFCABE /* MediaDisplayView.swift */,
+			);
+			path = "Media Display";
+			sourceTree = "<group>";
+		};
+		027250D42D9B27A800280DB2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		027250D62D9B28A800280DB2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				027250D72D9B28AF00280DB2 /* CoreData */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		027250D72D9B28AF00280DB2 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				0215FDE52D963E6D00E2B546 /* Container.xcdatamodeld */,
+				020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */,
+				020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */,
+				027250D82D9B291C00280DB2 /* CoreDataManager.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		027250DA2D9B2A5900280DB2 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				027250DB2D9B2A6E00280DB2 /* AlbumService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -293,11 +363,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */,
-				0215FDBB2D933EA800E2B546 /* ContentView.swift in Sources */,
+				0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */,
 				020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */,
-				0215FDE42D94414C00E2B546 /* LockScreen.swift in Sources */,
+				027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */,
+				0215FDE42D94414C00E2B546 /* LockView.swift in Sources */,
 				0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */,
-				020A8D6E2D976D6C00FFCABE /* MediaDisplay.swift in Sources */,
+				020A8D6E2D976D6C00FFCABE /* MediaDisplayView.swift in Sources */,
+				027250D92D9B291C00280DB2 /* CoreDataManager.swift in Sources */,
 				02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
 			);
