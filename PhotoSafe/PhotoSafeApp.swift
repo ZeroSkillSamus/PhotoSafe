@@ -12,7 +12,8 @@ struct PhotoSafeApp: App {
     var body: some Scene {
         WindowGroup {
             //LockScreen().preferredColorScheme(.dark)
-            ContentView().preferredColorScheme(.dark)
+            AlbumView().preferredColorScheme(.dark)
+            //ContentView().preferredColorScheme(.dark)
         }
     }
 }

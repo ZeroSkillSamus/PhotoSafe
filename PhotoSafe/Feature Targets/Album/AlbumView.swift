@@ -191,7 +191,7 @@ struct Header: View {
         .alert("Delete All Albums?", isPresented: $display_delete_alert) {
             Button("Delete", role: .destructive) {
                 withAnimation(.easeInOut) {
-                    self.album_vm.delete_all_albums()
+                    self.album_vm.deleteAll()
                 }
             }
             Button("Cancel", role: .cancel) { }
@@ -250,7 +250,7 @@ struct AlbumView: View {
                 Spacer()
             }
             .navigationDestination(for: AlbumEntity.self) { album in
-                MediaDisplay(album: album, album_vm: self.album_VM)
+                MediaDisplayView(album: album, album_vm: self.album_VM)
             }
         }
     }

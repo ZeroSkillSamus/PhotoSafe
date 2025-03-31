@@ -20,6 +20,10 @@ extension AlbumEntity {
         return NSFetchRequest<AlbumEntity>(entityName: "AlbumEntity")
     }
     
+    @nonobjc public class func deleteRequest() -> NSBatchDeleteRequest {
+        return NSBatchDeleteRequest(fetchRequest: self.fetchRequest())
+    }
+
     var is_locked: Bool {
         if let password {
             return password.isEmpty ? false : true
