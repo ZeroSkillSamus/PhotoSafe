@@ -274,7 +274,7 @@ struct MediaDisplayView: View {
                 for item in self.media_selected {
                     if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
                         if let thumbnail = video_url.generateVideoThumbnail() {
-                            let media = self.album_vm.add_media(
+                            let media = self.album_vm.create_album(
                                 album: self.album,
                                 type: MediaType.Video,
                                 image_data: thumbnail,
