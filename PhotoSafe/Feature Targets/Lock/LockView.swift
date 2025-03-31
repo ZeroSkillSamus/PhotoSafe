@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LockScreen: View {
+struct LockView: View {
     @State private var numberInput: String = ""
     @State private var is_secure: Bool = true
     
@@ -104,5 +104,5 @@ struct CustomButton: View {
 }
 
 #Preview {
-    LockScreen().preferredColorScheme(.dark)
+    LockView().preferredColorScheme(.dark)
 }

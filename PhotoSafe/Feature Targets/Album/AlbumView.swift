@@ -201,7 +201,7 @@ struct Header: View {
     }
 }
 
-struct ContentView: View {
+struct AlbumView: View {
     @StateObject private var album_VM = AlbumViewModel()
     @State private var display_alert: Bool = false
     @State private var path = NavigationPath()  // For NavigationStack

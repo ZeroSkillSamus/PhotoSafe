@@ -76,7 +76,7 @@ struct FullScreenModalView: View {
     }
 }
 
-struct MediaDisplay: View {
+struct MediaDisplayView: View {
     var album: AlbumEntity
     @ObservedObject var album_vm: AlbumViewModel
     
