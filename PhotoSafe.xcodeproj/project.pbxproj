@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		020A8D6E2D976D6C00FFCABE /* MediaDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D6D2D976D6C00FFCABE /* MediaDisplay.swift */; };
+		020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */; };
+		020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */; };
 		0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */; };
 		0215FDBB2D933EA800E2B546 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDBA2D933EA800E2B546 /* ContentView.swift */; };
 		0215FDBD2D933EAB00E2B546 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0215FDBC2D933EAB00E2B546 /* Assets.xcassets */; };
@@ -39,6 +41,8 @@
 
 /* Begin PBXFileReference section */
 		020A8D6D2D976D6C00FFCABE /* MediaDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDisplay.swift; sourceTree = "<group>"; };
+		020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0215FDB52D933EA800E2B546 /* PhotoSafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeApp.swift; sourceTree = "<group>"; };
 		0215FDBA2D933EA800E2B546 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -142,6 +146,8 @@
 			isa = PBXGroup;
 			children = (
 				0215FDE52D963E6D00E2B546 /* Container.xcdatamodeld */,
+				020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */,
+				020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */,
 				02B397002D96436B00952274 /* AlbumViewModel.swift */,
 			);
 			path = Viewmodels;
@@ -277,7 +283,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */,
 				0215FDBB2D933EA800E2B546 /* ContentView.swift in Sources */,
+				020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */,
 				0215FDE42D94414C00E2B546 /* LockScreen.swift in Sources */,
 				0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */,
 				020A8D6E2D976D6C00FFCABE /* MediaDisplay.swift in Sources */,

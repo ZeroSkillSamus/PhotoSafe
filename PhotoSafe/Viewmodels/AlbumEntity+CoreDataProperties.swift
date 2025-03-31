@@ -9,19 +9,32 @@
 import Foundation
 import CoreData
 
+@objc(AlbumEntity)
+public class AlbumEntity: NSManagedObject {
+
+}
 
 extension AlbumEntity {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<AlbumEntity> {
         return NSFetchRequest<AlbumEntity>(entityName: "AlbumEntity")
     }
+    
+    var is_locked: Bool {
+        if let password {
+            return password.isEmpty ? false : true
+        }
+        
+        return false 
+    }
 
     @NSManaged public var image: Data?
-    @NSManaged public var name: String?
+    @NSManaged public var name: String
     @NSManaged public var password: String?
-    @NSManaged public var date_added: Date?
+    @NSManaged public var date_added: Date
     @NSManaged public var media: NSSet?
 
+    
 }
 
 // MARK: Generated accessors for media

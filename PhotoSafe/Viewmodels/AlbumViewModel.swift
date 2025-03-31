@@ -14,8 +14,7 @@ class AlbumViewModel: ObservableObject {
     private let context: NSManagedObjectContext
     
     @Published private(set) var albums: [AlbumEntity] = []
-    @Published private(set) var media_entity: [MediaEntity] = []
-    
+
     init(){
         self.container = NSPersistentContainer(name: "Container")
         self.container.loadPersistentStores{ (description, error) in
@@ -30,14 +29,27 @@ class AlbumViewModel: ObservableObject {
         self.fetch_albums()
     }
     
-    func create_album(name: String, image_data: Data?, is_locked: Bool, password: String?) {
+    func add_media(album: AlbumEntity,type: MediaType,image_data: Data, video_path: String? = nil) -> MediaEntity {
+        let media = MediaEntity(context: self.context)
+        media.album = album
+        media.image_data = image_data
+        media.date_added = Date()
+        media.video_path = video_path
+        media.type = type.rawValue
+        self.save()
+        
+        return media
+    }
+
+    func create_album(name: String, image_data: Data?, password: String?) {
         let album = AlbumEntity(context: self.context)
-        album.is_locked = is_locked
         album.name = name
         album.image = image_data
         album.password = password
+        album.date_added = Date()
         
         self.save()
+        self.fetch_albums()
     }
     
     func delete_all_albums() {
@@ -53,9 +65,8 @@ class AlbumViewModel: ObservableObject {
     }
     
     private func fetch_albums() {
-        let request = NSFetchRequest<AlbumEntity>(entityName: "AlbumEntity")
         do {
-            self.albums = try self.context.fetch(request)
+            self.albums = try self.context.fetch(AlbumEntity.fetchRequest())
         } catch let error {
             print("Failed To Fetch albums \(error.localizedDescription)")
         }
@@ -64,7 +75,6 @@ class AlbumViewModel: ObservableObject {
     private func save() {
         do {
             try self.context.save()
-            self.fetch_albums()
         } catch let error {
             print("Error Saving!: \(error)")
         }

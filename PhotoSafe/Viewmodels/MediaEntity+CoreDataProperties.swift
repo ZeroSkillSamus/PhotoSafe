@@ -6,21 +6,29 @@
 //
 //
 
-import Foundation
+import SwiftUI
 import CoreData
 
+@objc(MediaEntity)
+public class MediaEntity: NSManagedObject {
+
+}
 
 extension MediaEntity {
-
+    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<MediaEntity> {
         return NSFetchRequest<MediaEntity>(entityName: "MediaEntity")
     }
-
-    @NSManaged public var image_data: Data?
-    @NSManaged public var date_added: Date?
-    @NSManaged public var type: String?
+    
+    var image: UIImage? {
+        UIImage(data: image_data)
+    }
+    
+    @NSManaged public var image_data: Data
+    @NSManaged public var date_added: Date
+    @NSManaged public var type: String
     @NSManaged public var video_path: String?
-    @NSManaged public var album: AlbumEntity?
+    @NSManaged public var album: AlbumEntity
 
 }
 
