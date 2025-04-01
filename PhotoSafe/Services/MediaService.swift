@@ -17,6 +17,7 @@ protocol MediaServiceProtocol {
     func save_media(to album: AlbumEntity, type: MediaType, imageData: Data, videoPath: String?) throws -> MediaEntity
     func fetch_media(from album: AlbumEntity) -> [MediaEntity]
     func delete(media: MediaEntity) throws
+    func move(media: MediaEntity, to album: AlbumEntity) throws
 }
 
 final class MediaService: MediaServiceProtocol {
@@ -54,6 +55,12 @@ final class MediaService: MediaServiceProtocol {
     
     func delete(media: MediaEntity) throws {
         self.context.delete(media)
+        try self.context.save()
+    }
+    
+    func move(media: MediaEntity, to album: AlbumEntity) throws {
+        media.album = album
+        media.date_added = Date()
         try self.context.save()
     }
     
