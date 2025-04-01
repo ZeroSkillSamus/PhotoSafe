@@ -16,8 +16,54 @@ struct MoveSheet: View {
     
     var body: some View {
         VStack {
-            Text("Move")
+            HStack {
+                Text("Move Selected Media")
+                    .font(.title2.bold())
+            }
+            .frame(maxWidth: .infinity,alignment: .leading)
+            .padding()
+            
+            LazyVStack {
+                ForEach(self.album_VM.albums.filter({$0.name != curr_album.name }),id:\.self) { album in
+                    Button {
+                        withAnimation {
+                            self.media_VM.move_selected(to: album)
+                        }
+                    } label: {
+                        HStack(spacing: 20) {
+                            if let data = album.image, let ui_image = UIImage(data: data) {
+                                Image(uiImage: ui_image)
+                                    .resizable()
+                                    .frame(width: 75,height: 75)
+                                    .scaledToFill()
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                            } else {
+                                // Get first image from album if available
+                                if let media = album.fetch_medias_as_list, let first = media.first, let ui_image = first.image {
+                                    Image(uiImage: ui_image)
+                                        .resizable()
+                                        .frame(width: 75,height: 75)
+                                        .scaledToFill()
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                } else {
+                                    Image("NoImageFound")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 75,height: 75)
+                                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                                }
+                            }
+                            
+                            Text(album.name)
+                            
+                        }
+                        .frame(maxWidth: .infinity,alignment: .leading)
+                        .padding()
+                    }
+                }
+            }
         }
+        .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         .presentationDetents([.medium, .medium, .fraction(0.35)])
     }
 }
@@ -29,6 +75,8 @@ struct BottomHeader: View {
     @State private var is_move_sheet_active: Bool = false
     
     @Binding var is_selected: Bool
+    @Binding var num_selected_items: Int
+    
     var album: AlbumEntity
     
     @ObservedObject var media_VM: MediaViewModel
@@ -44,13 +92,17 @@ struct BottomHeader: View {
                     }
                     .frame(width: 70,height: 70)
                 }
+                
             } else {
                 // Select Bottom Nav Bar
                 HStack(alignment: .center) {
                     SelectBottomButton(label: "Delete", system_name:"trash") {
                         withAnimation {
                             self.media_VM.delete_selected()
-                            self.is_selected.toggle()
+                            self.num_selected_items = 0
+                            
+                            // Only close select mode if the medias is empty after deleting
+                            if self.media_VM.medias.isEmpty { self.is_selected.toggle() }
                         }
                     }
                     .foregroundStyle(.red)
@@ -67,7 +119,8 @@ struct BottomHeader: View {
                     Spacer()
                     
                     SelectBottomButton(label: !self.is_select_all ? "Select All" : "Deselect All", system_name:"scope") {
-                        self.media_VM.change_all(to: self.is_select_all)
+                        let selector = self.is_select_all ? SelectMediaEntity.Select.blank : SelectMediaEntity.Select.checked
+                        self.media_VM.change_all(to: selector)
                         self.is_select_all.toggle()
                     }
                     .foregroundStyle(.white)
@@ -108,10 +161,13 @@ struct BottomHeader: View {
                         self.media_VM.add_media(to: self.album, type: type, image_data: image_data)
                     }
                 }
+                
+                // Done Looping, Time to Clear Out SelectedMedia
+                self.selected_media.removeAll()
             }
         }
         .sheet(isPresented: self.$is_move_sheet_active) {
-            MoveSheet()
+            MoveSheet(media_VM: self.media_VM, curr_album: self.album)
         }
     }
     

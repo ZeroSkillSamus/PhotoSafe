@@ -31,16 +31,25 @@ final class MediaViewModel: ObservableObject {
         self.service = media_service
     }
     
+    var selected_media: [SelectMediaEntity] {
+        self.medias.filter({$0.select == .checked})
+    }
+    
     /// Gets all selected elements
     /// Removes All selected elements from medias
     /// Proceeds to delete them from the coredata
     /// Adjust count to represent the changes
     func delete_selected() {
         // Get list of selected items
-        let selected = self.medias.filter({$0.select == .checked})
-        self.medias.removeAll(where: {$0.select == .checked }) // Remove selected items
-        
-        selected.forEach({try? self.service.delete(media: $0.media)})
+        self.selected_media.forEach { selected in
+            do {
+                try self.service.delete(media: selected.media)
+                
+                self.delete_from_medias(selected: selected)
+            } catch let error {
+                print("\(error)")
+            }
+        }
         
         self.set_counts()
     }
@@ -73,14 +82,35 @@ final class MediaViewModel: ObservableObject {
         }
     }
     
+    /// Loops through all selected items and attempts to move them to the specified album
+    ///   Calls delete_from_medias(selected) to remove from medias array
+    func move_selected(to album: AlbumEntity) {
+        // Get All Selected Media
+        selected_media.forEach { selected in
+            do {
+                try self.service.move(media: selected.media, to: album)
+                self.delete_from_medias(selected: selected)
+            } catch let error {
+                print("Error \(error)")
+            }
+        }
+    }
+    
     /// Depending on what is_select_all is set to we will do the following
     /// If is_select_all is true -> .blank
     /// if is_select_all is false -> .checked
-    func change_all(to is_select_all: Bool) {
+    func change_all(to selector: SelectMediaEntity.Select) {
         self.medias = self.medias.map { media in
             var change_media = media
-            change_media.select = is_select_all ? .blank : .checked
+            change_media.select = selector
             return change_media
+        }
+    }
+    
+    /// FInds the index of selected and deletes the item at that location from medias
+    private func delete_from_medias(selected: SelectMediaEntity) {
+        if let index = self.medias.firstIndex(of: selected) {
+            self.medias.remove(at: index)
         }
     }
     
