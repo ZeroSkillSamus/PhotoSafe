@@ -8,6 +8,16 @@
 import SwiftUI
 import PhotosUI
 
+struct MoveSheet: View {
+    var body: some View {
+        VStack {
+            Text("Move")
+        }
+        .presentationDetents([.medium, .medium, .fraction(0.35)])
+    }
+}
+
+
 struct BottomHeader: View {
     @State private var selected_media: [PhotosPickerItem] = []
     @State private var is_select_all: Bool = false
@@ -43,19 +53,26 @@ struct BottomHeader: View {
                     
                     Spacer()
                     
-                    SelectBottomButton(label: "Export", system_name:"square.and.arrow.up")
-                        .foregroundStyle(.white)
+                    SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
+                        
+                    }
+                    .foregroundStyle(.white)
                     //.background(.blue)
                     
                     Spacer()
                     
-                    SelectBottomButton(label: "Select All", system_name:"scope")
-                        .foregroundStyle(.white)
+                    SelectBottomButton(label: !self.is_select_all ? "Select All" : "Deselect All", system_name:"scope") {
+                        self.media_VM.change_all(to: self.is_select_all)
+                        self.is_select_all.toggle()
+                    }
+                    .foregroundStyle(.white)
                     
                     Spacer()
                     
-                    SelectBottomButton(label: "Move", system_name:"folder")
-                        .foregroundStyle(.white)
+                    SelectBottomButton(label: "Move", system_name:"folder"){
+                        self.is_move_sheet_active.toggle()
+                    }
+                    .foregroundStyle(.white)
                     //.background(.red)
                 }
                 .padding(.horizontal)
@@ -88,16 +105,20 @@ struct BottomHeader: View {
                 }
             }
         }
+        .sheet(isPresented: self.$is_move_sheet_active) {
+            MoveSheet()
+        }
     }
     
     struct SelectBottomButton: View {
         var label: String
         var system_name: String
         
+        var action: () -> Void
         
         var body: some View {
             Button {
-                print("Delete")
+                action()
             } label: {
                 VStack(spacing: 5) {
                     Image(systemName: system_name)

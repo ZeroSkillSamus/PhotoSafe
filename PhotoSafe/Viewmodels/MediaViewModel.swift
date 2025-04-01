@@ -52,9 +52,7 @@ final class MediaViewModel: ObservableObject {
             a.media.date_added < b.media.date_added
         })
         
-        // Set corresponding counts
-        self.photo_count = self.medias.filter({$0.media.type == MediaType.Photo.rawValue || $0.media.type == MediaType.GIF.rawValue}).count
-        self.video_count = self.medias.filter({$0.media.type == MediaType.Video.rawValue}).count
+        self.set_counts()
     }
     
     func add_media(
@@ -73,5 +71,24 @@ final class MediaViewModel: ObservableObject {
         case .GIF, .Photo:
             self.photo_count = self.photo_count + 1
         }
+    }
+    
+    /// Depending on what is_select_all is set to we will do the following
+    /// If is_select_all is true -> .blank
+    /// if is_select_all is false -> .checked
+    func change_all(to is_select_all: Bool) {
+        self.medias = self.medias.map { media in
+            var change_media = media
+            change_media.select = is_select_all ? .blank : .checked
+            return change_media
+        }
+    }
+    
+    ///  Sets the photo_count and video_count
+    ///     Note: Photo_Count will count photos and gifs
+    private func set_counts() {
+        // Set corresponding counts
+        self.photo_count = self.medias.filter({$0.media.type == MediaType.Photo.rawValue || $0.media.type == MediaType.GIF.rawValue}).count
+        self.video_count = self.medias.filter({$0.media.type == MediaType.Video.rawValue}).count
     }
 }

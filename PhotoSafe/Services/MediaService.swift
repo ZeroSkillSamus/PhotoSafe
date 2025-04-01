@@ -16,6 +16,7 @@ enum MediaError: Error {
 protocol MediaServiceProtocol {
     func save_media(to album: AlbumEntity, type: MediaType, imageData: Data, videoPath: String?) throws -> MediaEntity
     func fetch_media(from album: AlbumEntity) -> [MediaEntity]
+    func delete(media: MediaEntity) throws
 }
 
 final class MediaService: MediaServiceProtocol {
@@ -50,4 +51,11 @@ final class MediaService: MediaServiceProtocol {
         let medias = (try? self.context.fetch(MediaEntity.fetchRequest())) ?? []
         return medias.filter({ $0.album.name == album.name })
     }
+    
+    func delete(media: MediaEntity) throws {
+        self.context.delete(media)
+        try self.context.save()
+    }
+    
+    
 }
