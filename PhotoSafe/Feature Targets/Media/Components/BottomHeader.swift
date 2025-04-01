@@ -9,6 +9,11 @@ import SwiftUI
 import PhotosUI
 
 struct MoveSheet: View {
+    @EnvironmentObject private var album_VM: AlbumViewModel
+    
+    @ObservedObject var media_VM: MediaViewModel
+    var curr_album: AlbumEntity
+    
     var body: some View {
         VStack {
             Text("Move")
