@@ -14,7 +14,7 @@ struct TopHeader: View {
     @State private var display_delete_alert: Bool = false
     
     var body: some View {
-        VStack(spacing:0) {
+        //VStack(spacing:0) {
             HStack {
                 // Display Alert Confirming With User
                 // If they Want Albums to be removed
@@ -60,25 +60,27 @@ struct TopHeader: View {
             .frame(height:24)
             .padding(.horizontal)
             .padding(.vertical,10)
-        }
-        .background(.bar)
-        .overlay(
-            Text("Albums")
-                .font(.title2.bold())
-                .foregroundColor(.primary)
-        )
-        .sheet(isPresented: self.$display_sheet) {
-            CreateAlbumSheet(album_vm: self.album_vm)
-        }
-        .alert("Delete All Albums?", isPresented: $display_delete_alert) {
-            Button("Delete", role: .destructive) {
-                withAnimation(.easeInOut) {
-                    self.album_vm.deleteAll()
-                }
+            .overlay(
+                Text("Albums")
+                    .font(.title2.bold())
+                    .foregroundColor(.primary)
+            )
+            .sheet(isPresented: self.$display_sheet) {
+                CreateAlbumSheet(album_vm: self.album_vm)
             }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("Will Delete All Albums & Media, Are you Sure????")
-        }
+            .alert("Delete All Albums?", isPresented: $display_delete_alert) {
+                Button("Delete", role: .destructive) {
+                    withAnimation(.easeInOut) {
+                        self.album_vm.deleteAll()
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Will Delete All Albums & Media, Are you Sure????")
+            }
+            .background(.bar)
+        //}
+        
+        
     }
 }
