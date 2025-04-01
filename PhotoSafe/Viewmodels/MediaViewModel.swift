@@ -31,6 +31,20 @@ final class MediaViewModel: ObservableObject {
         self.service = media_service
     }
     
+    /// Gets all selected elements
+    /// Removes All selected elements from medias
+    /// Proceeds to delete them from the coredata
+    /// Adjust count to represent the changes
+    func delete_selected() {
+        // Get list of selected items
+        let selected = self.medias.filter({$0.select == .checked})
+        self.medias.removeAll(where: {$0.select == .checked }) // Remove selected items
+        
+        selected.forEach({try? self.service.delete(media: $0.media)})
+        
+        self.set_counts()
+    }
+    
     func set_media_and_counts(from album: AlbumEntity) {
         self.medias = self.service.fetch_media(from: album).map {
             return SelectMediaEntity(media: $0)

@@ -10,7 +10,10 @@ import PhotosUI
 
 struct BottomHeader: View {
     @State private var selected_media: [PhotosPickerItem] = []
-    var is_selected: Bool
+    @State private var is_select_all: Bool = false
+    @State private var is_move_sheet_active: Bool = false
+    
+    @Binding var is_selected: Bool
     var album: AlbumEntity
     
     @ObservedObject var media_VM: MediaViewModel
@@ -29,8 +32,13 @@ struct BottomHeader: View {
             } else {
                 // Select Bottom Nav Bar
                 HStack(alignment: .center) {
-                    SelectBottomButton(label: "Delete", system_name:"trash")
-                        .foregroundStyle(.red)
+                    SelectBottomButton(label: "Delete", system_name:"trash") {
+                        withAnimation {
+                            self.media_VM.delete_selected()
+                            self.is_selected.toggle()
+                        }
+                    }
+                    .foregroundStyle(.red)
                     //.background(.green)
                     
                     Spacer()
