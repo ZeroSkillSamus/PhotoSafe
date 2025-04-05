@@ -13,7 +13,8 @@ struct MoveSheet: View {
     
     @ObservedObject var media_VM: MediaViewModel
     var curr_album: AlbumEntity
-    
+    @Binding var num_selected_items: Int
+    @Binding var select_mode_active: Bool
     var body: some View {
         VStack {
             HStack {
@@ -28,7 +29,11 @@ struct MoveSheet: View {
                     Button {
                         withAnimation {
                             self.media_VM.move_selected(to: album)
+                            // Only close select mode if medias is empty after moving
+                            if self.media_VM.medias.isEmpty { self.select_mode_active.toggle() }
                         }
+                        
+                        self.num_selected_items = 0
                     } label: {
                         HStack(spacing: 20) {
                             if let data = album.image, let ui_image = UIImage(data: data) {
@@ -119,8 +124,15 @@ struct BottomHeader: View {
                     Spacer()
                     
                     SelectBottomButton(label: !self.is_select_all ? "Select All" : "Deselect All", system_name:"scope") {
-                        let selector = self.is_select_all ? SelectMediaEntity.Select.blank : SelectMediaEntity.Select.checked
+                        var selector = SelectMediaEntity.Select.checked
+                        if self.is_select_all {
+                            selector = .blank
+                            self.num_selected_items = 0
+                        } else {
+                            self.num_selected_items = self.media_VM.medias.count
+                        }
                         self.media_VM.change_all(to: selector)
+                        
                         self.is_select_all.toggle()
                     }
                     .foregroundStyle(.white)
@@ -167,7 +179,12 @@ struct BottomHeader: View {
             }
         }
         .sheet(isPresented: self.$is_move_sheet_active) {
-            MoveSheet(media_VM: self.media_VM, curr_album: self.album)
+            MoveSheet(
+                media_VM: self.media_VM,
+                curr_album: self.album,
+                num_selected_items: self.$num_selected_items,
+                select_mode_active: self.$is_selected
+            )
         }
     }
     
