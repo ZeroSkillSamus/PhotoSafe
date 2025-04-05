@@ -111,7 +111,6 @@ struct BottomHeader: View {
                         }
                     }
                     .foregroundStyle(.red)
-                    //.background(.green)
                     
                     Spacer()
                     
@@ -119,7 +118,6 @@ struct BottomHeader: View {
                         
                     }
                     .foregroundStyle(.white)
-                    //.background(.blue)
                     
                     Spacer()
                     
@@ -143,7 +141,6 @@ struct BottomHeader: View {
                         self.is_move_sheet_active.toggle()
                     }
                     .foregroundStyle(.white)
-                    //.background(.red)
                 }
                 .padding(.horizontal)
                 .padding(.vertical,10)
@@ -210,20 +207,3 @@ struct BottomHeader: View {
         }
     }
 }
-
-extension URL {
-    func generateVideoThumbnail() -> Data? {
-        let asset = AVAsset(url: self)
-        let imageGenerator = AVAssetImageGenerator(asset: asset)
-        imageGenerator.appliesPreferredTrackTransform = true
-        
-        do {
-            let cgImage = try imageGenerator.copyCGImage(at: CMTime(seconds: 10, preferredTimescale: 60), actualTime: nil)
-            return UIImage(cgImage: cgImage).jpegData(compressionQuality: 1)
-        } catch {
-            print("Error generating thumbnail: \(error.localizedDescription)")
-            return nil
-        }
-    }
-}
-

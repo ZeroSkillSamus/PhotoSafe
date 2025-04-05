@@ -18,12 +18,36 @@ enum MediaType: String {
 struct MediaView: View {
     var album: AlbumEntity
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
-
+    @State private var is_select_all: Bool = false
     @State private var media_selected: [PhotosPickerItem] = []
     @State private var select_count: Int = 0
     @State private var selectedItem: SelectMediaEntity?
     @State private var is_select_mode_active: Bool = false
-   
+    @State private var selected_media: [PhotosPickerItem] = []
+    @State private var is_move_sheet_active: Bool = false
+    
+    struct SelectBottomButton: View {
+        var label: String
+        var system_name: String
+        
+        var action: () -> Void
+        
+        var body: some View {
+            Button {
+                action()
+            } label: {
+                VStack(spacing: 5) {
+                    Image(systemName: system_name)
+                        .font(.title3)
+                    Text(label)
+                        .font(.caption.bold())
+                }
+            }
+            .padding(.top,15)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+    
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     var body: some View {
         VStack(spacing: 0) {
@@ -61,8 +85,12 @@ struct MediaView: View {
                     }
                 }
                 .padding(.top,10)
+                
+                Color.clear  // Add extra space to the bottom of the view
+                    .frame(height: 45)
             }
             .overlay(alignment: .bottom) {
+                // Bottom Header
                 BottomHeader(
                     is_selected: self.$is_select_mode_active,
                     num_selected_items:self.$select_count,
@@ -70,8 +98,6 @@ struct MediaView: View {
                     media_VM: self.media_VM
                 )
             }
-            
-           
         }
         .fullScreenCover(item: $selectedItem) { item in
             FullCoverSheet(select_media: item, list: self.media_VM.medias)
