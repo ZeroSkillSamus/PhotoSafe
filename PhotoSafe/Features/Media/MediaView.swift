@@ -18,35 +18,12 @@ enum MediaType: String {
 struct MediaView: View {
     var album: AlbumEntity
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
+    
     @State private var is_select_all: Bool = false
-    @State private var media_selected: [PhotosPickerItem] = []
     @State private var select_count: Int = 0
     @State private var selectedItem: SelectMediaEntity?
     @State private var is_select_mode_active: Bool = false
     @State private var selected_media: [PhotosPickerItem] = []
-    @State private var is_move_sheet_active: Bool = false
-    
-    struct SelectBottomButton: View {
-        var label: String
-        var system_name: String
-        
-        var action: () -> Void
-        
-        var body: some View {
-            Button {
-                action()
-            } label: {
-                VStack(spacing: 5) {
-                    Image(systemName: system_name)
-                        .font(.title3)
-                    Text(label)
-                        .font(.caption.bold())
-                }
-            }
-            .padding(.top,15)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-    }
     
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     var body: some View {
@@ -92,11 +69,37 @@ struct MediaView: View {
             .overlay(alignment: .bottom) {
                 // Bottom Header
                 BottomHeader(
+                    selected_media: self.$selected_media,
                     is_selected: self.$is_select_mode_active,
                     num_selected_items:self.$select_count,
                     album: self.album,
                     media_VM: self.media_VM
                 )
+            }
+        }
+        .overlay(alignment: .center) {
+            if self.media_VM.display_alert {
+                VStack(spacing: 15) {
+                    VStack(spacing: 5) {
+                        Text("Progress")
+                            .font(.title3.bold())
+                        
+                        Text("\(Int(self.media_VM.alert_value))/\(self.selected_media.count)")
+                            .font(.footnote.bold())
+                    }
+                    
+                    ProgressView(value: self.media_VM.alert_value,total: Float(self.selected_media.count))
+                        .progressViewStyle(.linear)
+                        .padding(.horizontal)
+                }
+                .padding(.vertical, 25)
+                .frame(maxWidth: 270)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+            }
+        }
+        .background{
+            if self.media_VM.display_alert {
+                Color.black.opacity(0.35)
             }
         }
         .fullScreenCover(item: $selectedItem) { item in

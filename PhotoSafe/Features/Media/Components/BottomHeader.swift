@@ -75,10 +75,11 @@ struct MoveSheet: View {
 
 
 struct BottomHeader: View {
-    @State private var selected_media: [PhotosPickerItem] = []
+    
     @State private var is_select_all: Bool = false
     @State private var is_move_sheet_active: Bool = false
     
+    @Binding var selected_media: [PhotosPickerItem]
     @Binding var is_selected: Bool
     @Binding var num_selected_items: Int
     
@@ -101,21 +102,12 @@ struct BottomHeader: View {
             } else {
                 // Select Bottom Nav Bar
                 HStack(alignment: .center) {
-                    SelectBottomButton(label: "Delete", system_name:"trash") {
-                        withAnimation {
-                            self.media_VM.delete_selected()
-                            self.num_selected_items = 0
-                            
-                            // Only close select mode if the medias is empty after deleting
-                            if self.media_VM.medias.isEmpty { self.is_selected.toggle() }
-                        }
-                    }
-                    .foregroundStyle(.red)
-                    
-                    Spacer()
-                    
                     SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
-                        
+                        self.media_VM.progress_alert = true
+                        self.media_VM.export_selected_media_to_photo_library()
+                        withAnimation {
+                            self.is_selected = false // Get out of select mode
+                        }
                     }
                     .foregroundStyle(.white)
                     
@@ -141,6 +133,19 @@ struct BottomHeader: View {
                         self.is_move_sheet_active.toggle()
                     }
                     .foregroundStyle(.white)
+                    
+                    Spacer()
+                    
+                    SelectBottomButton(label: "Delete", system_name:"trash") {
+                        withAnimation {
+                            self.media_VM.delete_selected()
+                            self.num_selected_items = 0
+                            
+                            // Only close select mode if the medias is empty after deleting
+                            if self.media_VM.medias.isEmpty { self.is_selected.toggle() }
+                        }
+                    }
+                    .foregroundStyle(.red)
                 }
                 .padding(.horizontal)
                 .padding(.vertical,10)
@@ -150,6 +155,9 @@ struct BottomHeader: View {
         }
         .onChange(of: self.selected_media) {
             Task {
+                self.media_VM.reset_alert_value()
+                self.media_VM.progress_alert = true
+                
                 for item in self.selected_media {
                     if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
                         if let thumbnail = video_url.generateVideoThumbnail() {
@@ -173,6 +181,7 @@ struct BottomHeader: View {
                 
                 // Done Looping, Time to Clear Out SelectedMedia
                 self.selected_media.removeAll()
+                self.media_VM.progress_alert = false
             }
         }
         .sheet(isPresented: self.$is_move_sheet_active) {
