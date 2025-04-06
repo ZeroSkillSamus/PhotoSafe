@@ -46,7 +46,7 @@ final class MediaViewModel: ObservableObject {
     var selected_media: [SelectMediaEntity] {
         self.medias.filter({$0.select == .checked})
     }
-    
+  
     func reset_alert_value() {
         self.alert_value = 0
     }
@@ -72,7 +72,6 @@ final class MediaViewModel: ObservableObject {
             }
         }
     }
-    
     /// Gets all selected elements
     /// Removes All selected elements from medias
     /// Proceeds to delete them from the coredata
@@ -135,7 +134,7 @@ final class MediaViewModel: ObservableObject {
             }
         }
     }
-    
+  
     /// Depending on what is_select_all is set to we will do the following
     /// If is_select_all is true -> .blank
     /// if is_select_all is false -> .checked
@@ -146,7 +145,7 @@ final class MediaViewModel: ObservableObject {
             return change_media
         }
     }
-    
+
     private func increment_alert_value() {
         self.alert_value += 1
     }

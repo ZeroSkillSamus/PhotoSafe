@@ -75,7 +75,6 @@ struct MoveSheet: View {
 
 
 struct BottomHeader: View {
-    
     @State private var is_select_all: Bool = false
     @State private var is_move_sheet_active: Bool = false
     

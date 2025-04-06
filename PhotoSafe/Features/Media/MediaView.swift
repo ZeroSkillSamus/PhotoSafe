@@ -18,13 +18,13 @@ enum MediaType: String {
 struct MediaView: View {
     var album: AlbumEntity
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
-    
+  
     @State private var is_select_all: Bool = false
     @State private var select_count: Int = 0
     @State private var selectedItem: SelectMediaEntity?
     @State private var is_select_mode_active: Bool = false
     @State private var selected_media: [PhotosPickerItem] = []
-    
+  
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     var body: some View {
         VStack(spacing: 0) {

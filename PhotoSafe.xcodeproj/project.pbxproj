@@ -210,7 +210,6 @@
 				0248E9572D9B56D600272924 /* ImageGridView.swift */,
 				0245023D2D9E100700E9A862 /* PlayerView.swift */,
 				0245023F2D9E107B00E9A862 /* CustomPlayer.swift */,
-				025019B12DA2FECF00F7BCE6 /* CustomAlert .swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
