@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct AlbumView: View {
-    @StateObject private var album_VM = AlbumViewModel()
+    @EnvironmentObject private var album_VM: AlbumViewModel
     @State private var display_alert: Bool = false
     @State private var path = NavigationPath()  // For NavigationStack
     @State private var password: String = ""

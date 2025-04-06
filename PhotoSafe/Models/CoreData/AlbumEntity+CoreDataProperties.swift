@@ -31,6 +31,10 @@ extension AlbumEntity {
         
         return false 
     }
+    
+    var fetch_medias_as_list: [MediaEntity]? {
+        media?.allObjects as? [MediaEntity]
+    }
 
     @NSManaged public var image: Data?
     @NSManaged public var name: String
