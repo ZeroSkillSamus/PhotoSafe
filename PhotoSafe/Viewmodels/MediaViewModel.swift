@@ -24,6 +24,18 @@ final class MediaViewModel: ObservableObject {
     
     @Published private(set) var photo_count: Int = 0
     @Published private(set) var video_count: Int = 0
+    @Published private(set) var display_alert: Bool = false
+    @Published private(set) var alert_value: Float = 0.0
+
+    // Getter & Setter for display_alert
+    var progress_alert: Bool {
+        get {
+            self.display_alert
+        }
+        set {
+            self.display_alert = newValue
+        }
+    }
     
     private let service: MediaServiceProtocol
     
@@ -34,7 +46,32 @@ final class MediaViewModel: ObservableObject {
     var selected_media: [SelectMediaEntity] {
         self.medias.filter({$0.select == .checked})
     }
+  
+    func reset_alert_value() {
+        self.alert_value = 0
+    }
     
+    /// Handles exporting media to the users photo library
+    /// Still need to implement proper way to relay progress to user
+    func export_selected_media_to_photo_library() {
+        let media_saver = MediaSaver()
+        self.selected_media.forEach { selected in
+            switch selected.media.type {
+            case MediaType.Photo.rawValue:
+                if let ui_image = selected.media.image {
+                    media_saver.save_photo_to_user_library(image: ui_image)
+                }
+            case MediaType.Video.rawValue:
+                if let path = selected.media.video_path {
+                    media_saver.save_video_to_user_library(vid_path: path)
+                }
+            case MediaType.GIF.rawValue:
+                media_saver.save_gif_to_user_library(data: selected.media.image_data)
+            default:
+                print("Type Not Found!!")
+            }
+        }
+    }
     /// Gets all selected elements
     /// Removes All selected elements from medias
     /// Proceeds to delete them from the coredata
@@ -72,13 +109,15 @@ final class MediaViewModel: ObservableObject {
     ) {
         if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, videoPath: video_path) {
             self.medias.append(SelectMediaEntity(media: media_entity))
-        }
-        
-        switch type {
-        case .Video:
-            self.video_count = self.video_count + 1
-        case .GIF, .Photo:
-            self.photo_count = self.photo_count + 1
+            self.increment_alert_value()
+            
+            switch type {
+            case .Video:
+                self.video_count = self.video_count + 1
+            case .GIF, .Photo:
+                self.photo_count = self.photo_count + 1
+            }
+            
         }
     }
     
@@ -95,7 +134,7 @@ final class MediaViewModel: ObservableObject {
             }
         }
     }
-    
+  
     /// Depending on what is_select_all is set to we will do the following
     /// If is_select_all is true -> .blank
     /// if is_select_all is false -> .checked
@@ -105,6 +144,10 @@ final class MediaViewModel: ObservableObject {
             change_media.select = selector
             return change_media
         }
+    }
+
+    private func increment_alert_value() {
+        self.alert_value += 1
     }
     
     /// FInds the index of selected and deletes the item at that location from medias
