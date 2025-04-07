@@ -13,10 +13,6 @@ class MediaSaver: NSObject {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(save_completed), nil)
     }
     
-    @objc func save_completed(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        print("Save Finished!")
-    }
-    
     func save_video_to_user_library(vid_path: String) {
         UISaveVideoAtPathToSavedPhotosAlbum(vid_path, self, #selector(save_completed), nil)
     }
@@ -33,4 +29,9 @@ class MediaSaver: NSObject {
             }
         }
     }
+    
+    @objc func save_completed(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        print("Save Finished!")
+    }
+    
 }

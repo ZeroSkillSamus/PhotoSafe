@@ -16,9 +16,10 @@ enum MediaType: String {
 }
 
 struct MediaView: View {
-    var album: AlbumEntity
+    @ObservedObject var album: AlbumEntity
+    
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
-  
+
     @State private var is_select_all: Bool = false
     @State private var select_count: Int = 0
     @State private var selectedItem: SelectMediaEntity?
@@ -31,19 +32,9 @@ struct MediaView: View {
             ScrollView {
                 if !self.is_select_mode_active {
                     VStack(spacing: 5) {
-                        if let image_data = album.image, let ui_image = UIImage(data: image_data) {
-                            Image(uiImage: ui_image)
-                                .resizable()
-                                .frame(width: 150, height:150)
-                                .scaledToFill()
-                                .clipShape(Circle())
-                        } else {
-                            Image("NoImageFound")
-                                .resizable()
-                                .frame(width: 150, height:150)
-                                .scaledToFill()
-                                .clipShape(Circle())
-                        }
+                        AlbumImageDisplay(album: self.album)
+                            .frame(width: 150, height:150)
+                            .clipShape(Circle())
                         
                         Text("Photos: \(self.media_VM.photo_count), Videos: \(self.media_VM.video_count)")
                             .font(.system(size: 13,weight: .semibold,design: .rounded))
@@ -64,7 +55,7 @@ struct MediaView: View {
                 .padding(.top,10)
                 
                 Color.clear  // Add extra space to the bottom of the view
-                    .frame(height: 45)
+                    .frame(height: 50)
             }
             .overlay(alignment: .bottom) {
                 // Bottom Header

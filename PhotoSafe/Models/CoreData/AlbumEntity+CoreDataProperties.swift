@@ -33,7 +33,19 @@ extension AlbumEntity {
     }
     
     var fetch_medias_as_list: [MediaEntity]? {
-        media?.allObjects as? [MediaEntity]
+        if let list = media?.allObjects as? [MediaEntity] {
+            return list.sorted(by: { a, b in
+                a.date_added < b.date_added
+            })
+        }
+        return nil
+    }
+    
+    var fetch_first_image: Data? {
+        if let first = self.fetch_medias_as_list?.first {
+            return first.image_data
+        }
+        return nil
     }
 
     @NSManaged public var image: Data?
