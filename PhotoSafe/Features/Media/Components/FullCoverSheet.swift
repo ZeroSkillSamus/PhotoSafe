@@ -8,6 +8,7 @@
 import SwiftUI
 import AVKit
 import SDWebImageSwiftUI
+import LazyPager
 
 struct FullCoverSheet: View {
     @Environment(\.dismiss) var dismiss
@@ -25,20 +26,7 @@ struct FullCoverSheet: View {
         self.orientation.isPortrait || (self.orientation.isFlat && !self.prev_orientation.isLandscape) || self.orientation == .unknown
     }
 
-    func photo_view(image: UIImage) -> some View {
-        return (
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFit()
-        )
-    }
-    
-    func gif_view(index: Int) -> some View {
-        AnimatedImage(data: list[index].media.image_data)
-            .resizable()
-            .customLoopCount(0)
-            .scaledToFit()
-    }
+    @State private var opacity: CGFloat = 0
     
     var body: some View {
         ZStack {
@@ -70,42 +58,46 @@ struct FullCoverSheet: View {
                             .padding(5)
                             .foregroundStyle(.primary)
                     }
+                    .opacity(self.opacity)
                 }
  
-                TabView(selection: $current_media_index) {
-                    ForEach(0..<list.count,id:\.self) { index in
-                        DragGestureWrapper {
-                            VStack {
-                                switch list[index].media.type {
-                                case MediaType.Photo.rawValue:
-                                    if let image = list[index].media.image {
-                                        photo_view(image: image)
-                                    }
-                                case MediaType.Video.rawValue:
-                                    if let video_path = list[index].media.video_path, let url = URL(string: video_path) {
-                                        if self.current_media_index == index { // Needed to stop video from preloading
-                                            PlayerView(
-                                                curr_orientation: self.orientation,
-                                                prev_orientation: self.prev_orientation,
-                                                url: url
-                                            )
-                                        }
-                                    }
-                                case MediaType.GIF.rawValue:
-                                    gif_view(index: index)
-                                default:
-                                    EmptyView()
-                                }
+                LazyPager(data: self.list, page: self.$current_media_index) { element in
+                    VStack {
+                        switch element.media.type {
+                        case MediaType.Photo.rawValue:
+                            if let image = element.media.image {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .ignoresSafeArea(edges: .bottom)
-                            .tag(index)
-                        } dismissAction: {
-                            self.dismiss()
+                        case MediaType.Video.rawValue:
+                            if let video_path = element.media.video_path, let url = URL(string: video_path) {
+                                //if self.current_media_index == elment. { // Needed to stop video from preloading
+                                PlayerView(
+                                    curr_orientation: self.orientation,
+                                    prev_orientation: self.prev_orientation,
+                                    url: url
+                                )
+                            }
+                        case MediaType.GIF.rawValue:
+                            AnimatedImage(data: element.media.image_data)
+                                .resizable()
+                                .customLoopCount(0)
+                                .scaledToFit()
+                            //gif_view(index: index)
+                        default:
+                            EmptyView()
                         }
+                        
                     }
+                    .ignoresSafeArea(edges: .bottom)
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
+                // Make the content zoomable
+                .zoomable(min: 1, max: 5)
+                .onDismiss(backgroundOpacity: $opacity) {
+                    self.dismiss()
+                }
+                .opacity(self.opacity)
             }
             .onRotate { newOrientation in
                 self.prev_orientation = self.orientation
@@ -118,5 +110,7 @@ struct FullCoverSheet: View {
         .preferredColorScheme(.dark)
         .persistentSystemOverlays(.hidden)
         .ignoresSafeArea(edges: .bottom)
+        .background(.black.opacity(opacity))
+        .background(ClearFullScreenBackground())
     }
 }

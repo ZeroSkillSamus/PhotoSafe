@@ -95,8 +95,6 @@ struct MediaView: View {
         }
         .fullScreenCover(item: $selectedItem) { item in
             FullCoverSheet(select_media: item, list: self.media_VM.medias)
-                //.background(BackgroundCleanerView()) // Optional for transparent background
-                .animation(.easeInOut(duration: 0.3), value: selectedItem)
         }
         .onAppear {
             self.media_VM.set_media_and_counts(from: album)
