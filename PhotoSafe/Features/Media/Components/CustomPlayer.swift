@@ -37,7 +37,7 @@ struct NewCustomProgressBar: UIViewRepresentable {
     func makeUIView(context: Context) -> some UISlider {
         let slider = UISlider()
         slider.minimumTrackTintColor = UIColor(.secondary)
-        slider.maximumTrackTintColor = UIColor(.primary)
+        slider.maximumTrackTintColor = UIColor(.white)
 
         // Create a custom thumb image with the desired color
         if let thumbImage = UIImage(systemName: "circle.fill") {

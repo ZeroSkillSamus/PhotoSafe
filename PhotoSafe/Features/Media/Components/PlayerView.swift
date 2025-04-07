@@ -119,6 +119,7 @@ struct PlayerView: View {
                     }
                     .padding(.horizontal)
                     .padding(.bottom,bottom_padding_length)
+                    .background(Color.black.opacity(0.35))
                 }
                 .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
                 .background(Color.black.opacity(0.35))
@@ -132,12 +133,12 @@ struct PlayerView: View {
             HStack(spacing:50) {
                 Button {
                     let curr_time = (self.controller.player?.currentTime().seconds ?? 0)
-                    let new_time = curr_time - 15 <= 0 ? 0 : curr_time - 15
+                    let new_time = curr_time - 10 <= 0 ? 0 : curr_time - 10
                     
                     self.controller.player?.seek(to: CMTime(seconds: new_time, preferredTimescale: 800))
                 } label: {
                     //goforward.15
-                    Image(systemName: "gobackward.15")
+                    Image(systemName: "gobackward.10")
                         .foregroundStyle(.blue)
                         .font(.system(size: 30))
                 }
@@ -157,10 +158,10 @@ struct PlayerView: View {
                     let curr_time = (self.controller.player?.currentTime().seconds ?? 0)
                     let duration = self.controller.player?.currentItem?.duration.seconds ?? 0
                     
-                    let new_time = curr_time + 15 >= duration ? duration : curr_time + 15
+                    let new_time = curr_time + 10 >= duration ? duration : curr_time + 10
                     self.controller.player?.seek(to: CMTime(seconds: new_time, preferredTimescale: 800))
                 } label: {
-                    Image(systemName: "goforward.15")
+                    Image(systemName: "goforward.10")
                         .foregroundStyle(.blue)
                         .font(.system(size: 30))
                 }

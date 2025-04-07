@@ -109,7 +109,7 @@ struct FullCoverSheet: View {
         .onAppear {
             self.current_media_index = self.list.firstIndex(of: self.select_media) ?? 0
         }
-        .preferredColorScheme(.dark)
+        //.preferredColorScheme(.dark)
         .persistentSystemOverlays(.hidden)
         .ignoresSafeArea(edges: .bottom)
         .background(.black.opacity(opacity))
