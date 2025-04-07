@@ -18,6 +18,8 @@ class MediaHandler: NSObject {
     
     // Function to delete multiple assets
     static func deleteAssets(_ assets: [PHAsset]) {
+        if assets.isEmpty { return }
+        
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.deleteAssets(assets as NSArray)
         }) { success, error in

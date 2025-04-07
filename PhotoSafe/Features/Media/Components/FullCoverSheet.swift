@@ -73,11 +73,13 @@ struct FullCoverSheet: View {
                         case MediaType.Video.rawValue:
                             if let video_path = element.media.video_path, let url = URL(string: video_path) {
                                 //if self.current_media_index == elment. { // Needed to stop video from preloading
-                                PlayerView(
-                                    curr_orientation: self.orientation,
-                                    prev_orientation: self.prev_orientation,
-                                    url: url
-                                )
+                                if list[self.current_media_index] == element {
+                                    PlayerView(
+                                        curr_orientation: self.orientation,
+                                        prev_orientation: self.prev_orientation,
+                                        url: url
+                                    )
+                                }
                             }
                         case MediaType.GIF.rawValue:
                             AnimatedImage(data: element.media.image_data)
