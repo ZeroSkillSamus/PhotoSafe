@@ -24,7 +24,7 @@ struct AlbumView: View {
                                 Button {
                                     self.display_alert = true
                                 } label: {
-                                    AlbumDisplay(album: album)
+                                    AlbumVDisplay(album: album)
                                 }
                                 .alert("Enter Password For \(album.name)",
                                        isPresented: self.$display_alert)
@@ -43,7 +43,7 @@ struct AlbumView: View {
                                 }
                             } else {
                                 NavigationLink(value: album) {
-                                    AlbumDisplay(album: album)
+                                    AlbumVDisplay(album: album)
                                 }
                             }
                             Divider()
@@ -59,50 +59,4 @@ struct AlbumView: View {
             }
         }
     }
-    
-    struct AlbumDisplay: View {
-        var album: AlbumEntity
-
-        var body: some View {
-            HStack {
-                VStack {
-                    if let data = album.image, let ui_image = UIImage(data: data) {
-                        Image(uiImage: ui_image)
-                            .resizable()
-                            .scaledToFill()
-                        
-                    } else {
-                        Image("NoImageFound")
-                            .resizable()
-                            .scaledToFill()
-                            //.frame(width: 100, height: 125)
-                    }
-                }
-                .frame(width: 130, height:120)
-                .clipShape(RoundedRectangle(cornerRadius: 2))
-                
-                HStack {
-                    Text(album.name)
-                        .foregroundStyle(.white)
-                        .padding(.leading,20)
-                        .font(.system(size: 18,weight: .medium,design: .rounded))
-                    
-                    Spacer()
-                    
-                    if album.is_locked {
-                        Image(systemName: "lock.fill")
-                            .font(.title2)
-                            .foregroundColor(.primary)
-                            .padding(.trailing,20)
-                    }
-                }
-                .frame(maxWidth:.infinity)
-            }
-        }
-    }
-    
 }
-
-//#Preview {
-//    ContentView().preferredColorScheme(.dark)
-//}
