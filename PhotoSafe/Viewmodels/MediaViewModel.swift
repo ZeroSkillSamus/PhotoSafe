@@ -54,7 +54,7 @@ final class MediaViewModel: ObservableObject {
     /// Handles exporting media to the users photo library
     /// Still need to implement proper way to relay progress to user
     func export_selected_media_to_photo_library() {
-        let media_saver = MediaSaver()
+        let media_saver = MediaHandler()
         self.selected_media.forEach { selected in
             switch selected.media.type {
             case MediaType.Photo.rawValue:

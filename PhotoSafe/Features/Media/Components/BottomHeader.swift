@@ -77,7 +77,7 @@ struct MoveSheet: View {
 struct BottomHeader: View {
     @State private var is_select_all: Bool = false
     @State private var is_move_sheet_active: Bool = false
-    
+ 
     @Binding var selected_media: [PhotosPickerItem]
     @Binding var is_selected: Bool
     @Binding var num_selected_items: Int
@@ -89,7 +89,7 @@ struct BottomHeader: View {
         VStack {
             if !self.is_selected {
                 // Bottom Header
-                PhotosPicker(selection: self.$selected_media, selectionBehavior: .ordered) {
+                PhotosPicker(selection: self.$selected_media, selectionBehavior: .ordered, photoLibrary: .shared()) {
                     ZStack {
                         Circle().fill(.blue)
                         Image(systemName: "plus")
@@ -156,8 +156,15 @@ struct BottomHeader: View {
             Task {
                 self.media_VM.reset_alert_value()
                 self.media_VM.progress_alert = true
+                var asset_to_delete: [PHAsset] = []
                 
                 for item in self.selected_media {
+                    // Handle adding to photos list which will be batched delete from user library
+                    if let identifier = item.itemIdentifier, let asset = MediaHandler.fetchAsset(with: identifier) {
+                        asset_to_delete.append(asset)
+                    }
+                    
+                    // Handles Saving Media to CoreData
                     if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
                         if let thumbnail = video_url.generateVideoThumbnail() {
                             self.media_VM.add_media(
@@ -177,6 +184,9 @@ struct BottomHeader: View {
                         self.media_VM.add_media(to: self.album, type: type, image_data: image_data)
                     }
                 }
+                
+                // Batch delete
+                MediaHandler.deleteAssets(asset_to_delete)
                 
                 // Done Looping, Time to Clear Out SelectedMedia
                 self.selected_media.removeAll()
