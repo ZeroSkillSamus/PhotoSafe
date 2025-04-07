@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AlbumImageDisplay: View {
+    @ObservedObject var album: AlbumEntity
+
     var body: some View {
         if let image_data = album.image, let ui_image = UIImage(data: image_data) {
             Image(uiImage: ui_image)
@@ -25,8 +27,4 @@ struct AlbumImageDisplay: View {
             }
         }
     }
-}
-
-#Preview {
-    AlbumImageDisplay()
 }
