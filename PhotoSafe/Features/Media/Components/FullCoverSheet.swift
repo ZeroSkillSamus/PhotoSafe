@@ -20,10 +20,24 @@ struct FullCoverSheet: View {
     
     @State private var current_media_index: Int = 0
     @State private var curr_media: SelectMediaEntity?
-    @State var player_controller: AVPlayerViewController = AVPlayerViewController()
-    
+
     var should_header_display: Bool {
         self.orientation.isPortrait || (self.orientation.isFlat && !self.prev_orientation.isLandscape) || self.orientation == .unknown
+    }
+
+    func photo_view(image: UIImage) -> some View {
+        return (
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+        )
+    }
+    
+    func gif_view(index: Int) -> some View {
+        AnimatedImage(data: list[index].media.image_data)
+            .resizable()
+            .customLoopCount(0)
+            .scaledToFit()
     }
     
     var body: some View {
@@ -60,38 +74,35 @@ struct FullCoverSheet: View {
  
                 TabView(selection: $current_media_index) {
                     ForEach(0..<list.count,id:\.self) { index in
-                        VStack {
-                            switch list[index].media.type {
-                            case MediaType.Photo.rawValue:
-                                if let image = list[index].media.image {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .scaledToFit()
-                                        
-                                }
-                            case MediaType.Video.rawValue:
-                                if let video_path = list[index].media.video_path, let url = URL(string: video_path) {
-                                    if self.current_media_index == index { // Needed to stop video from preloading due to TabView
-                                        PlayerView(
-                                            curr_orientation: self.orientation,
-                                            prev_orientation: self.prev_orientation,
-                                            url: url
-                                        )
+                        DragGestureWrapper {
+                            VStack {
+                                switch list[index].media.type {
+                                case MediaType.Photo.rawValue:
+                                    if let image = list[index].media.image {
+                                        photo_view(image: image)
                                     }
+                                case MediaType.Video.rawValue:
+                                    if let video_path = list[index].media.video_path, let url = URL(string: video_path) {
+                                        if self.current_media_index == index { // Needed to stop video from preloading
+                                            PlayerView(
+                                                curr_orientation: self.orientation,
+                                                prev_orientation: self.prev_orientation,
+                                                url: url
+                                            )
+                                        }
+                                    }
+                                case MediaType.GIF.rawValue:
+                                    gif_view(index: index)
+                                default:
+                                    EmptyView()
                                 }
-                            case MediaType.GIF.rawValue:
-                                AnimatedImage(data: list[index].media.image_data)
-                                    .resizable()
-                                    .customLoopCount(0)
-                                    .scaledToFit()
-                                
-                            default:
-                                EmptyView()
                             }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .ignoresSafeArea(edges: .bottom)
+                            .tag(index)
+                        } dismissAction: {
+                            self.dismiss()
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .ignoresSafeArea(edges: .bottom)
-                        .tag(index)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
