@@ -39,6 +39,7 @@
 		02D8012C2DA45276002AE361 /* DragGestureWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D8012B2DA45276002AE361 /* DragGestureWrapper.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
+		02D801362DA5733A002AE361 /* SelectMediaEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801352DA5733A002AE361 /* SelectMediaEntity.swift */; };
 		02EBCE322DA34C24004181A3 /* AlbumVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE312DA34C24004181A3 /* AlbumVView.swift */; };
 		02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */; };
 /* End PBXBuildFile section */
@@ -95,6 +96,7 @@
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D8012B2DA45276002AE361 /* DragGestureWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragGestureWrapper.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
+		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
 		02EBCE312DA34C24004181A3 /* AlbumVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumVView.swift; sourceTree = "<group>"; };
 		02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumImageDisplay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -150,12 +152,12 @@
 		0215FDB72D933EA800E2B546 /* PhotoSafe */ = {
 			isa = PBXGroup;
 			children = (
+				02D801342DA57228002AE361 /* App */,
 				027250DA2D9B2A5900280DB2 /* Services */,
 				027250D62D9B28A800280DB2 /* Models */,
 				027250D42D9B27A800280DB2 /* Utilities */,
 				027250D02D9B268000280DB2 /* Features */,
 				0215FDE22D934B4E00E2B546 /* Viewmodels */,
-				0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */,
 				0215FDBC2D933EAB00E2B546 /* Assets.xcassets */,
 				0215FDBE2D933EAB00E2B546 /* Preview Content */,
 			);
@@ -296,6 +298,7 @@
 			isa = PBXGroup;
 			children = (
 				027250D72D9B28AF00280DB2 /* CoreData */,
+				02D801352DA5733A002AE361 /* SelectMediaEntity.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -318,6 +321,14 @@
 				027250DE2D9B308D00280DB2 /* MediaService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		02D801342DA57228002AE361 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -481,6 +492,7 @@
 				027250D92D9B291C00280DB2 /* CoreDataManager.swift in Sources */,
 				0248E9512D9B4C7300272924 /* FullCoverSheet.swift in Sources */,
 				02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */,
+				02D801362DA5733A002AE361 /* SelectMediaEntity.swift in Sources */,
 				02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
 				02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */,
