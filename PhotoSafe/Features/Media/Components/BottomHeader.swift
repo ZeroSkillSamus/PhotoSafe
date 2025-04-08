@@ -67,42 +67,54 @@ struct MoveSheet: View {
                             self.media_VM.move_selected(to: album)
                             // Only close select mode if medias is empty after moving
                             if self.media_VM.medias.isEmpty { self.select_mode_active.toggle() }
+                            
+                            self.dismiss()
                         }
                         
-                        self.num_selected_items = 0
-                    } label: {
-                        HStack(spacing: 20) {
-                            if let data = album.image, let ui_image = UIImage(data: data) {
-                                Image(uiImage: ui_image)
-                                    .resizable()
-                                    .frame(width: 75,height: 75)
-                                    .scaledToFill()
-                                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                            } else {
-                                // Get first image from album if available
-                                if let media = album.fetch_medias_as_list, let first = media.first, let ui_image = first.image {
-                                    Image(uiImage: ui_image)
-                                        .resizable()
-                                        .frame(width: 75,height: 75)
-                                        .scaledToFill()
-                                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                                } else {
-                                    Image("NoImageFound")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 75,height: 75)
-                                        .clipShape(RoundedRectangle(cornerRadius: 5))
-                                }
-                            }
-                            
-                            Text(album.name)
-                            
-                        }
-                        .frame(maxWidth: .infinity,alignment: .leading)
-                        .padding()
                     }
+                    Divider()
+                        .foregroundStyle(.white)
+                }
+                
+                // Create New Album Button
+                MoveButtonLabel(
+                    name: "Create & Move To New Album",
+                    image: Image("NoImageFound").resizable())
+                {
+                    // Toggle alert that will prompt user to enter new album name
+                    self.toggle_alert = true
                 }
             }
+        }
+        .alert("Create Album", isPresented: self.$toggle_alert) {
+            VStack(spacing: 5) {
+                TextField("Name", text: self.$album_name)
+                TextField("Password", text: self.$album_password)
+            }
+            
+            Button("OK", action: {
+                // Create Album
+                self.album_VM.create_album(
+                    name: self.album_name,
+                    image_data: nil,
+                    password: self.album_password.isEmpty ? nil : self.album_password
+                )
+                
+                // Fetch Newly Created Album
+                if let album = self.album_VM.albums.first(where: {$0.name == album_name}) {
+                    withAnimation {
+                        self.media_VM.move_selected(to: album)
+                        
+                        // Only close select mode if medias is empty after moving
+                        if self.media_VM.medias.isEmpty { self.select_mode_active.toggle() }
+                        
+                        self.dismiss()
+                    }
+                }
+            })
+            Button("Cancel",action: {})
+        } message: {
+            Text("Action Will Create & Move Selected Media To New Album!")
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         .presentationDetents([.medium, .medium, .fraction(0.35)])
@@ -138,7 +150,6 @@ struct BottomHeader: View {
                 // Select Bottom Nav Bar
                 HStack(alignment: .center) {
                     SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
-                        self.media_VM.progress_alert = true
                         self.media_VM.export_selected_media_to_photo_library()
                         withAnimation {
                             self.is_selected = false // Get out of select mode
@@ -164,7 +175,7 @@ struct BottomHeader: View {
                     
                     Spacer()
                     
-                    SelectBottomButton(label: "Move", system_name:"folder"){
+                    SelectBottomButton(label: "Move", system_name:"rectangle.2.swap"){
                         self.is_move_sheet_active.toggle()
                     }
                     .foregroundStyle(.white)
