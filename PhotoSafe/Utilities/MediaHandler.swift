@@ -8,15 +8,22 @@
 import SwiftUI
 import Photos
 
-// Handles Saving & Deleting to Users photo library
+/// Class that handles saving & deleting from the user photo library.
+///
+///
+/// - Tag: MediaHandler
+/// - Author: Abraham Mitchell
+/// - Version: 1.0
+/// - Copyright: Your Company
 class MediaHandler: NSObject {
-    // Convert to PHAsset
+    
+    /// Convert the identifier to PHAsset
     static func fetchAsset(with identifier: String) -> PHAsset? {
         let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
         return fetchResult.firstObject
     }
     
-    // Function to delete multiple assets
+    /// Function to delete multiple assets
     static func deleteAssets(_ assets: [PHAsset]) {
         if assets.isEmpty { return }
         
