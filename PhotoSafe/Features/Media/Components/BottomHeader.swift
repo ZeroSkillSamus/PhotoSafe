@@ -15,6 +15,42 @@ struct MoveSheet: View {
     var curr_album: AlbumEntity
     @Binding var num_selected_items: Int
     @Binding var select_mode_active: Bool
+    
+    @State private var toggle_alert: Bool = false
+    @State private var album_name: String = ""
+    @State private var album_password: String = ""
+    
+    struct MoveButtonLabel<Content: View>: View {
+        let name: String
+        let image: Content
+        let action: () -> Void
+        
+        
+        var body: some View {
+            Button {
+                self.action()
+            } label: {
+                HStack(spacing: 20) {
+                    image
+                        .frame(width: 60,height: 60)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                    
+                    Text(name)
+                        .font(.system(size: 15,weight: .semibold,design: .rounded))
+                        .foregroundStyle(.white)
+                    Spacer()
+                    
+                    Image(systemName: "greaterthan")
+                        .font(.system(size: 15,weight: .semibold,design: .rounded))
+                        .foregroundStyle(.white)
+                    
+                }
+                .frame(maxWidth: .infinity,alignment: .leading)
+                .padding()
+            }
+        }
+    }
+    
     var body: some View {
         VStack {
             HStack {
