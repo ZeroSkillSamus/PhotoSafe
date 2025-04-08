@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct MoveSheet: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var album_VM: AlbumViewModel
     
     @ObservedObject var media_VM: MediaViewModel
@@ -60,9 +61,10 @@ struct MoveSheet: View {
             .frame(maxWidth: .infinity,alignment: .leading)
             .padding()
             
-            LazyVStack {
+            LazyVStack(spacing: 0) {
                 ForEach(self.album_VM.albums.filter({$0.name != curr_album.name }),id:\.self) { album in
-                    Button {
+                    MoveButtonLabel(name: album.name, image: AlbumImageDisplay(album: album)) {
+                        self.num_selected_items = 0
                         withAnimation {
                             self.media_VM.move_selected(to: album)
                             // Only close select mode if medias is empty after moving
@@ -117,7 +119,8 @@ struct MoveSheet: View {
             Text("Action Will Create & Move Selected Media To New Album!")
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
-        .presentationDetents([.medium, .medium, .fraction(0.35)])
+        .presentationDetents([.height(CGFloat(self.album_VM.albums.count + 2) * 70)])
+        .presentationDragIndicator(.visible)
     }
 }
 
