@@ -29,32 +29,13 @@ struct TopHeader: View {
                 Spacer()
                 
                 // Created a menu for now
-                // 1) Allow User To Create An Album
-                Menu {
-                    Button {
-                        self.display_sheet.toggle()
-                    } label: {
-                        Label {
-                            Text("New Album")
-                        } icon: {
-                            Image(systemName: "plus")
-                        }
-                    }
-                    
-                    Button {
-                        print("Edit")
-                    } label: {
-                        Label {
-                            Text("Edit")
-                        } icon: {
-                            Image(systemName: "pencil")
-                        }
-                    }
-
+                // 1) Allow User To Edit Albums
+                //    -> Choose Where they are placed
+                //    -> Choose which ones to delete
+                Button {
+                    print("Edit")
                 } label: {
-                    Image(systemName: "gear")
-                        .font(.title2)
-                        .foregroundColor(.primary)
+                    Text("Edit")
                 }
             }
             .frame(height:24)
@@ -65,9 +46,9 @@ struct TopHeader: View {
                     .font(.title2.bold())
                     .foregroundColor(.primary)
             )
-            .sheet(isPresented: self.$display_sheet) {
-                CreateAlbumSheet(album_vm: self.album_vm)
-            }
+//            .sheet(isPresented: self.$display_sheet) {
+//                CreateAlbumSheet(album_vm: self.album_vm)
+//            }
             .alert("Delete All Albums?", isPresented: $display_delete_alert) {
                 Button("Delete", role: .destructive) {
                     withAnimation(.easeInOut) {
