@@ -207,13 +207,8 @@
 		0248E94F2D9B4C5500272924 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				0248E9502D9B4C7300272924 /* FullCoverSheet.swift */,
 				0248E9522D9B4CC100272924 /* VideoFileTranferable.swift */,
-				0248E9542D9B4D0500272924 /* BottomHeader.swift */,
-				0248E9572D9B56D600272924 /* ImageGridView.swift */,
-				0245023D2D9E100700E9A862 /* PlayerView.swift */,
 				0245023F2D9E107B00E9A862 /* CustomPlayer.swift */,
-				02D801322DA56D66002AE361 /* MoveSheet.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -276,6 +271,11 @@
 			isa = PBXGroup;
 			children = (
 				0248E94F2D9B4C5500272924 /* Components */,
+				0248E9572D9B56D600272924 /* ImageGridView.swift */,
+				0245023D2D9E100700E9A862 /* PlayerView.swift */,
+				0248E9502D9B4C7300272924 /* FullCoverSheet.swift */,
+				0248E9542D9B4D0500272924 /* BottomHeader.swift */,
+				02D801322DA56D66002AE361 /* MoveSheet.swift */,
 				020A8D6D2D976D6C00FFCABE /* MediaView.swift */,
 			);
 			path = Media;
