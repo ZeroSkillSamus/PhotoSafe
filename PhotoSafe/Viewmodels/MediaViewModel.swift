@@ -129,6 +129,7 @@ final class MediaViewModel: ObservableObject {
             do {
                 try self.service.move(media: selected.media, to: album)
                 self.delete_from_medias(selected: selected)
+                self.set_counts()
             } catch let error {
                 print("Error \(error)")
             }
