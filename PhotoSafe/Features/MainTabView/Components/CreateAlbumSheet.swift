@@ -14,14 +14,15 @@ enum KindOfTextBox {
 }
 
 struct CreateAlbumSheet: View {
+    @EnvironmentObject private var album_vm: AlbumViewModel
     @Environment(\.dismiss) private var dismiss
     
     @State private var avatar: PhotosPickerItem?
     @State private var avatar_data: Data?
     @State private var name: String = ""
     @State private var password: String = ""
-    
-    @ObservedObject var album_vm: AlbumViewModel
+
+    @Binding var toggle_plus_mode: Bool
     
     func determine_if_button_disabled() -> Bool {
         self.name.isEmpty
@@ -95,7 +96,11 @@ struct CreateAlbumSheet: View {
                             image_data: self.avatar_data,
                             password: self.password
                         )
+                       
                         self.dismiss() // Close Sheet
+                        withAnimation {
+                            self.toggle_plus_mode.toggle()
+                        }
                     } label: {
                         Text("Create")
                             .font(.title3)

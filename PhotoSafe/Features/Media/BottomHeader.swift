@@ -24,12 +24,7 @@ struct BottomHeader: View {
             if !self.is_selected {
                 // Bottom Header
                 PhotosPicker(selection: self.$selected_media, selectionBehavior: .ordered, photoLibrary: .shared()) {
-                    ZStack {
-                        Circle().fill(.blue)
-                        Image(systemName: "plus")
-                            .foregroundStyle(.white)
-                    }
-                    .frame(width: 70,height: 70)
+                    ImageCircleOverlay()
                 }
                 
             } else {
@@ -129,9 +124,9 @@ struct BottomHeader: View {
         .sheet(isPresented: self.$is_move_sheet_active) {
             MoveSheet(
                 media_VM: self.media_VM,
-                curr_album: self.album,
-                num_selected_items: self.$num_selected_items,
-                select_mode_active: self.$is_selected
+                curr_album: self.album
+//                num_selected_items: self.$num_selected_items,
+//                select_mode_active: self.$is_selected
             )
         }
     }
