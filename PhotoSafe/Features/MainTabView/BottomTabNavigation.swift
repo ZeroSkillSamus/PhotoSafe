@@ -44,6 +44,31 @@ struct BottomTabNavigation: View {
         .frame(maxWidth: .infinity)
     }
 
+    private func CustomNavHeader() -> some View {
+        return (
+            HStack(spacing:0) {
+                //Tab Buttons...
+                TabButton(tab:.albums,image: "rectangle.stack.fill")
+                
+                TabButton(tab:.favorites,image: "heart.fill")
+                
+                Button {
+                    withAnimation(.easeIn) {
+                        self.toggle_plus_mode.toggle()
+                    }
+                } label: {
+                    ImageCircleOverlay()
+                }
+                .offset(y: -5)
+                
+                TabButton(tab:.web,image: "network")
+                
+                TabButton(tab:.settings,image: "gear")
+            }
+            .frame(maxWidth: .infinity,maxHeight: 55)
+        )
+    }
+    
     var body: some View {
         //.ignoresSafeArea(.keyboard) // Prevents keyboard pushing tab bar up
         NavigationStack(path: self.$path) {
