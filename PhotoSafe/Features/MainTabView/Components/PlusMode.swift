@@ -14,8 +14,7 @@ struct PlusMode: View {
     @State private var selected_media: [PhotosPickerItem] = []
     @State private var create_album_sheet: Bool = false
     @State private var show_move_sheet: Bool = false
-    
-    @ObservedObject var album_VM: AlbumViewModel
+ 
     @Binding var toggle_plus_mode: Bool
     
     var body: some View {
@@ -55,9 +54,7 @@ struct PlusMode: View {
                     }
                 }
                 .sheet(isPresented: self.$create_album_sheet) {
-                    CreateAlbumSheet(
-                        toggle_plus_mode: self.$toggle_plus_mode
-                    )
+                    CreateAlbumSheet(toggle_plus_mode: self.$toggle_plus_mode)
                 }
             }
             
