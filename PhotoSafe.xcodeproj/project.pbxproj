@@ -41,6 +41,9 @@
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
 		02D801362DA5733A002AE361 /* SelectMediaEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801352DA5733A002AE361 /* SelectMediaEntity.swift */; };
 		02D801382DA5A552002AE361 /* BottomTabNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801372DA5A551002AE361 /* BottomTabNavigation.swift */; };
+		02D8013B2DA5A679002AE361 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D8013A2DA5A679002AE361 /* SettingsView.swift */; };
+		02D8013E2DA5A6A0002AE361 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D8013D2DA5A6A0002AE361 /* WebView.swift */; };
+		02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801402DA5A82D002AE361 /* FavoritesView.swift */; };
 		02EBCE322DA34C24004181A3 /* AlbumVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE312DA34C24004181A3 /* AlbumVView.swift */; };
 		02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */; };
 /* End PBXBuildFile section */
@@ -99,6 +102,9 @@
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
 		02D801372DA5A551002AE361 /* BottomTabNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabNavigation.swift; sourceTree = "<group>"; };
+		02D8013A2DA5A679002AE361 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		02D8013D2DA5A6A0002AE361 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		02D801402DA5A82D002AE361 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		02EBCE312DA34C24004181A3 /* AlbumVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumVView.swift; sourceTree = "<group>"; };
 		02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumImageDisplay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -246,6 +252,9 @@
 		027250D02D9B268000280DB2 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				02D8013F2DA5A822002AE361 /* Favorites */,
+				02D8013C2DA5A692002AE361 /* Web */,
+				02D801392DA5A66B002AE361 /* Settings */,
 				027250D32D9B277500280DB2 /* Media */,
 				027250D22D9B272300280DB2 /* Album */,
 				027250D12D9B26F100280DB2 /* Lock */,
@@ -332,6 +341,30 @@
 				02D801372DA5A551002AE361 /* BottomTabNavigation.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		02D801392DA5A66B002AE361 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				02D8013A2DA5A679002AE361 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		02D8013C2DA5A692002AE361 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				02D8013D2DA5A6A0002AE361 /* WebView.swift */,
+			);
+			path = Web;
+			sourceTree = "<group>";
+		};
+		02D8013F2DA5A822002AE361 /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				02D801402DA5A82D002AE361 /* FavoritesView.swift */,
+			);
+			path = Favorites;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -475,6 +508,7 @@
 				0245023C2D9E0F5200E9A862 /* URL+Thumbnail.swift in Sources */,
 				027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */,
 				020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */,
+				02D8013E2DA5A6A0002AE361 /* WebView.swift in Sources */,
 				0248E9582D9B56D700272924 /* ImageGridView.swift in Sources */,
 				0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */,
 				020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */,
@@ -487,6 +521,7 @@
 				025019B02DA1F2A000F7BCE6 /* MediaHandler.swift in Sources */,
 				02EBCE322DA34C24004181A3 /* AlbumVView.swift in Sources */,
 				0215FDE42D94414C00E2B546 /* LockView.swift in Sources */,
+				02D8013B2DA5A679002AE361 /* SettingsView.swift in Sources */,
 				024502402D9E107B00E9A862 /* CustomPlayer.swift in Sources */,
 				0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */,
 				0248E9602D9B5C0700272924 /* CreateAlbumSheet.swift in Sources */,
@@ -498,6 +533,7 @@
 				02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */,
 				02D801362DA5733A002AE361 /* SelectMediaEntity.swift in Sources */,
 				02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */,
+				02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
 				02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */,
 				02D8012C2DA45276002AE361 /* DragGestureWrapper.swift in Sources */,

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct BottomTabNavigation: View {
     enum Tab: String {
         case favorites = "Favorites"
         case albums = "Albums"
@@ -53,13 +53,13 @@ struct ContentView: View {
                         .toolbar(.hidden, for: .bottomBar)
                         .navigationBarTitleDisplayMode(.inline)
                     
-                    Web()
+                    WebView()
                         .tag(Tab.web)
                     
-                    Settings()
+                    SettingsView()
                         .tag(Tab.settings)
                     
-                    Favorites()
+                    FavoritesView()
                         .tag(Tab.favorites)
                 }
                 

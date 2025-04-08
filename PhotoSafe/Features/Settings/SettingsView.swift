@@ -1,5 +1,5 @@
 //
-//  WebView.swift
+//  SettingsView.swift
 //  PhotoSafe
 //
 //  Created by Abraham Mitchell on 4/8/25.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct WebView: View {
+struct SettingsView: View {
     var body: some View {
-        Text("Web")
+        Text("Settings")
     }
 }
 
 #Preview {
-    WebView()
+    SettingsView()
 }
