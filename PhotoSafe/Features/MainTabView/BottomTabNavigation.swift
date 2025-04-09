@@ -70,34 +70,37 @@ struct BottomTabNavigation: View {
     }
     
     var body: some View {
-        //.ignoresSafeArea(.keyboard) // Prevents keyboard pushing tab bar up
+        // // Prevents keyboard pushing tab bar up
         NavigationStack(path: self.$path) {
-            VStack(spacing:0) {
-                TabView(selection: self.$current_tab) {
-                    AlbumView(path: self.$path)
-                        
-                        .tag(Tab.albums)
-                        .toolbar(.hidden, for: .bottomBar)
-                        .navigationBarTitleDisplayMode(.inline)
-
-                    WebView()
-                        .tag(Tab.web)
-                    
-                    SettingsView()
-                        .tag(Tab.settings)
-                    
-                    FavoritesView()
-                        .tag(Tab.favorites)
-                }
-
-                //Custom Tab Bar
+            ZStack {
                 VStack(spacing:0) {
-                    CustomNavHeader()
+                    TabView(selection: self.$current_tab) {
+                        AlbumView(path: self.$path)
+                            .tag(Tab.albums)
+                            .toolbar(.hidden, for: .bottomBar)
+                            .navigationBarTitleDisplayMode(.inline)
+                        
+                        WebView()
+                            .tag(Tab.web)
+                        
+                        SettingsView()
+                            .tag(Tab.settings)
+                        
+                        FavoritesView()
+                            .tag(Tab.favorites)
+                    }
+                    
+                    //Custom Tab Bar
+                    VStack(spacing:0) {
+                        CustomNavHeader()
+                        
+                    }
+                    .background(.bar)
+                    
+                    .opacity(self.toggle_plus_mode ? 0 : 1)
                 }
-                .background(.bar)
-                .opacity(self.toggle_plus_mode ? 0 : 1)
             }
-            
+            .ignoresSafeArea(.keyboard)
             .overlay(alignment: .bottom) {
                 PlusMode(toggle_plus_mode: self.$toggle_plus_mode)
             }
@@ -105,6 +108,7 @@ struct BottomTabNavigation: View {
                 MediaView(album: album)
             }
         }
+        
         .environmentObject(self.album_VM)
         .background(self.toggle_plus_mode ? .black.opacity(0.25) : .clear)
     }
