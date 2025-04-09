@@ -13,6 +13,7 @@ protocol AlbumServiceProtocol {
     func fetchAlbums() -> [AlbumEntity]
     func saveAlbum(name: String, image_data: Data?, password: String?) throws
     func deleteAll() throws
+    func delete(album: AlbumEntity) throws
 }
 
 final class AlbumService: AlbumServiceProtocol {
@@ -20,6 +21,11 @@ final class AlbumService: AlbumServiceProtocol {
     
     init(context: NSManagedObjectContext = CoreDataManager.shared.container.viewContext) {
         self.context = context
+    }
+    
+    func delete(album: AlbumEntity) throws {
+        self.context.delete(album)
+        try self.context.save()
     }
     
     func fetchAlbums() -> [AlbumEntity] {
