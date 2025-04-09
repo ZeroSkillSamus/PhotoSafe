@@ -8,25 +8,44 @@
 import SwiftUI
 
 struct AlbumVDisplay: View {
+    @EnvironmentObject private var album_VM: AlbumViewModel
+    
     var album: AlbumEntity
     //@State private var offset: CGFloat = 0
     @State private var isSwiped = false
     @Binding var is_edit_enabled: Bool
     
+    private let edit_mode_width: CGFloat = -80
+    
     var body: some View {
         ZStack {
-            VStack(spacing: 5) {
-                Image(systemName: "trash.fill")
-                    .font(.title3)
-  
-                Text("Delete")
-                    .font(.system(size: 15,weight: .medium,design: .rounded))
+            Button {
+                self.album_VM.delete(album: album)
+                
+                // After delete and list is empty, exit out of edit mode
+                if album_VM.albums.isEmpty {
+                    withAnimation {
+                        self.is_edit_enabled.toggle()
+                    }
+                }
+            } label: {
+                HStack {
+                    Spacer()
+                    VStack(spacing: 5) {
+                        Image(systemName: "trash.fill")
+                            .font(.title3)
+                        
+                        Text("Delete")
+                            .font(.system(size: 15,weight: .medium,design: .rounded))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal)
+                    .frame(width: 80,height: 120)
+                    .background(.red)
+                }
             }
-            .foregroundStyle(.white)
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .trailing)
-            .background(.red)
-
+            .opacity(self.is_edit_enabled ? 1 : 0)
+            
             HStack {
                 VStack {
                     AlbumImageDisplay(album: album)
@@ -52,7 +71,7 @@ struct AlbumVDisplay: View {
                 .frame(maxWidth:.infinity)
             }
             .background(.black)
-            .offset(x: self.is_edit_enabled ? -80 : 0)
+            .offset(x: self.is_edit_enabled ? self.edit_mode_width : 0)
         }
     }
 }

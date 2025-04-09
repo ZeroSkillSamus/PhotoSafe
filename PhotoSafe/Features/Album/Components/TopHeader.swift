@@ -23,8 +23,9 @@ struct TopHeader: View {
             } label: {
                 Image(systemName:"trash.fill")
                     .font(.title2)
-                    .foregroundColor(.red)
+                    .foregroundColor(self.album_vm.albums.isEmpty ? .gray : .red)
             }
+            .disabled(self.album_vm.albums.isEmpty)
             
             Spacer()
             
@@ -43,8 +44,8 @@ struct TopHeader: View {
                 } else {
                     Text("Edit")
                 }
-                //Text("Edit")
             }
+            .disabled(self.album_vm.albums.isEmpty)
         }
         .frame(height:24)
         .padding(.horizontal)
