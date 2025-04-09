@@ -85,6 +85,14 @@ struct PlusMode: View {
                 self.toggle_plus_mode.toggle()
             }
         }
+        .overlay {
+            if self.media_VM.progress_alert {
+                ProgressAlert(
+                    selected_media_count: self.selected_media.count,
+                    alert_value: self.media_VM.alert_value
+                )
+            }
+        }
         .onChange(of: self.selected_media) {
             if !selected_media.isEmpty {
                 self.toggle_plus_mode.toggle()

@@ -69,23 +69,11 @@ struct MediaView: View {
             }
         }
         .overlay(alignment: .center) {
-            if self.media_VM.display_alert {
-                VStack(spacing: 15) {
-                    VStack(spacing: 5) {
-                        Text("Progress")
-                            .font(.title3.bold())
-                        
-                        Text("\(Int(self.media_VM.alert_value))/\(self.selected_media.count)")
-                            .font(.footnote.bold())
-                    }
-                    
-                    ProgressView(value: self.media_VM.alert_value,total: Float(self.selected_media.count))
-                        .progressViewStyle(.linear)
-                        .padding(.horizontal)
-                }
-                .padding(.vertical, 25)
-                .frame(maxWidth: 270)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+            if self.media_VM.progress_alert {
+                ProgressAlert(
+                    selected_media_count: self.selected_media.count,
+                    alert_value: self.media_VM.alert_value
+                )
             }
         }
         .background{
