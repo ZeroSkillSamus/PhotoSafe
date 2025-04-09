@@ -13,7 +13,7 @@ struct BottomHeader: View {
     @State private var is_move_sheet_active: Bool = false
  
     @Binding var selected_media: [PhotosPickerItem]
-    @Binding var is_selected: Bool
+    @Binding var select_mode_active: Bool
     @Binding var num_selected_items: Int
     
     var album: AlbumEntity
@@ -21,7 +21,7 @@ struct BottomHeader: View {
     @ObservedObject var media_VM: MediaViewModel
     var body: some View {
         VStack {
-            if !self.is_selected {
+            if !self.select_mode_active {
                 // Bottom Header
                 PhotosPicker(selection: self.$selected_media, selectionBehavior: .ordered, photoLibrary: .shared()) {
                     ImageCircleOverlay()
@@ -33,7 +33,7 @@ struct BottomHeader: View {
                     SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
                         self.media_VM.export_selected_media_to_photo_library()
                         withAnimation {
-                            self.is_selected = false // Get out of select mode
+                            self.select_mode_active = false // Get out of select mode
                         }
                     }
                     .foregroundStyle(.white)
@@ -69,7 +69,7 @@ struct BottomHeader: View {
                             self.num_selected_items = 0
                             
                             // Only close select mode if the medias is empty after deleting
-                            if self.media_VM.medias.isEmpty { self.is_selected.toggle() }
+                            if self.media_VM.medias.isEmpty { self.select_mode_active.toggle() }
                         }
                     }
                     .foregroundStyle(.red)
@@ -82,52 +82,23 @@ struct BottomHeader: View {
         }
         .onChange(of: self.selected_media) {
             Task {
-                self.media_VM.reset_alert_value()
-                self.media_VM.progress_alert = true
-                var asset_to_delete: [PHAsset] = []
-                
-                for item in self.selected_media {
-                    // Handle adding to photos list which will be batched delete from user library
-                    if let identifier = item.itemIdentifier, let asset = MediaHandler.fetchAsset(with: identifier) {
-                        asset_to_delete.append(asset)
-                    }
-                    
-                    // Handles Saving Media to CoreData
-                    if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
-                        if let thumbnail = video_url.generateVideoThumbnail() {
-                            self.media_VM.add_media(
-                                to: self.album,
-                                type: MediaType.Video,
-                                image_data: thumbnail,
-                                video_path: video_url.absoluteString
-                            )
-                        }
-                    }
-                    else if let image_data = try? await item.loadTransferable(type: Data.self) {
-                        // Code determines if image is either a gif
-                        let supported_types = item.supportedContentTypes
-                        let isGIF = supported_types.contains(UTType.gif)
-                        let type = isGIF ? MediaType.GIF : MediaType.Photo
-                        
-                        self.media_VM.add_media(to: self.album, type: type, image_data: image_data)
-                    }
-                }
-                
-                // Batch delete
-                MediaHandler.deleteAssets(asset_to_delete)
-                
-                // Done Looping, Time to Clear Out SelectedMedia
+                await self.media_VM.add_imported_photos(to:album, from:self.selected_media)
                 self.selected_media.removeAll()
-                self.media_VM.progress_alert = false
             }
         }
         .sheet(isPresented: self.$is_move_sheet_active) {
             MoveSheet(
                 media_VM: self.media_VM,
-                curr_album: self.album
-//                num_selected_items: self.$num_selected_items,
-//                select_mode_active: self.$is_selected
-            )
+                curr_album_name: self.album.name
+            ) { album in
+                self.num_selected_items = 0
+                withAnimation {
+                    self.media_VM.move_selected(to: album)
+                    
+                    // Only close select mode if medias is empty after moving
+                    if self.media_VM.medias.isEmpty { self.select_mode_active.toggle() }
+                }
+            }
         }
     }
     

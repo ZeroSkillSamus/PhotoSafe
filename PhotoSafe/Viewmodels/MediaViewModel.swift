@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import _PhotosUI_SwiftUI
 
+@MainActor
 final class MediaViewModel: ObservableObject {
     @Published var medias: [SelectMediaEntity] = []
     
     @Published private(set) var photo_count: Int = 0
     @Published private(set) var video_count: Int = 0
-    @Published private(set) var display_alert: Bool = false
+    @Published private var display_alert: Bool = false
     @Published private(set) var alert_value: Float = 0.0
 
     // Getter & Setter for display_alert
@@ -60,6 +62,7 @@ final class MediaViewModel: ObservableObject {
             }
         }
     }
+    
     /// Gets all selected elements
     /// Removes All selected elements from medias
     /// Proceeds to delete them from the coredata
@@ -89,24 +92,46 @@ final class MediaViewModel: ObservableObject {
         self.set_counts()
     }
     
-    func add_media(
-        to album: AlbumEntity,
-        type: MediaType,
-        image_data: Data,
-        video_path: String? = nil
-    ) {
-        if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, videoPath: video_path) {
-            self.medias.append(SelectMediaEntity(media: media_entity))
-            self.increment_alert_value()
-            
-            switch type {
-            case .Video:
-                self.video_count = self.video_count + 1
-            case .GIF, .Photo:
-                self.photo_count = self.photo_count + 1
+    func add_imported_photos(to album: AlbumEntity, from photos_list: [PhotosPickerItem]) async {
+        self.reset_alert_value()
+        self.progress_alert = true
+        var asset_to_delete: [PHAsset] = []
+        
+        for item in photos_list {
+            // Handle adding to photos list which will be batched delete from user library
+            if let identifier = item.itemIdentifier, let asset = MediaHandler.fetchAsset(with: identifier) {
+                asset_to_delete.append(asset)
             }
             
+            // Handles Saving Media to CoreData
+            if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
+                if let thumbnail = video_url.generateVideoThumbnail() {
+                    self.add_media(
+                        to: album,
+                        type: MediaType.Video,
+                        image_data: thumbnail,
+                        video_path: video_url.absoluteString
+                    )
+                }
+            }
+            else if let image_data = try? await item.loadTransferable(type: Data.self) {
+                // Code determines if image is either a gif
+                let supported_types = item.supportedContentTypes
+                let isGIF = supported_types.contains(UTType.gif)
+                let type = isGIF ? MediaType.GIF : MediaType.Photo
+                self.add_media(
+                    to: album,
+                    type: type,
+                    image_data: image_data
+                )
+            }
         }
+        
+        // Batch delete
+        MediaHandler.deleteAssets(asset_to_delete)
+        
+        // Done Looping, Time to Clear Out SelectedMedia
+        self.progress_alert = false
     }
     
     /// Loops through all selected items and attempts to move them to the specified album
@@ -135,6 +160,26 @@ final class MediaViewModel: ObservableObject {
         }
     }
 
+    private func add_media(
+        to album: AlbumEntity,
+        type: MediaType,
+        image_data: Data,
+        video_path: String? = nil
+    ) {
+        if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, videoPath: video_path) {
+            self.medias.append(SelectMediaEntity(media: media_entity))
+            self.increment_alert_value()
+            
+            switch type {
+            case .Video:
+                self.video_count = self.video_count + 1
+            case .GIF, .Photo:
+                self.photo_count = self.photo_count + 1
+            }
+            
+        }
+    }
+    
     private func increment_alert_value() {
         self.alert_value += 1
     }

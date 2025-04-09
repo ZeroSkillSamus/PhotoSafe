@@ -61,7 +61,7 @@ struct MediaView: View {
                 // Bottom Header
                 BottomHeader(
                     selected_media: self.$selected_media,
-                    is_selected: self.$is_select_mode_active,
+                    select_mode_active: self.$is_select_mode_active,
                     num_selected_items:self.$select_count,
                     album: self.album,
                     media_VM: self.media_VM
@@ -77,7 +77,7 @@ struct MediaView: View {
             }
         }
         .background{
-            if self.media_VM.display_alert {
+            if self.media_VM.progress_alert {
                 Color.black.opacity(0.35)
             }
         }

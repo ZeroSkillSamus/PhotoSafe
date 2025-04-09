@@ -58,7 +58,6 @@ struct PlusMode: View {
                 }
             }
             
-            
             Button {
                 withAnimation(.easeInOut) {
                     self.toggle_plus_mode.toggle()
@@ -72,13 +71,17 @@ struct PlusMode: View {
             }
         }
         .sheet(isPresented: self.$show_move_sheet) {
-            MoveSheet(
-                media_VM: self.media_VM,
-                curr_album: nil
-            )
+            MoveSheet(media_VM: self.media_VM) { album in
+                Task {
+                    await self.media_VM.add_imported_photos(to: album, from: self.selected_media)
+                    
+                    // Done Looping, Time to Clear Out SelectedMedia
+                    self.selected_media.removeAll()
+                }
+            }
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
-        .background(.blue.opacity(0.75))
+        .background(Color(red: 28/255, green: 28/255, blue: 30/255).opacity(0.75))
         .opacity(self.toggle_plus_mode ? 1 : 0)
         .onTapGesture {
             withAnimation {
@@ -101,8 +104,6 @@ struct PlusMode: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.show_move_sheet.toggle()
                 }
-                
-                self.selected_media.removeAll()
             }
         }
     }
