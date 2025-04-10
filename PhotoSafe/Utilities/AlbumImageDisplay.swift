@@ -14,16 +14,16 @@ struct AlbumImageDisplay: View {
         if let image_data = album.image, let ui_image = UIImage(data: image_data) {
             Image(uiImage: ui_image)
                 .resizable()
-                .scaledToFill()
+                //.scaledToFill()
         } else {
             if !album.is_locked ,let data = album.fetch_first_image, let ui_image = UIImage(data: data) {
                 Image(uiImage: ui_image)
                     .resizable()
-                    .scaledToFill()
+                    //.scaledToFill()
             } else {
                 Image("NoImageFound")
                     .resizable()
-                    .scaledToFill()
+                    //.scaledToFill()
             }
         }
     }
