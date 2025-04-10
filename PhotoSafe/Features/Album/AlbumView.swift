@@ -23,15 +23,13 @@ struct AlbumView: View {
         
         var body: some View {
             Button {
-                if self.is_edit_enabled {
+                if album.is_locked {
+                    self.display_alert = true
+                    self.password = "" //Clear password anytime the alert pops up
+                } else if self.is_edit_enabled {
                     self.album_selected_to_edit = album
                 } else {
-                    if album.is_locked {
-                        self.display_alert = true
-                        self.password = "" //Clear password anytime the alert pops up
-                    } else {
-                        path.append(album)
-                    }
+                    path.append(album)
                 }
             } label: {
                 AlbumVDisplay(album: album,is_edit_enabled: self.$is_edit_enabled)
@@ -49,9 +47,12 @@ struct AlbumView: View {
                     .textContentType(.password)
                 
                 Button("OK", role: .cancel) {
-                    if let album_password = album.password,
-                       album_password == password {
-                        path.append(album)
+                    if album.password == password {
+                        if self.is_edit_enabled {
+                            self.album_selected_to_edit = album
+                        } else {
+                            path.append(album)
+                        }
                     }
                 }
             }
