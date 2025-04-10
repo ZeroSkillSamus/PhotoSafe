@@ -99,7 +99,7 @@ struct MoveSheet: View {
                 self.album_VM.create_album(
                     name: self.album_name,
                     image_data: nil,
-                    password: self.album_password.isEmpty ? nil : self.album_password
+                    password: self.album_password
                 )
                 
                 // Fetch Newly Created Album
