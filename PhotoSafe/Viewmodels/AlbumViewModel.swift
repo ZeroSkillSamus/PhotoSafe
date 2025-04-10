@@ -17,6 +17,21 @@ final class AlbumViewModel: ObservableObject {
         self.set_albums()
     }
     
+    func change_password(for album: AlbumEntity, with password: String) {
+        try? self.service.change_password(for: album, with: password)
+        self.set_albums()
+    }
+    
+    func change_name(for album: AlbumEntity, with name: String) {
+        try? self.service.change_name(for: album, with: name)
+        self.set_albums()
+    }
+    
+    func change_image(for album: AlbumEntity, with image_data: Data) {
+        try? self.service.change_photo(for: album, with: image_data)
+        self.set_albums()
+    }
+    
     func set_albums() {
         self.albums = service.fetchAlbums()
     }
@@ -26,7 +41,7 @@ final class AlbumViewModel: ObservableObject {
         self.set_albums()
     }
 
-    func create_album(name: String, image_data: Data?, password: String?) {
+    func create_album(name: String, image_data: Data?, password: String) {
         try? service.saveAlbum(
             name: name,
             image_data: image_data,

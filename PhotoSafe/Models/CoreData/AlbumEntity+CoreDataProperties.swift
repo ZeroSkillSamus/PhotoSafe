@@ -25,11 +25,7 @@ extension AlbumEntity {
     }
 
     var is_locked: Bool {
-        if let password {
-            return password.isEmpty ? false : true
-        }
-        
-        return false 
+        return password.isEmpty ? false : true
     }
     
     var fetch_medias_as_list: [MediaEntity]? {
@@ -50,7 +46,7 @@ extension AlbumEntity {
 
     @NSManaged public var image: Data?
     @NSManaged public var name: String
-    @NSManaged public var password: String?
+    @NSManaged public var password: String
     @NSManaged public var date_added: Date
     @NSManaged public var media: NSSet?
 
