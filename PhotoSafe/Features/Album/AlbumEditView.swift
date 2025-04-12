@@ -41,7 +41,7 @@ struct AlbumEditView: View {
                     
                 } label: {
                     Text("Done")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.c1_text)
                         .font(.footnote.bold())
                 }
                 
@@ -49,6 +49,7 @@ struct AlbumEditView: View {
             .overlay {
                 Text("Edit Album")
                     .font(.title2.bold())
+                    .foregroundStyle(Color.c1_text)
             }
             .padding()
             .frame(height: 50)
@@ -72,14 +73,14 @@ struct AlbumEditView: View {
                     Text("Choose From Own Library")
                 }
             } label: {
-                AlbumImageDisplay(album: album)
+                AlbumImageDisplay(album: album, corner_radius: 6)
                     .overlay(alignment: .bottom) {
                         Text("Tap To Edit")
                             .frame(maxWidth: .infinity)
                             .background(.black.opacity(0.5))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.c1_text)
                     }
-                    .frame(width: 120,height: 120)
+                    .frame(width: 130,height: 130)
                 
             }
             .photosPicker(isPresented: $showingPhotosPicker, selection: $avatar, matching: .images)
@@ -89,14 +90,15 @@ struct AlbumEditView: View {
                 Text("Name")
                     .frame(maxWidth: .infinity,alignment: .leading)
                     .font(.title3)
+                    .foregroundStyle(Color.c1_text)
                 
                 TextField(self.edit_sheet_VM.album_name, text: self.$edit_sheet_VM.album_name)
                     .opacity(0.5)
                     .multilineTextAlignment(.trailing)
                     .autocorrectionDisabled()
                     .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
-                    .foregroundStyle(.white)
-                    .background(.black)
+                    .foregroundStyle(Color.c1_text)
+                    .background(Color.c1_background)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .onChange(of: self.edit_sheet_VM.album_name) {
                         self.edit_sheet_VM.remove_last_from_album_name()
@@ -109,7 +111,8 @@ struct AlbumEditView: View {
             VStack {
                 Toggle(isOn: self.$edit_sheet_VM.is_locked) {
                     Text("Password")
-                        .font(.title2)
+                        .font(.title3)
+                        .foregroundStyle(Color.c1_text)
                 }
                 .padding()
                 
@@ -118,19 +121,20 @@ struct AlbumEditView: View {
                         Text("Initial Password")
                             .frame(maxWidth: .infinity,alignment: .leading)
                             .font(.title3)
+                            .foregroundStyle(Color.c1_text)
 
                         TextField("Enter Password", text: self.$edit_sheet_VM.initial_password, onEditingChanged: { editing_changed in
                             if editing_changed {
                                 self.edit_sheet_VM.has_user_started_typing_initial = false
                             }
                         })
-                            .opacity(0.5)
+                            .opacity(0.75)
                             .textInputAutocapitalization(.never)
                             .multilineTextAlignment(.trailing)
                             .autocorrectionDisabled()
                             .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
-                            .foregroundStyle(.white)
-                            .background(.black)
+                            .foregroundStyle(Color.c1_text)
+                            .background(Color.c1_background)
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                             .onChange(of: self.edit_sheet_VM.initial_password) { old, new in
                                 self.edit_sheet_VM.reset_initial(with: new)
@@ -143,6 +147,7 @@ struct AlbumEditView: View {
             Spacer()
             
         }
+        .background(Color.c1_background)
         .onChange(of: self.edit_sheet_VM.is_locked) {
             self.edit_sheet_VM.reset_password()
         }

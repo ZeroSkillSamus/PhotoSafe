@@ -77,7 +77,7 @@ struct BottomHeader: View {
                 .padding(.horizontal)
                 .padding(.vertical,10)
                 .frame(maxWidth: .infinity, maxHeight: 45,alignment: .center)
-                .background(.bar)
+                .background(Color.c1_secondary)
             }
         }
         .onChange(of: self.selected_media) {

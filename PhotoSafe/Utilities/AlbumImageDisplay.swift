@@ -9,15 +9,16 @@ import SwiftUI
 
 struct AlbumImageDisplay: View {
     @ObservedObject var album: AlbumEntity
-
+    var corner_radius: CGFloat = 2
+    
     @ViewBuilder
     func display_image_view(with ui_image: UIImage? = nil) -> some View {
         if let ui_image, !self.album.is_locked {
             Image(uiImage: ui_image).resizable()
         } else if self.album.is_locked {
             ZStack {
-                RoundedRectangle(cornerRadius: 2).fill(.white)
-                Image(systemName: "lock.fill").font(.title.bold()).foregroundStyle(.gray)
+                RoundedRectangle(cornerRadius: corner_radius).fill(Color.c1_primary)
+                Image(systemName: "lock.fill").font(.title.bold()).foregroundStyle(Color.c1_accent)
             }
         } else {
             Image("NoImageFound").resizable()

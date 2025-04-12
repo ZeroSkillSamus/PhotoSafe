@@ -67,6 +67,7 @@ struct AlbumView: View {
                 Text("Press '+' To Create an Album!!")
                     .font(.title2.bold())
                     .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .center)
+                    .foregroundStyle(Color.c1_text)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0) {

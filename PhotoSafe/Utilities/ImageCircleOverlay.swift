@@ -37,7 +37,7 @@ struct ImageCircleOverlay: View {
         case text(String)
     }
 
-    var color: Color = .blue
+    var color: Color = Color.c1_accent
     var icon: IconType = .symbol("plus")
     var frame: CGSize = CGSize(width: 70, height: 70)
     

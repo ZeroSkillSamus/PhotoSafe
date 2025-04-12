@@ -38,6 +38,8 @@ struct MediaView: View {
                         
                         Text("Photos: \(self.media_VM.photo_count), Videos: \(self.media_VM.video_count)")
                             .font(.system(size: 13,weight: .semibold,design: .rounded))
+                            .foregroundStyle(Color.c1_text)
+                        
                     }
                     .padding(.top,5)
                 }
@@ -78,9 +80,13 @@ struct MediaView: View {
         }
         .background{
             if self.media_VM.progress_alert {
-                Color.black.opacity(0.35)
+                Color.c1_background.opacity(0.35).ignoresSafeArea()
+            } else {
+                Color.c1_background.ignoresSafeArea(edges: .bottom)
             }
         }
+        .toolbarBackground(Color.c1_background, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(item: $selectedItem) { item in
             FullCoverSheet(select_media: item, list: self.media_VM.medias)
         }
@@ -97,6 +103,7 @@ struct MediaView: View {
                         .id("text-\(self.is_select_mode_active ? "Select Media" : album.name )")
                         .transition(.opacity) // Fade in/out
                         .animation(.easeInOut(duration: 0.35), value: self.is_select_mode_active)
+                        .foregroundStyle(Color.c1_text)
                 }
             }
             

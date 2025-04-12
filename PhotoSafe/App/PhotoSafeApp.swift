@@ -11,7 +11,7 @@ import SwiftUI
 struct PhotoSafeApp: App {
     var body: some Scene {
         WindowGroup {
-            BottomTabNavigation().preferredColorScheme(.dark)
+            BottomTabNavigation()
         }
     }
 }

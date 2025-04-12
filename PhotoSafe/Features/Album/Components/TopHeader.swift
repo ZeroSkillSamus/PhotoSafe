@@ -40,7 +40,6 @@ struct TopHeader: View {
             } label: {
                 if self.is_edit_enabled {
                     Text("Cancel")
-                        .foregroundStyle(.red)
                 } else {
                     Text("Edit")
                 }
@@ -53,7 +52,7 @@ struct TopHeader: View {
         .overlay(
             Text("Albums")
                 .font(.title2.bold())
-                .foregroundColor(.primary)
+                .foregroundColor(.c1_text)
         )
         .alert("Delete All Albums?", isPresented: $display_delete_alert) {
             Button("Delete", role: .destructive) {
@@ -65,6 +64,6 @@ struct TopHeader: View {
         } message: {
             Text("Will Delete All Albums & Media, Are you Sure????")
         }
-        .background(.bar)
+        .background(Color.c1_secondary)
     }
 }

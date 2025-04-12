@@ -38,8 +38,7 @@ struct BottomTabNavigation: View {
                 Text(tab.rawValue)
                     .font(.caption2)
             }
-            .foregroundColor(self.current_tab == tab ? .primary : .gray)
-
+            .foregroundStyle(self.current_tab == tab ? Color.c1_accent : Color.c1_background)
         }
         .frame(maxWidth: .infinity)
     }
@@ -79,6 +78,7 @@ struct BottomTabNavigation: View {
                             .tag(Tab.albums)
                             .toolbar(.hidden, for: .bottomBar)
                             .navigationBarTitleDisplayMode(.inline)
+                            .background(Color.c1_background)
                         
                         WebView()
                             .tag(Tab.web)
@@ -93,11 +93,11 @@ struct BottomTabNavigation: View {
                     //Custom Tab Bar
                     VStack(spacing:0) {
                         CustomNavHeader()
-                        
+                            .background(Color.c1_secondary)
+                            .opacity(self.toggle_plus_mode ? 0 : 1)
                     }
-                    .background(.bar)
+                    .background(Color.c1_background)
                     
-                    .opacity(self.toggle_plus_mode ? 0 : 1)
                 }
             }
             .ignoresSafeArea(.keyboard)
@@ -110,6 +110,6 @@ struct BottomTabNavigation: View {
         }
         
         .environmentObject(self.album_VM)
-        .background(self.toggle_plus_mode ? .black.opacity(0.25) : .clear)
+        .background(self.toggle_plus_mode ? Color.red.opacity(0.25) : Color.orange)
     }
 }

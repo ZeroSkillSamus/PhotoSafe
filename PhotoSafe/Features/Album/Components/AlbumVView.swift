@@ -56,7 +56,7 @@ struct AlbumVDisplay: View {
                     
                     HStack {
                         Text(album.name)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.c1_text)
                             .padding(.leading,20)
                             .font(.system(size: 18,weight: .medium,design: .rounded))
                         
@@ -65,7 +65,7 @@ struct AlbumVDisplay: View {
                         if album.is_locked {
                             Image(systemName: "lock.fill")
                                 .font(.title2)
-                                .foregroundColor(.primary)
+                                .foregroundColor(Color.c1_primary)
                                 .padding(.trailing,20)
                         }
                     }
@@ -74,7 +74,7 @@ struct AlbumVDisplay: View {
                 
                 Divider()
             }
-            .background(.black)
+            .background(Color.c1_background)
             .offset(x: self.is_edit_enabled ? self.edit_mode_width : 0)
         }
     }

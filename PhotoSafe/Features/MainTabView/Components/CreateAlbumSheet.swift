@@ -39,6 +39,7 @@ struct CreateAlbumSheet: View {
                 Text(header)
                     .font(.system(size: 18,weight: .semibold,design: .rounded))
                     .frame(maxWidth: .infinity,alignment: .leading)
+                    .foregroundStyle(Color.c1_text)
                 
                 TextField("", text: self.$text)
                     .fontWeight(.semibold)
@@ -46,7 +47,7 @@ struct CreateAlbumSheet: View {
                     .autocorrectionDisabled()
                     .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
                     .foregroundStyle(.black)
-                    .background(Color.primary)
+                    .background(Color.c1_primary)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                     .onChange(of: self.text) {
                         // Check to see if its in character limit (15)
@@ -59,73 +60,78 @@ struct CreateAlbumSheet: View {
     }
     
     var body: some View {
-        VStack {
-            Text("Create Album")
-                .font(.title2)
-                .fontWeight(.bold)
+        ZStack {
+            Color.c1_secondary.ignoresSafeArea()
             
-            HStack {
-                PhotosPicker(
-                    selection: $avatar,
-                    matching: .images) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15).fill(.gray.opacity(0.5))
-                            if let avatar_data, let ui_image = UIImage(data: avatar_data) {
-                                Image(uiImage: ui_image)
-                                    .resizable()
-                                    .scaledToFill()
-                            } else {
-                                Image("NoImageFound")
-                                    .resizable()
-                                    .scaledToFill()
-                            }
-                        }
-                        .frame(width: 165, height:150)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                    }
-                    .frame(maxHeight: .infinity,alignment: .top)
+            VStack {
+                Text("Create Album")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color.c1_text)
                 
-                VStack {
-                    TextBox(header: "Name", type: .Name, text: self.$name)
-                    
-                    TextBox(header: "Password", type: .Password, text: self.$password)
-
-                    Button {
-                        self.album_vm.create_album(
-                            name: self.name,
-                            image_data: self.avatar_data,
-                            password: self.password
-                        )
-                       
-                        self.dismiss() // Close Sheet
-                        withAnimation {
-                            self.toggle_plus_mode.toggle()
+                HStack {
+                    PhotosPicker(
+                        selection: $avatar,
+                        matching: .images) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 15).fill(.gray.opacity(0.5))
+                                if let avatar_data, let ui_image = UIImage(data: avatar_data) {
+                                    Image(uiImage: ui_image)
+                                        .resizable()
+                                        .scaledToFill()
+                                } else {
+                                    Image("NoImageFound")
+                                        .resizable()
+                                        .scaledToFill()
+                                }
+                            }
+                            .frame(width: 165, height:150)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
                         }
-                    } label: {
-                        Text("Create")
-                            .font(.title3)
-                            .fontWeight(.bold)
+                        .frame(maxHeight: .infinity,alignment: .top)
+                    
+                    VStack {
+                        TextBox(header: "Name", type: .Name, text: self.$name)
+                        
+                        TextBox(header: "Password", type: .Password, text: self.$password)
+                        
+                        Button {
+                            self.album_vm.create_album(
+                                name: self.name,
+                                image_data: self.avatar_data,
+                                password: self.password
+                            )
+                            
+                            self.dismiss() // Close Sheet
+                            withAnimation {
+                                self.toggle_plus_mode.toggle()
+                            }
+                        } label: {
+                            Text("Create")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                        }
+                        .disabled(self.determine_if_button_disabled())
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color.c1_secondary)
+                        .buttonBorderShape(.roundedRectangle(radius: 10))
                     }
-                    .disabled(self.determine_if_button_disabled())
-                    .buttonStyle(.borderedProminent)
-                    .tint(.green)
-                    .buttonBorderShape(.roundedRectangle(radius: 10))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity,alignment: .top)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity,alignment: .top)
-            }
-            .frame(maxWidth: .infinity,maxHeight: .infinity)
-            .padding()
-            .onChange(of: avatar) {
-                Task {
-                    if let loaded = try? await avatar?.loadTransferable(type: Data.self) {
-                        avatar_data = loaded
-                    } else {
-                        print("Failed")
+                .frame(maxWidth: .infinity,maxHeight: .infinity)
+                .padding()
+                .onChange(of: avatar) {
+                    Task {
+                        if let loaded = try? await avatar?.loadTransferable(type: Data.self) {
+                            avatar_data = loaded
+                        } else {
+                            print("Failed")
+                        }
                     }
                 }
             }
+            .padding(.top,25)
         }
-        .padding(.top,25)
-        .presentationDetents([.medium, .medium, .fraction(0.35)])
+        .presentationDetents([.medium, .fraction(0.35)])
     }
 }

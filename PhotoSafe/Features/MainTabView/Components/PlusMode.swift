@@ -32,7 +32,7 @@ struct PlusMode: View {
                         )
 
                         Text("Import Photos")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.c1_text)
                             .font(.caption.bold())
                             .frame(width: 50)
                     }
@@ -48,7 +48,7 @@ struct PlusMode: View {
                         )
 
                         Text("New Album")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.c1_text)
                             .font(.caption.bold())
                             .frame(width: 50)
                     }
@@ -81,7 +81,8 @@ struct PlusMode: View {
             }
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
-        .background(Color(red: 28/255, green: 28/255, blue: 30/255).opacity(0.75))
+        //.background(Color(red: 28/255, green: 28/255, blue: 30/255).opacity(0.75))
+        .background(Color.c1_background.opacity(0.75))
         .opacity(self.toggle_plus_mode ? 1 : 0)
         .onTapGesture {
             withAnimation {
