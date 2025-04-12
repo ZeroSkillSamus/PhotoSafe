@@ -17,6 +17,11 @@ final class AlbumViewModel: ObservableObject {
         self.set_albums()
     }
     
+    func change_upload_status(for album: AlbumEntity, with new: ImageDisplayType) {
+        try? self.service.change_image_upload_status(for: album, with: new)
+        self.set_albums()
+    }
+    
     func change_password(for album: AlbumEntity, with password: String) {
         try? self.service.change_password(for: album, with: password)
         self.set_albums()
@@ -42,13 +47,19 @@ final class AlbumViewModel: ObservableObject {
     }
 
     func create_album(name: String, image_data: Data?, password: String) {
-        try? service.saveAlbum(
-            name: name,
-            image_data: image_data,
-            password: password
-        )
+        do {
+            try service.saveAlbum(
+                name: name,
+                image_data: image_data,
+                password: password
+            )
+            self.set_albums()
+            
+        } catch let error {
+            print(error)
+        }
         
-        self.set_albums()
+        
     }
 
     func deleteAll() {

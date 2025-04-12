@@ -91,7 +91,14 @@ struct MoveSheet: View {
         .alert("Create Album", isPresented: self.$toggle_alert) {
             VStack(spacing: 5) {
                 TextField("Name", text: self.$album_name)
+                    .foregroundStyle(.black)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.words)
+                
                 TextField("Password", text: self.$album_password)
+                    .foregroundStyle(.black)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
             }
             
             Button("OK", action: {
@@ -106,7 +113,6 @@ struct MoveSheet: View {
                 if let album = self.album_VM.albums.first(where: {$0.name == album_name}) {
                     self.move_action(album)
                     self.dismiss()
-                    //self.move_handler(for: album)
                 }
             })
             .disabled(self.album_name.isEmpty)

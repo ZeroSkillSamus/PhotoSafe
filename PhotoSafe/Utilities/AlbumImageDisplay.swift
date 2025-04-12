@@ -10,21 +10,43 @@ import SwiftUI
 struct AlbumImageDisplay: View {
     @ObservedObject var album: AlbumEntity
 
-    var body: some View {
-        if let image_data = album.image, let ui_image = UIImage(data: image_data) {
-            Image(uiImage: ui_image)
-                .resizable()
-                //.scaledToFill()
-        } else {
-            if !album.is_locked ,let data = album.fetch_first_image, let ui_image = UIImage(data: data) {
-                Image(uiImage: ui_image)
-                    .resizable()
-                    //.scaledToFill()
-            } else {
-                Image("NoImageFound")
-                    .resizable()
-                    //.scaledToFill()
+    @ViewBuilder
+    func display_image_view(with ui_image: UIImage? = nil) -> some View {
+        if let ui_image, !self.album.is_locked {
+            Image(uiImage: ui_image).resizable()
+        } else if self.album.is_locked {
+            ZStack {
+                RoundedRectangle(cornerRadius: 2).fill(.white)
+                Image(systemName: "lock.fill").font(.title.bold()).foregroundStyle(.gray)
             }
+        } else {
+            Image("NoImageFound").resizable()
+        }
+                
+    }
+    
+    var body: some View {
+        switch album.image_upload_status {
+        case .First:
+            if let first_image_data = album.fetch_first_image, let ui_image = UIImage(data: first_image_data) {
+                display_image_view(with: ui_image)
+            } else {
+                display_image_view()
+            }
+        case .Last:
+            if let last_image_data = album.fetch_last_image, let ui_image = UIImage(data: last_image_data) {
+                display_image_view(with: ui_image)
+            } else {
+                display_image_view()
+            }
+        case .Upload:
+            if let image_data = album.image, let ui_image = UIImage(data: image_data){
+                display_image_view(with: ui_image)
+            } else {
+                display_image_view()
+            }
+        case .None:
+            display_image_view()
         }
     }
 }

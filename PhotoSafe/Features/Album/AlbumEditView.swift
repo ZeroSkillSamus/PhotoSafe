@@ -28,17 +28,16 @@ struct AlbumEditView: View {
                 
                 Button {
                     // Save changes
-                    if !self.edit_sheet_VM.passwords_match {
-                        self.error.toggle()
-                        AudioServicesPlayAlertSoundWithCompletion(SystemSoundID(kSystemSoundID_Vibrate)) {   }
-                    } else {
+                    if self.album.password != self.edit_sheet_VM.initial_password {
                         self.album_VM.change_password(for: self.album, with: self.edit_sheet_VM.initial_password)
-                        if !self.edit_sheet_VM.did_album_name_change(from: self.album) {
-                            self.album_VM.change_name(for: self.album, with: self.edit_sheet_VM.album_name)
-                        }
-                        
-                        self.dismiss()
                     }
+                    
+                    if !self.edit_sheet_VM.did_album_name_change(from: self.album) {
+                        self.album_VM.change_name(for: self.album, with: self.edit_sheet_VM.album_name)
+                    }
+                    
+                    self.dismiss()
+                    
                     
                 } label: {
                     Text("Done")
@@ -57,12 +56,12 @@ struct AlbumEditView: View {
             
             Menu {
                 Button {
-                    print("TBI")
+                    self.album_VM.change_upload_status(for: album, with: .Last)
                 } label: {
                     Text("Set to Last Image")
                 }
                 Button {
-                    print("TBI")
+                    self.album_VM.change_upload_status(for: album, with: .First)
                 } label: {
                     Text("Set to First Image")
                 }
@@ -139,36 +138,13 @@ struct AlbumEditView: View {
                         }
                     .padding()
                     
-                    HStack {
-                        Text("Retype Password")
-                            .frame(maxWidth: .infinity,alignment: .leading)
-                            .font(.title3)
-                        
-                        TextField("Retype Password", text: self.$edit_sheet_VM.repeated_password, onEditingChanged: { editing_changed in
-                            if editing_changed {
-                                self.edit_sheet_VM.has_user_started_typing_repeated = false
-                            }
-                        })
-                            .opacity(0.5)
-                            .multilineTextAlignment(.trailing)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                            .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
-                            .foregroundStyle(.white)
-                            .background(.black)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .onChange(of: self.edit_sheet_VM.repeated_password) { _, new in
-                                self.edit_sheet_VM.reset_repeated(with: new)
-                            }
-                    }
-                    .padding()
                 }
             }
             Spacer()
             
         }
         .onChange(of: self.edit_sheet_VM.is_locked) {
-            self.edit_sheet_VM.reset_passwords()
+            self.edit_sheet_VM.reset_password()
         }
         .alert("Passwords Do Not Match!", isPresented: self.$error) {
             Button {} label: { Text("Ok") }
@@ -177,9 +153,10 @@ struct AlbumEditView: View {
             Task {
                 if let image_data = try? await self.avatar?.loadTransferable(type: Data.self) {
                     self.album_VM.change_image(for: album, with: image_data)
+                    self.album_VM.change_upload_status(for: album, with: .Upload)
                     self.avatar = nil
                 } else {
-                    print("Failed")
+                    self.album_VM.change_upload_status(for: album, with: .None)
                 }
             }
         }

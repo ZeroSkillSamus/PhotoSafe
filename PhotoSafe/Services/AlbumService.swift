@@ -14,6 +14,7 @@ protocol AlbumServiceProtocol {
     func saveAlbum(name: String, image_data: Data?, password: String) throws
     func deleteAll() throws
     func delete(album: AlbumEntity) throws
+    func change_image_upload_status(for album: AlbumEntity, with new: ImageDisplayType) throws
     func change_photo(for album: AlbumEntity, with data: Data) throws
     func change_name(for album: AlbumEntity, with name: String) throws
     func change_password(for album: AlbumEntity, with password: String) throws
@@ -26,9 +27,15 @@ final class AlbumService: AlbumServiceProtocol {
         self.context = context
     }
     
+    func change_image_upload_status(for album: AlbumEntity, with new: ImageDisplayType) throws {
+        album.image_upload_status = new
+        if new != .Upload {
+            album.image = nil
+        }
+        try self.context.save()
+    }
+    
     func change_password(for album: AlbumEntity, with password: String) throws {
-        print(album.password)
-        print(password)
         album.password = password
         try context.save()
     }
@@ -58,6 +65,11 @@ final class AlbumService: AlbumServiceProtocol {
         albumEntity.image = image_data
         albumEntity.password = password
         
+        if image_data != nil {
+            albumEntity.image_upload_status = .Upload
+        } else {
+            albumEntity.image_upload_status = .First
+        }
         try context.save()
     }
     
