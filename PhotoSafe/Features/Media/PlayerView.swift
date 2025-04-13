@@ -33,6 +33,7 @@ struct PlayerView: View {
     @State private var player_value: Float = 0
     @State private var is_video_playing: Bool = true
 
+    @Binding var did_user_tap: Bool
     var curr_orientation: UIDeviceOrientation
     var prev_orientation: UIDeviceOrientation
   
@@ -90,7 +91,10 @@ struct PlayerView: View {
                     self.controller.player?.play()
                 }
                 .onTapGesture {
-                    self.is_controls_active.toggle()
+                    withAnimation {
+                        self.is_controls_active.toggle()
+                        self.did_user_tap.toggle()
+                    }
                 }
                 .onDisappear {
                     self.controller.player?.pause()
@@ -169,7 +173,11 @@ struct PlayerView: View {
             .frame(maxWidth: .infinity,maxHeight: .infinity)
             .background(Color.black.opacity(0.35))
             .onTapGesture {
-                self.is_controls_active = false
+                withAnimation {
+                    self.is_controls_active = false
+                    self.did_user_tap.toggle()
+                }
+                
             }
         )
     }

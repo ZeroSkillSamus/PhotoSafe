@@ -88,7 +88,7 @@ struct MediaView: View {
         .toolbarBackground(Color.c1_background, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(item: $selectedItem) { item in
-            FullCoverSheet(select_media: item, list: self.media_VM.medias)
+            FullCoverSheet(select_media: item, list: self.$media_VM.medias, media_VM: self.media_VM)
         }
         .onAppear {
             self.media_VM.set_media_and_counts(from: album)

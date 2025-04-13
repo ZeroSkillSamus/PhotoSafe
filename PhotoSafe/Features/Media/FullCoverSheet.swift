@@ -12,9 +12,11 @@ import LazyPager
 
 struct FullCoverSheet: View {
     @Environment(\.dismiss) var dismiss
-
+    @EnvironmentObject private var favorite_VM: FavoriteViewModel
+    
     var select_media: SelectMediaEntity
-    var list: [SelectMediaEntity]
+    @Binding var list: [SelectMediaEntity]
+    @ObservedObject var media_VM: MediaViewModel
     
     @State private var orientation = UIDeviceOrientation.unknown
     @State private var prev_orientation = UIDeviceOrientation.unknown
@@ -80,10 +82,14 @@ struct FullCoverSheet: View {
                                 //if self.current_media_index == elment. { // Needed to stop video from preloading
                                 if list[self.current_media_index] == element {
                                     PlayerView(
+                                        did_user_tap: self.$did_user_tap,
                                         curr_orientation: self.orientation,
                                         prev_orientation: self.prev_orientation,
                                         url: url
                                     )
+                                    .onAppear {
+                                        self.did_user_tap = true
+                                    }
                                 }
                             }
                         case MediaType.GIF.rawValue:
@@ -91,13 +97,11 @@ struct FullCoverSheet: View {
                                 .resizable()
                                 .customLoopCount(0)
                                 .scaledToFit()
-                            //gif_view(index: index)
                         default:
                             EmptyView()
                         }
                         
                     }
-                    //.ignoresSafeArea(edges: .bottom)
                 }
                 // Make the content zoomable
                 .zoomable(min: 1, max: 5)
@@ -111,8 +115,9 @@ struct FullCoverSheet: View {
                 }
                 .opacity(self.opacity)
                 .frame(maxWidth:.infinity,maxHeight: .infinity)
+                .ignoresSafeArea(edges: .bottom)
                 
-                if should_header_display {
+                if should_header_display || !self.did_user_tap {
                     HStack {
                         SelectBottomButton(label: "Export", system_name: "square.and.arrow.up") {
                             print("DD")
@@ -124,8 +129,17 @@ struct FullCoverSheet: View {
                         }
                         .frame(maxWidth: .infinity)
                         
-                        SelectBottomButton(label: "Favorite", system_name: "heart") {
-                            print("DD")
+                        SelectBottomButton(label: "Favorite", system_name: list[self.current_media_index].media.is_favorited ? "heart.fill" : "heart") {
+                            let prev_status = self.list[self.current_media_index].media.is_favorited
+                            let change_to = prev_status ? false : true // False means dislike, true means like
+
+                            // Get updated media and overwrite current element in list
+                            let new_media = self.media_VM.favorite_media(for: list[self.current_media_index].media, with: change_to)
+                            self.list[self.current_media_index] = SelectMediaEntity(media: new_media)
+                            
+                            // Update Favorites List
+                            if new_media.is_favorited { self.favorite_VM.favorites.append(new_media) }
+                            else { self.favorite_VM.delete_favorited(media: new_media) }
                         }
                         .frame(maxWidth: .infinity)
                         
@@ -154,6 +168,7 @@ struct FullCoverSheet: View {
         .onAppear {
             self.current_media_index = self.list.firstIndex(of: self.select_media) ?? 0
         }
+        .ignoresSafeArea(edges: !self.did_user_tap ? [] : .bottom)
         //.preferredColorScheme(.dark)
         .persistentSystemOverlays(.hidden)
         .background(.black.opacity(opacity))
