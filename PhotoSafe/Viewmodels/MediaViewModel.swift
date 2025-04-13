@@ -160,6 +160,15 @@ final class MediaViewModel: ObservableObject {
         }
     }
 
+    func favorite_media(for media: MediaEntity, with status: Bool) -> MediaEntity {
+        do {
+            let media = try self.service.like_or_unlike(with: status, for: media)
+            return media
+        } catch {
+            return media
+        }
+    }
+    
     private func add_media(
         to album: AlbumEntity,
         type: MediaType,

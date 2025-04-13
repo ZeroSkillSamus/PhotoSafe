@@ -18,6 +18,7 @@ protocol MediaServiceProtocol {
     func fetch_media(from album: AlbumEntity) -> [MediaEntity]
     func delete(media: MediaEntity) throws
     func move(media: MediaEntity, to album: AlbumEntity) throws
+    func like_or_unlike(with status: Bool, for media: MediaEntity) throws -> MediaEntity
 }
 
 final class MediaService: MediaServiceProtocol {
@@ -25,6 +26,12 @@ final class MediaService: MediaServiceProtocol {
     
     init(context: NSManagedObjectContext = CoreDataManager.shared.container.viewContext) {
         self.context = context
+    }
+    
+    func like_or_unlike(with status: Bool, for media: MediaEntity) throws -> MediaEntity {
+        media.is_favorited = status
+        try self.context.save()
+        return media
     }
     
     func save_media(
@@ -43,6 +50,7 @@ final class MediaService: MediaServiceProtocol {
         media.image_data = imageData
         media.type = type.rawValue
         media.video_path = videoPath
+        media.is_favorited = false
         
         try self.context.save()
         return media
