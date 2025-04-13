@@ -16,7 +16,8 @@ struct BottomTabNavigation: View {
     }
     
     @StateObject private var album_VM: AlbumViewModel = AlbumViewModel()
-  
+    @StateObject private var favorite_VM: FavoriteViewModel = FavoriteViewModel()
+    
     @State private var current_tab: Tab = .albums // Current Tab
     @State private var path = NavigationPath()  // For NavigationStack
     @State private var display_sheet: Bool = false
@@ -108,8 +109,12 @@ struct BottomTabNavigation: View {
                 MediaView(album: album)
             }
         }
-        
         .environmentObject(self.album_VM)
+        .environmentObject(self.favorite_VM)
+        .onAppear {
+            //Populate Favorites
+            self.favorite_VM.set_favorites(with: self.album_VM.albums)
+        }
         .background(self.toggle_plus_mode ? Color.red.opacity(0.25) : Color.orange)
     }
 }
