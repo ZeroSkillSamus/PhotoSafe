@@ -19,6 +19,17 @@ struct BottomHeader: View {
     var album: AlbumEntity
     
     @ObservedObject var media_VM: MediaViewModel
+    
+    struct BottomHeaderButton<Content: View>: View {
+        @ViewBuilder var content: Content
+        
+        var body: some View {
+            content
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+    
     var body: some View {
         VStack {
             if !self.select_mode_active {
@@ -30,49 +41,55 @@ struct BottomHeader: View {
             } else {
                 // Select Bottom Nav Bar
                 HStack(alignment: .center) {
-                    SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
-                        self.media_VM.export_selected_media_to_photo_library()
-                        withAnimation {
-                            self.select_mode_active = false // Get out of select mode
+                    BottomHeaderButton {
+                        SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
+                            self.media_VM.export_selected_media_to_photo_library()
+                            withAnimation {
+                                self.select_mode_active = false // Get out of select mode
+                            }
                         }
+                        //.foregroundStyle(.white)
                     }
-                    .foregroundStyle(.white)
                     
-                    Spacer()
                     
-                    SelectBottomButton(label: !self.is_select_all ? "Select All" : "Deselect All", system_name:"scope") {
-                        var selector = SelectMediaEntity.Select.checked
-                        if self.is_select_all {
-                            selector = .blank
-                            self.num_selected_items = 0
-                        } else {
-                            self.num_selected_items = self.media_VM.medias.count
-                        }
-                        self.media_VM.change_all(to: selector)
-                        
-                        self.is_select_all.toggle()
-                    }
-                    .foregroundStyle(.white)
-                    
-                    Spacer()
-                    
-                    SelectBottomButton(label: "Move", system_name:"rectangle.2.swap"){
-                        self.is_move_sheet_active.toggle()
-                    }
-                    .foregroundStyle(.white)
-                    
-                    Spacer()
-                    
-                    SelectBottomButton(label: "Delete", system_name:"trash") {
-                        withAnimation {
-                            self.media_VM.delete_selected()
-                            self.num_selected_items = 0
+                    //Spacer()
+                    BottomHeaderButton {
+                        SelectBottomButton(label: !self.is_select_all ? "Select All" : "Deselect All", system_name:"scope") {
+                            var selector = SelectMediaEntity.Select.checked
+                            if self.is_select_all {
+                                selector = .blank
+                                self.num_selected_items = 0
+                            } else {
+                                self.num_selected_items = self.media_VM.medias.count
+                            }
+                            self.media_VM.change_all(to: selector)
                             
-                            // Only close select mode if the medias is empty after deleting
-                            if self.media_VM.medias.isEmpty { self.select_mode_active.toggle() }
+                            self.is_select_all.toggle()
+                        }
+                        
+                    }
+                    
+                    //Spacer()
+                    BottomHeaderButton {
+                        SelectBottomButton(label: "Move", system_name:"rectangle.2.swap"){
+                            self.is_move_sheet_active.toggle()
                         }
                     }
-                    .foregroundStyle(.red)
+                    //.foregroundStyle(.white)
+                    
+                    //Spacer()
+                    BottomHeaderButton {
+                        SelectBottomButton(label: "Delete", system_name:"trash") {
+                            withAnimation {
+                                self.media_VM.delete_selected()
+                                self.num_selected_items = 0
+                                
+                                // Only close select mode if the medias is empty after deleting
+                                if self.media_VM.medias.isEmpty { self.select_mode_active.toggle() }
+                            }
+                        }
+                    }
+                    //.foregroundStyle(.red)
                 }
                 .padding(.horizontal)
                 .padding(.vertical,10)
@@ -101,26 +118,31 @@ struct BottomHeader: View {
             }
         }
     }
+}
+
+struct SelectBottomButton: View {
+    var label: String
+    var system_name: String
     
-    struct SelectBottomButton: View {
-        var label: String
-        var system_name: String
-        
-        var action: () -> Void
-        
-        var body: some View {
-            Button {
-                action()
-            } label: {
-                VStack(spacing: 5) {
-                    Image(systemName: system_name)
-                        .font(.title3)
-                    Text(label)
-                        .font(.caption.bold())
-                }
+    var action: () -> Void
+    
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            VStack(spacing: 5) {
+                Image(systemName: system_name)
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width:23,height:22)
+
+                Text(label)
+                    .font(.caption2)
             }
-            .padding(.top,15)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .foregroundStyle(Color.c1_primary)
         }
+        .padding(.top,15)
+        
     }
 }

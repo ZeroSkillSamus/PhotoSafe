@@ -26,6 +26,8 @@ struct FullCoverSheet: View {
         self.orientation.isPortrait || (self.orientation.isFlat && !self.prev_orientation.isLandscape) || self.orientation == .unknown
     }
 
+    @State private var did_user_tap: Bool = false
+    
     @State private var opacity: CGFloat = 0
     
     var body: some View {
@@ -50,15 +52,18 @@ struct FullCoverSheet: View {
                         }
                         .foregroundStyle(.blue)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 60,alignment: .topLeading)
-                    .padding(.horizontal,5)
+                    .frame(maxWidth: .infinity, maxHeight: 40,alignment: .topLeading)
+                    .padding(.horizontal)
                     .overlay(alignment: .top) {
                         Text("\(current_media_index + 1) of \(list.count)")
                             .font(.title3)
                             .padding(5)
                             .foregroundStyle(.primary)
                     }
+                    .background(Color.c1_secondary)
                     .opacity(self.opacity)
+                    .opacity(!self.did_user_tap ? 1 : 0)
+//                    .opacity(self.should_header_display ? 1 : 0)
                 }
  
                 LazyPager(data: self.list, page: self.$current_media_index) { element in
@@ -92,14 +97,54 @@ struct FullCoverSheet: View {
                         }
                         
                     }
-                    .ignoresSafeArea(edges: .bottom)
+                    //.ignoresSafeArea(edges: .bottom)
                 }
                 // Make the content zoomable
                 .zoomable(min: 1, max: 5)
                 .onDismiss(backgroundOpacity: $opacity) {
                     self.dismiss()
                 }
+                .onTap {
+                    withAnimation {
+                        self.did_user_tap.toggle()
+                    }
+                }
                 .opacity(self.opacity)
+                .frame(maxWidth:.infinity,maxHeight: .infinity)
+                
+                if should_header_display {
+                    HStack {
+                        SelectBottomButton(label: "Export", system_name: "square.and.arrow.up") {
+                            print("DD")
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        SelectBottomButton(label: "Vertical", system_name: "rectangle.expand.vertical") {
+                            print("DD")
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        SelectBottomButton(label: "Favorite", system_name: "heart") {
+                            print("DD")
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        SelectBottomButton(label: "Move", system_name: "rectangle.2.swap") {
+                            print("DD")
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                        SelectBottomButton(label: "Delete", system_name: "trash") {
+                            print("DD")
+                        }
+                        .frame(maxWidth: .infinity)
+                        
+                    }
+                    .padding(.horizontal)
+                    .background(Color.c1_secondary)
+                    .opacity(self.opacity)
+                    .opacity(!self.did_user_tap ? 1 : 0)
+                }
             }
             .onRotate { newOrientation in
                 self.prev_orientation = self.orientation
@@ -111,7 +156,6 @@ struct FullCoverSheet: View {
         }
         //.preferredColorScheme(.dark)
         .persistentSystemOverlays(.hidden)
-        .ignoresSafeArea(edges: .bottom)
         .background(.black.opacity(opacity))
         .background(ClearFullScreenBackground())
     }
