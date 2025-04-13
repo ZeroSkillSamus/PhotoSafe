@@ -41,7 +41,7 @@ struct AlbumView: View {
                    isPresented: self.$display_alert)
             {
                 TextField("Enter Your Password", text: self.$password)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color.c1_text)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
                     .textContentType(.password)
