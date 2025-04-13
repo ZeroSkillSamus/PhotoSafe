@@ -13,9 +13,13 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="FavoriteEntity" representedClassName="FavoriteEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="date_added" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="MediaEntity" representedClassName="MediaEntity" syncable="YES">
         <attribute name="date_added" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="image_data" optional="YES" attributeType="Binary"/>
+        <attribute name="is_favorited" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="type" optional="YES" attributeType="String"/>
         <attribute name="video_path" optional="YES" attributeType="String"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumEntity" inverseName="media" inverseEntity="AlbumEntity"/>

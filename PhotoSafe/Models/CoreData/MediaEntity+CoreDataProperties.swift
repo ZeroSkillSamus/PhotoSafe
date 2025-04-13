@@ -29,7 +29,7 @@ extension MediaEntity {
     @NSManaged public var type: String
     @NSManaged public var video_path: String?
     @NSManaged public var album: AlbumEntity
-
+    @NSManaged public var is_favorited: Bool
 }
 
 extension MediaEntity : Identifiable {
