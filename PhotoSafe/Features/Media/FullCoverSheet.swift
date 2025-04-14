@@ -129,19 +129,21 @@ struct FullCoverSheet: View {
                         }
                         .frame(maxWidth: .infinity)
                         
-                        SelectBottomButton(label: "Favorite", system_name: list[self.current_media_index].media.is_favorited ? "heart.fill" : "heart") {
-                            let prev_status = self.list[self.current_media_index].media.is_favorited
-                            let change_to = prev_status ? false : true // False means dislike, true means like
-
-                            // Get updated media and overwrite current element in list
-                            let new_media = self.media_VM.favorite_media(for: list[self.current_media_index].media, with: change_to)
-                            self.list[self.current_media_index] = SelectMediaEntity(media: new_media)
-                            
-                            // Update Favorites List
-                            if new_media.is_favorited { self.favorite_VM.favorites.append(new_media) }
-                            else { self.favorite_VM.delete_favorited(media: new_media) }
+                        if list.indices.contains(self.current_media_index) {
+                            SelectBottomButton(label: "Favorite", system_name: list[self.current_media_index].media.is_favorited ? "heart.fill" : "heart") {
+                                let prev_status = self.list[self.current_media_index].media.is_favorited
+                                let change_to = prev_status ? false : true // False means dislike, true means like
+                                
+                                // Get updated media and overwrite current element in list
+                                let new_media = self.media_VM.favorite_media(for: list[self.current_media_index].media, with: change_to)
+                                self.list[self.current_media_index] = SelectMediaEntity(media: new_media)
+                                
+                                // Update Favorites List
+                                if new_media.is_favorited { self.favorite_VM.favorites.append(new_media) }
+                                else { self.favorite_VM.delete_favorited(media: new_media) }
+                            }
+                            .frame(maxWidth: .infinity)
                         }
-                        .frame(maxWidth: .infinity)
                         
                         SelectBottomButton(label: "Move", system_name: "rectangle.2.swap") {
                             print("DD")
