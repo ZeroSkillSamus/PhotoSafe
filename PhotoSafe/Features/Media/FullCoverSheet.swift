@@ -149,7 +149,14 @@ struct FullCoverSheet: View {
                         .frame(maxWidth: .infinity)
                         
                         SelectBottomButton(label: "Delete", system_name: "trash") {
-                            print("DD")
+                            withAnimation {
+                                self.list[self.current_media_index].select = .checked
+                                if self.current_media_index == self.list.count - 1 && self.current_media_index != 0 {
+                                    self.current_media_index -= 1
+                                }
+                                self.media_VM.delete_selected()
+                            }
+                            if self.list.isEmpty { self.dismiss() }
                         }
                         .frame(maxWidth: .infinity)
                         
