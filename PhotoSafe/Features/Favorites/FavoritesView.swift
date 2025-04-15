@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @EnvironmentObject private var favorites: FavoriteViewModel
-    @EnvironmentObject private var albums: AlbumViewModel
+    @EnvironmentObject private var favorite_VM: FavoriteViewModel
+    @EnvironmentObject private var album_VM: AlbumViewModel
     
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     
@@ -58,12 +58,12 @@ struct FavoritesView: View {
             }
 
             ScrollView {
-                LazyVGrid(columns: self.gridItemLayout) {
-                    ForEach(self.favorites.favorites, id:\.self) { media in
-                        if let ui_image = media.image {
+                LazyVGrid(columns: self.gridItemLayout, spacing: 5) {
+                    ForEach(Array(self.favorite_VM.favorites.keys),id:\.self) { key in
+                        if let ui_image = self.favorite_VM.favorites[key] {
                             ImageGridView(
                                 ui_image: ui_image,
-                                media: media,
+                                media: key,
                                 display_if_favorited: false
                             )
                         }
