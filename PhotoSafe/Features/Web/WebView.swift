@@ -9,7 +9,14 @@ import SwiftUI
 
 struct WebView: View {
     var body: some View {
-        Text("Web")
+        VStack  {
+            UniversalHeader(header: "Web") {
+                EmptyView()
+            } trailing_button: {
+                EmptyView()
+            }
+        }
+        .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
     }
 }
 
