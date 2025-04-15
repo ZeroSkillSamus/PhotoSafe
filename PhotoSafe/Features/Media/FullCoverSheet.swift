@@ -143,8 +143,7 @@ struct FullCoverSheet: View {
                                 self.list[self.current_media_index] = SelectMediaEntity(media: new_media)
                                 
                                 // Update Favorites List
-                                if new_media.is_favorited { self.favorite_VM.favorites.append(new_media) }
-                                else { self.favorite_VM.delete_favorited(media: new_media) }
+                                self.favorite_VM.add_or_delete_from_favorites(for: new_media)
                             }
                             .frame(maxWidth: .infinity)
                         }
