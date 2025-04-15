@@ -55,14 +55,13 @@ struct MoveSheet: View {
     
     var body: some View {
         ZStack {
-            /*Color.grayscale(/*@START_MENU_TOKEN@*/0.50/*@END_MENU_TOKEN@*/).ignoresSafeArea()*/ // Background color
-            //Color.brown.ignoresSafeArea()
-            Color(red: 28/255, green: 28/255, blue: 30/255).ignoresSafeArea()
+            Color.c1_secondary.ignoresSafeArea()
             
             VStack {
                 HStack {
                     Text("Move Selected")
                         .font(.title2.bold())
+                        .foregroundStyle(Color.c1_text)
                 }
                 .frame(maxWidth: .infinity,alignment: .leading)
                 .padding()
@@ -74,7 +73,7 @@ struct MoveSheet: View {
                             self.dismiss()
                         }
                         Divider()
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
                     }
                     
                     // Create New Album Button

@@ -23,6 +23,7 @@ struct FullCoverSheet: View {
     
     @State private var current_media_index: Int = 0
     @State private var curr_media: SelectMediaEntity?
+    @State private var display_move_sheet: Bool = false
 
     var should_header_display: Bool {
         self.orientation.isPortrait || (self.orientation.isFlat && !self.prev_orientation.isLandscape) || self.orientation == .unknown
@@ -35,7 +36,7 @@ struct FullCoverSheet: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if should_header_display {
+                if should_header_display || !self.did_user_tap {
                     HStack {
                         Button {
                             self.dismiss()
@@ -115,17 +116,20 @@ struct FullCoverSheet: View {
                 }
                 .opacity(self.opacity)
                 .frame(maxWidth:.infinity,maxHeight: .infinity)
-                .ignoresSafeArea(edges: .bottom)
+                .ignoresSafeArea(edges: [.bottom, .top])
                 
                 if should_header_display || !self.did_user_tap {
                     HStack {
                         SelectBottomButton(label: "Export", system_name: "square.and.arrow.up") {
-                            print("DD")
-                        }
-                        .frame(maxWidth: .infinity)
-                        
-                        SelectBottomButton(label: "Vertical", system_name: "rectangle.expand.vertical") {
-                            print("DD")
+                            self.list[self.current_media_index].select = .checked
+                            self.media_VM.export_selected_media_to_photo_library()
+                            
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                withAnimation {
+                                    self.media_VM.export_finished = false
+                                }
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         
@@ -146,7 +150,7 @@ struct FullCoverSheet: View {
                         }
                         
                         SelectBottomButton(label: "Move", system_name: "rectangle.2.swap") {
-                            print("DD")
+                            self.display_move_sheet.toggle()
                         }
                         .frame(maxWidth: .infinity)
                         
@@ -177,8 +181,26 @@ struct FullCoverSheet: View {
         .onAppear {
             self.current_media_index = self.list.firstIndex(of: self.select_media) ?? 0
         }
-        .ignoresSafeArea(edges: !self.did_user_tap ? [] : .bottom)
-        //.preferredColorScheme(.dark)
+        .overlay(alignment: .center) {
+            if self.media_VM.export_finished {
+                CustomAlertView {
+                    Text("Save Finished")
+                        .font(.title3.bold())
+                }
+            }
+        }
+        .sheet(isPresented: self.$display_move_sheet) {
+            MoveSheet(media_VM: self.media_VM,curr_album_name: self.select_media.media.album.name) { album in
+                self.list[self.current_media_index].select = .checked
+                if self.current_media_index == self.list.count - 1 && self.current_media_index != 0 {
+                    self.current_media_index -= 1
+                }
+                self.media_VM.move_selected(to: album)
+                
+                if self.list.isEmpty { self.dismiss() }
+            }
+        }
+        .ignoresSafeArea(edges: !self.did_user_tap ? [] : [.bottom,.top])
         .persistentSystemOverlays(.hidden)
         .background(.black.opacity(opacity))
         .background(ClearFullScreenBackground())

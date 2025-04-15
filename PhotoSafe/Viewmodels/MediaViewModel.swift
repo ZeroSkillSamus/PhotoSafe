@@ -16,7 +16,8 @@ final class MediaViewModel: ObservableObject {
     @Published private(set) var video_count: Int = 0
     @Published private var display_alert: Bool = false
     @Published private(set) var alert_value: Float = 0.0
-
+    @Published var export_finished: Bool = false
+    
     // Getter & Setter for display_alert
     var progress_alert: Bool {
         get {
@@ -61,6 +62,7 @@ final class MediaViewModel: ObservableObject {
                 print("Type Not Found!!")
             }
         }
+        self.export_finished = true
     }
     
     /// Gets all selected elements
