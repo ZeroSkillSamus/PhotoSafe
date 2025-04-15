@@ -77,18 +77,24 @@ struct BottomTabNavigation: View {
                     TabView(selection: self.$current_tab) {
                         AlbumView(path: self.$path)
                             .tag(Tab.albums)
-                            .toolbar(.hidden, for: .bottomBar)
-                            .navigationBarTitleDisplayMode(.inline)
+                            .toolbar(.hidden, for: .tabBar)
                             .background(Color.c1_background)
                         
                         WebView()
                             .tag(Tab.web)
+                            .toolbar(.hidden, for: .tabBar)
+                            .background(Color.c1_background)
                         
                         SettingsView()
                             .tag(Tab.settings)
+                            .toolbar(.hidden, for: .tabBar)
+                            .background(Color.c1_background)
+                        
                         
                         FavoritesView()
                             .tag(Tab.favorites)
+                            .toolbar(.hidden, for: .tabBar)
+                            .background(Color.c1_background)
                     }
                     
                     //Custom Tab Bar
