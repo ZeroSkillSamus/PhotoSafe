@@ -12,26 +12,61 @@ struct FavoritesView: View {
     @EnvironmentObject private var albums: AlbumViewModel
     
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
+    
+    func leading_button() -> some View {
+        Menu {
+            Button {
+                print("enable slideshow mode")
+            } label: {
+                Label("Start SlideShow", systemImage: "play.rectangle.fill")
+            }
+            
+            Button {
+                print("enable slideshow mode")
+            } label: {
+                Label("Vertical View", systemImage: "chevron.up.chevron.down")
+            }
+            
+            Button {
+                print("enable slideshow mode")
+            } label: {
+                Label("Delete All Favorites", systemImage: "trash.fill")
+            }
+
+        } label: {
+            Image(systemName: "gear")
+                .font(.title2)
+                .foregroundStyle(Color.c1_text)
+        }
+    }
+    
+    private func trailing_button() -> some View {
+        Button {
+            print("Select")
+        } label: {
+            Text("Select")
+        }
+    }
+    
+    
     var body: some View {
-        VStack {
-            ForEach(self.favorites.favorites, id:\.self) { media in
-                if let ui_image = media.image {
-                    LazyVGrid(columns: self.gridItemLayout) {
-                        Image(uiImage: ui_image)
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fill)
-                            .scaleEffect(1.3)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .overlay(alignment: .topLeading) {
-                                VStack {
-                                    if media.type == MediaType.Video.rawValue {
-                                        Image(systemName: "video.fill")
-                                            .font(.caption)
-                                            .foregroundStyle(.green)
-                                    }
-                                }
-                                .padding(5)
-                            }
+        VStack(spacing: 0) {
+            UniversalHeader(header: "Favorites") {
+                self.leading_button()
+            } trailing_button: {
+                self.trailing_button()
+            }
+
+            ScrollView {
+                LazyVGrid(columns: self.gridItemLayout) {
+                    ForEach(self.favorites.favorites, id:\.self) { media in
+                        if let ui_image = media.image {
+                            ImageGridView(
+                                ui_image: ui_image,
+                                media: media,
+                                display_if_favorited: false
+                            )
+                        }
                     }
                 }
             }
@@ -40,7 +75,3 @@ struct FavoritesView: View {
         .background(Color.c1_background)
     }
 }
-//
-//#Preview {
-//    FavoritesView()
-//}
