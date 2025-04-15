@@ -46,7 +46,7 @@ struct MediaView: View {
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
                     ForEach(self.$media_VM.medias) { $media_select in
-                        ImageGridView(
+                        MediaImageGridView(
                             is_selected: self.is_select_mode_active,
                             media_select: $media_select,
                             selected_item: self.$selectedItem,

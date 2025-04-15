@@ -7,30 +7,20 @@
 
 import SwiftUI
 
-struct ImageGridView: View {
+struct MediaImageGridView: View {
     var is_selected: Bool
     
     @Binding var media_select: SelectMediaEntity
-    @Binding var selected_item: SelectMediaEntity?
+    @Binding var selected_item: SelectMediaEntity? // Used to open up fullcoversheet
     @Binding var select_count: Int
+    
+    var show_background: Bool {
+        media_select.media.is_favorited || media_select.media.type == MediaType.Video.rawValue
+    }
     
     var body: some View {
         if let ui_image = media_select.media.image {
-            Image(uiImage: ui_image)
-                .resizable()
-                .aspectRatio(1, contentMode: .fill)
-                .scaleEffect(1.3)
-                .clipShape(RoundedRectangle(cornerRadius: 5))
-                .overlay(alignment: .topLeading) {
-                    VStack {
-                        if media_select.media.type == MediaType.Video.rawValue {
-                            Image(systemName: "video.fill")
-                                .font(.caption)
-                                .foregroundStyle(.green)
-                        }
-                    }
-                    .padding(5)
-                }
+            ImageGridView(ui_image: ui_image, media: self.media_select.media)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(determine_color(media: media_select), lineWidth: 2)
