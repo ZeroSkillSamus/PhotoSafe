@@ -41,6 +41,7 @@
 		028C6F452DAAB99F00BB8BB9 /* Color+CustomScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F442DAAB99F00BB8BB9 /* Color+CustomScheme.swift */; };
 		028C6F472DAB56C100BB8BB9 /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F462DAB56C100BB8BB9 /* FavoriteViewModel.swift */; };
 		028C6F492DAD879000BB8BB9 /* ProgressAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F482DAD879000BB8BB9 /* ProgressAlert.swift */; };
+		028C6F4C2DADEAD200BB8BB9 /* UniversalHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F4B2DADEAD200BB8BB9 /* UniversalHeader.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
@@ -111,6 +112,7 @@
 		028C6F442DAAB99F00BB8BB9 /* Color+CustomScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+CustomScheme.swift"; sourceTree = "<group>"; };
 		028C6F462DAB56C100BB8BB9 /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
 		028C6F482DAD879000BB8BB9 /* ProgressAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressAlert.swift; sourceTree = "<group>"; };
+		028C6F4B2DADEAD200BB8BB9 /* UniversalHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalHeader.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 				02D801462DA5BBE2002AE361 /* ImageCircleOverlay.swift */,
 				02D801482DA5ECEA002AE361 /* CustomAlertView.swift */,
 				028C6F482DAD879000BB8BB9 /* ProgressAlert.swift */,
+				028C6F4B2DADEAD200BB8BB9 /* UniversalHeader.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -568,6 +571,7 @@
 				0248E9552D9B4D0500272924 /* BottomHeader.swift in Sources */,
 				028C6F472DAB56C100BB8BB9 /* FavoriteViewModel.swift in Sources */,
 				028C6F3F2DA8903B00BB8BB9 /* EditSheetViewModel.swift in Sources */,
+				028C6F4C2DADEAD200BB8BB9 /* UniversalHeader.swift in Sources */,
 				02D801472DA5BBE2002AE361 /* ImageCircleOverlay.swift in Sources */,
 				0245023E2D9E100700E9A862 /* PlayerView.swift in Sources */,
 				0248E95E2D9B5BD700272924 /* TopHeader.swift in Sources */,
