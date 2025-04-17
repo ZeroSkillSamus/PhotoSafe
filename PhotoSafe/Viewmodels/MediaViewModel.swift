@@ -10,6 +10,7 @@ import _PhotosUI_SwiftUI
 
 @MainActor
 final class MediaViewModel: ObservableObject {
+    @Published var medias_dict: [SelectMediaEntity: UIImage] = [:]
     @Published var medias: [SelectMediaEntity] = []
     
     @Published private(set) var photo_count: Int = 0

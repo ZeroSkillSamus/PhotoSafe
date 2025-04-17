@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct FavoritesView: View {
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
     @EnvironmentObject private var album_VM: AlbumViewModel
     
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
+    @State private var selected_media: SelectMediaEntity?
+    @State private var select_count: Int = 0
+    @State private var current_media_index: Int = 0
+    
+    @Binding var select_mode_active: Bool
     
     func leading_button() -> some View {
         Menu {
@@ -42,34 +48,97 @@ struct FavoritesView: View {
     
     private func trailing_button() -> some View {
         Button {
-            print("Select")
+            withAnimation(.easeInOut) {
+                self.select_mode_active.toggle()
+            }
+            //}
+            
         } label: {
-            Text("Select")
+            Text(self.select_mode_active ? "Cancel" : "Select")
         }
     }
     
+    var header: Text {
+//        self.select_mode_active ?  "^[\(self.select_count) Item](inflect: true) Selected" : "Favorites"
+        if self.select_mode_active {
+            if self.select_count == 0 {
+                return Text("Select Media")
+            } else {
+                return Text("^[\(self.select_count) Item](inflect: true) Selected")
+            }
+        }
+        return Text("Favorites")
+    }
     
     var body: some View {
         VStack(spacing: 0) {
-            UniversalHeader(header: "Favorites") {
+            UniversalHeader(header: {
+                header
+                    .default_header()
+            }) {
                 self.leading_button()
             } trailing_button: {
                 self.trailing_button()
             }
 
             ScrollView {
-                LazyVGrid(columns: self.gridItemLayout, spacing: 5) {
-                    ForEach(Array(self.favorite_VM.favorites.keys),id:\.self) { key in
-                        if let ui_image = self.favorite_VM.favorites[key] {
-                            ImageGridView(
+                LazyVGrid(columns: self.gridItemLayout, spacing: 3) {
+                    ForEach(self.$favorite_VM.favorites_list,id:\.self) { $favorite in
+                        if let ui_image = self.favorite_VM.favorites_dict[favorite] {
+                            MediaImageGridView(
+                                is_selected: self.select_mode_active,
                                 ui_image: ui_image,
-                                media: key,
-                                display_if_favorited: false
-                            )
+                                media_select: $favorite,
+                                selected_item: self.$selected_media,
+                                select_count: self.$select_count
+                            ) {
+                                if select_mode_active {
+                                    switch favorite.select {
+                                    case .blank:
+                                        let old_value = self.favorite_VM.favorites_dict[favorite]
+                                        self.favorite_VM.favorites_dict.removeValue(forKey: favorite)
+                                        
+                                        favorite.select = .checked
+                                        self.favorite_VM.favorites_dict[favorite] = old_value
+                                        self.select_count = select_count + 1
+                                    case .checked:
+                                        let old_key = favorite
+                                        let old_value = self.favorite_VM.favorites_dict[favorite]
+                                        
+                                        //self.media_VM.medias[index].select = .blank
+                                        favorite.select = .blank
+                                        self.favorite_VM.favorites_dict.removeValue(forKey: old_key)
+                                        self.favorite_VM.favorites_dict[favorite] = old_value
+                                        self.select_count = select_count - 1
+                                    }
+                                } else {
+                                    self.selected_media = favorite
+                                }
+                            }
                         }
                     }
                 }
             }
+            
+            if self.select_mode_active {
+                Button {
+                    self.favorite_VM.unselect_all()
+                    self.select_count = 0
+                } label: {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 10).fill(Color.c1_accent)
+                        Text("Unfavorite")
+                            .font(.system(size: 15,weight: .semibold,design: .rounded))
+                            .foregroundStyle(Color.c1_text)
+                    }
+                    .frame(width: 200,height: 50)
+                }
+            }
+        }
+        .fullScreenCover(item: self.$selected_media) { element in
+//            FullCoverSheet(select_media: element, list: self.$favorite_VM.favorites_list, current_media_index: $current_media_index) {
+//                
+//            }
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         .background(Color.c1_background)

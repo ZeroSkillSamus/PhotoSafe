@@ -15,7 +15,10 @@ struct TopHeader: View {
     @State private var display_delete_alert: Bool = false
     
     var body: some View {
-        UniversalHeader(header: "Albums") {
+        UniversalHeader(header: {
+            Text("Album")
+                .default_header()
+        }) {
             //             Display Alert Confirming With User
             //             If they Want Albums to be removed
             Button {

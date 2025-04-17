@@ -10,7 +10,10 @@ import SwiftUI
 struct WebView: View {
     var body: some View {
         VStack  {
-            UniversalHeader(header: "Web") {
+            UniversalHeader(header: {
+                Text("Web")
+                    .default_header()
+            }) {
                 EmptyView()
             } trailing_button: {
                 EmptyView()

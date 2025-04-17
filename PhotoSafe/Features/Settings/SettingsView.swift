@@ -10,7 +10,10 @@ import SwiftUI
 struct SettingsView: View {
     var body: some View {
         VStack {
-            UniversalHeader(header: "Settings") {
+            UniversalHeader(header: {
+                Text("Settings")
+                    .default_header()
+            }) {
                 EmptyView()
             } trailing_button: {
                 EmptyView()

@@ -32,7 +32,6 @@ struct FullCoverSheet: View {
     @State private var did_user_tap: Bool = false
     
     @State private var opacity: CGFloat = 0
-    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
