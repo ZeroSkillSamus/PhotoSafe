@@ -45,28 +45,30 @@ struct MediaView: View {
                 }
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
-                    ForEach(self.$media_VM.medias) { $media_select in
-                        if let ui_image = media_select.media.image {
+                    ForEach(self.$media_VM.medias) { $media in
+                        //if let ui_image = media_select.media.image {
+                        if let ui_image = self.media_VM.medias_dict[media] {
                             MediaImageGridView(
                                 is_selected: self.is_select_mode_active,
                                 ui_image: ui_image,
-                                media_select: $media_select,
+                                media_select: $media,
                                 selected_item: self.$selectedItem,
                                 select_count: self.$select_count
                             ) {
                                 if self.is_select_mode_active {
-                                    switch media_select.select {
+                                    let old_value = self.media_VM.medias_dict[media]
+                                    self.media_VM.medias_dict.removeValue(forKey: media)
+                                    switch media.select {
                                     case .blank:
-                                        //self.media_VM.medias[index].select = .checked
-                                        media_select.select = .checked
+                                        media.select = .checked
                                         self.select_count = select_count + 1
                                     case .checked:
-                                        //self.media_VM.medias[index].select = .blank
-                                        media_select.select = .blank
+                                        media.select = .blank
                                         self.select_count = select_count - 1
                                     }
+                                    self.media_VM.medias_dict[media] = old_value
                                 } else {
-                                    self.selectedItem = media_select
+                                    self.selectedItem = media
                                 }
                             }
                         }

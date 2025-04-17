@@ -72,7 +72,7 @@ struct FullCoverSheet: View {
                     VStack {
                         switch element.media.type {
                         case MediaType.Photo.rawValue:
-                            if let image = element.media.image {
+                            if let image = self.media_VM.medias_dict[element] {
                                 Image(uiImage: image)
                                     .resizable()
                                     .scaledToFit()

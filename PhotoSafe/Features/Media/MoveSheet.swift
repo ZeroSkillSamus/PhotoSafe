@@ -90,12 +90,12 @@ struct MoveSheet: View {
         .alert("Create Album", isPresented: self.$toggle_alert) {
             VStack(spacing: 5) {
                 TextField("Name", text: self.$album_name)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color.c1_text)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.words)
                 
                 TextField("Password", text: self.$album_password)
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Color.c1_text)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
             }

@@ -92,6 +92,9 @@ final class MediaViewModel: ObservableObject {
             a.media.date_added < b.media.date_added
         })
         
+        // Populate dictionary
+        self.medias.forEach { self.medias_dict[$0] = $0.media.image}
+        
         self.set_counts()
     }
     
@@ -179,7 +182,9 @@ final class MediaViewModel: ObservableObject {
         video_path: String? = nil
     ) {
         if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, videoPath: video_path) {
-            self.medias.append(SelectMediaEntity(media: media_entity))
+            let select_media = SelectMediaEntity(media: media_entity)
+            self.medias.append(select_media) // add to list
+            self.medias_dict[select_media] = select_media.media.image // add to dictionary
             self.increment_alert_value()
             
             switch type {
@@ -199,7 +204,9 @@ final class MediaViewModel: ObservableObject {
     /// FInds the index of selected and deletes the item at that location from medias
     private func delete_from_medias(selected: SelectMediaEntity) {
         if let index = self.medias.firstIndex(of: selected) {
-            self.medias.remove(at: index)
+            self.medias.remove(at: index) //remove from list
+            
+            self.medias_dict.removeValue(forKey: selected) // remove from dictionary
         }
     }
     
