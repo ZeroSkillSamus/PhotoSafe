@@ -59,7 +59,6 @@ struct FavoritesView: View {
     }
     
     var header: Text {
-//        self.select_mode_active ?  "^[\(self.select_count) Item](inflect: true) Selected" : "Favorites"
         if self.select_mode_active {
             if self.select_count == 0 {
                 return Text("Select Media")
@@ -84,37 +83,14 @@ struct FavoritesView: View {
             ScrollView {
                 LazyVGrid(columns: self.gridItemLayout, spacing: 3) {
                     ForEach(self.$favorite_VM.favorites_list,id:\.self) { $favorite in
-                        if let ui_image = self.favorite_VM.favorites_dict[favorite] {
+                        if let ui_image = favorite.media.thumbnail_image {
                             MediaImageGridView(
-                                is_selected: self.select_mode_active,
+                                is_select_mode_active: self.select_mode_active,
                                 ui_image: ui_image,
                                 media_select: $favorite,
-                                selected_item: self.$selected_media,
+                                selected_media: self.$selected_media,
                                 select_count: self.$select_count
-                            ) {
-                                if select_mode_active {
-                                    switch favorite.select {
-                                    case .blank:
-                                        let old_value = self.favorite_VM.favorites_dict[favorite]
-                                        self.favorite_VM.favorites_dict.removeValue(forKey: favorite)
-                                        
-                                        favorite.select = .checked
-                                        self.favorite_VM.favorites_dict[favorite] = old_value
-                                        self.select_count = select_count + 1
-                                    case .checked:
-                                        let old_key = favorite
-                                        let old_value = self.favorite_VM.favorites_dict[favorite]
-                                        
-                                        //self.media_VM.medias[index].select = .blank
-                                        favorite.select = .blank
-                                        self.favorite_VM.favorites_dict.removeValue(forKey: old_key)
-                                        self.favorite_VM.favorites_dict[favorite] = old_value
-                                        self.select_count = select_count - 1
-                                    }
-                                } else {
-                                    self.selected_media = favorite
-                                }
-                            }
+                            )
                         }
                     }
                 }
@@ -136,9 +112,11 @@ struct FavoritesView: View {
             }
         }
         .fullScreenCover(item: self.$selected_media) { element in
-//            FullCoverSheet(select_media: element, list: self.$favorite_VM.favorites_list, current_media_index: $current_media_index) {
-//                
-//            }
+            FullCoverSheet(
+                select_media: element,
+                list: self.$favorite_VM.favorites_list,
+                media_VM: MediaViewModel()
+            )
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         .background(Color.c1_background)

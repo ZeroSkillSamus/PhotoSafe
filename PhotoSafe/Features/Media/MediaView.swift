@@ -7,7 +7,7 @@
 
 import SwiftUI
 import PhotosUI
-
+import CoreData
 
 enum MediaType: String {
     case Photo = "Photo"
@@ -17,7 +17,6 @@ enum MediaType: String {
 
 struct MediaView: View {
     @ObservedObject var album: AlbumEntity
-    
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
 
     @State private var is_select_all: Bool = false
@@ -26,6 +25,24 @@ struct MediaView: View {
     @State private var is_select_mode_active: Bool = false
     @State private var selected_media: [PhotosPickerItem] = []
   
+    /// If we are in select mode function will handle if a user taps on a photo it will highlight green for selected items
+    /// User can tap the media again to uncheck the item
+    /// If we are not in select mode we then set the selected_item, which will open our sheet
+    private func handle_select_image(for select_media: inout SelectMediaEntity) {
+        if self.is_select_mode_active {
+            switch select_media.select {
+            case .blank:
+                select_media.select = .checked
+                self.select_count = select_count + 1
+            case .checked:
+                select_media.select = .blank
+                self.select_count = select_count - 1
+            }
+        } else {
+            self.selectedItem = select_media
+        }
+    }
+    
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     var body: some View {
         VStack(spacing: 0) {
@@ -45,32 +62,15 @@ struct MediaView: View {
                 }
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
-                    ForEach(self.$media_VM.medias) { $media in
-                        //if let ui_image = media_select.media.image {
-                        if let ui_image = self.media_VM.medias_dict[media] {
+                    ForEach(self.$media_VM.medias) { $select_media in
+                        if let ui_image = select_media.media.thumbnail_image {
                             MediaImageGridView(
-                                is_selected: self.is_select_mode_active,
+                                is_select_mode_active: self.is_select_mode_active,
                                 ui_image: ui_image,
-                                media_select: $media,
-                                selected_item: self.$selectedItem,
+                                media_select: $select_media,
+                                selected_media: self.$selectedItem,
                                 select_count: self.$select_count
-                            ) {
-                                if self.is_select_mode_active {
-                                    let old_value = self.media_VM.medias_dict[media]
-                                    self.media_VM.medias_dict.removeValue(forKey: media)
-                                    switch media.select {
-                                    case .blank:
-                                        media.select = .checked
-                                        self.select_count = select_count + 1
-                                    case .checked:
-                                        media.select = .blank
-                                        self.select_count = select_count - 1
-                                    }
-                                    self.media_VM.medias_dict[media] = old_value
-                                } else {
-                                    self.selectedItem = media
-                                }
-                            }
+                            )
                         }
                     }
                 }
@@ -108,7 +108,12 @@ struct MediaView: View {
         .toolbarBackground(Color.c1_background, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(item: $selectedItem) { item in
-            FullCoverSheet(select_media: item, list: self.$media_VM.medias, media_VM: self.media_VM)
+            FullCoverSheet(
+                //dictionary: self.media_VM.medias_dict,
+                select_media: item,
+                list: self.$media_VM.medias,
+                media_VM: self.media_VM
+            )
         }
         .onAppear {
             self.media_VM.set_media_and_counts(from: album)
