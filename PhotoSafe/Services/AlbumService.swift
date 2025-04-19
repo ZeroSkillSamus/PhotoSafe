@@ -11,7 +11,7 @@ import CoreData
 // Define the blueprint for AlbumService
 protocol AlbumServiceProtocol {
     func fetchAlbums() -> [AlbumEntity]
-    func saveAlbum(name: String, image_data: Data?, password: String) throws
+    func saveAlbum(name: String, thumbnail: Data?, password: String) throws
     func deleteAll() throws
     func delete(album: AlbumEntity) throws
     func change_image_upload_status(for album: AlbumEntity, with new: ImageDisplayType) throws
@@ -30,7 +30,7 @@ final class AlbumService: AlbumServiceProtocol {
     func change_image_upload_status(for album: AlbumEntity, with new: ImageDisplayType) throws {
         album.image_upload_status = new
         if new != .Upload {
-            album.image = nil
+            album.thumbnail = nil
         }
         try self.context.save()
     }
@@ -46,7 +46,7 @@ final class AlbumService: AlbumServiceProtocol {
     }
     
     func change_photo(for album: AlbumEntity, with data: Data) throws {
-        album.image = data
+        album.thumbnail = data
         try context.save()
     }
     
@@ -59,13 +59,13 @@ final class AlbumService: AlbumServiceProtocol {
         return (try? self.context.fetch(AlbumEntity.fetchRequest())) ?? []
     }
     
-    func saveAlbum(name: String, image_data: Data?, password: String) throws {
+    func saveAlbum(name: String, thumbnail: Data?, password: String) throws {
         let albumEntity = AlbumEntity(context: context)
         albumEntity.name = name
-        albumEntity.image = image_data
+        albumEntity.thumbnail = thumbnail
         albumEntity.password = password
         
-        if image_data != nil {
+        if thumbnail != nil {
             albumEntity.image_upload_status = .Upload
         } else {
             albumEntity.image_upload_status = .First

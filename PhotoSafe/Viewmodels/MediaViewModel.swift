@@ -7,11 +7,13 @@
 
 import Foundation
 import _PhotosUI_SwiftUI
+import CoreData
 
 @MainActor
 final class MediaViewModel: ObservableObject {
-    @Published var medias_dict: [SelectMediaEntity: UIImage] = [:]
     @Published var medias: [SelectMediaEntity] = []
+    @Published var test_media: [MediaEntity] = []
+    @Published var test: [UIImage] = []
     
     @Published private(set) var photo_count: Int = 0
     @Published private(set) var video_count: Int = 0
@@ -50,7 +52,7 @@ final class MediaViewModel: ObservableObject {
         self.selected_media.forEach { selected in
             switch selected.media.type {
             case MediaType.Photo.rawValue:
-                if let ui_image = selected.media.image {
+                if let ui_image = selected.media.full_image {
                     media_saver.save_photo_to_user_library(image: ui_image)
                 }
             case MediaType.Video.rawValue:
@@ -86,15 +88,9 @@ final class MediaViewModel: ObservableObject {
     }
     
     func set_media_and_counts(from album: AlbumEntity) {
-        self.medias = self.service.fetch_media(from: album).map {
-            return SelectMediaEntity(media: $0)
-        }.sorted(by: { a, b in
-            a.media.date_added < b.media.date_added
-        })
-        
-        // Populate dictionary
-        self.medias.forEach { self.medias_dict[$0] = $0.media.image}
-        
+        if let medias_sorted = album.sorted_list {
+            self.medias = medias_sorted.map({SelectMediaEntity(media: $0)})
+        }
         self.set_counts()
     }
     
@@ -111,13 +107,16 @@ final class MediaViewModel: ObservableObject {
             
             // Handles Saving Media to CoreData
             if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
-                if let thumbnail = video_url.generateVideoThumbnail() {
-                    self.add_media(
-                        to: album,
-                        type: MediaType.Video,
-                        image_data: thumbnail,
-                        video_path: video_url.absoluteString
-                    )
+                if let image_data = video_url.generateVideoThumbnail() {
+                    if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
+                        self.add_media(
+                            to: album,
+                            type: MediaType.Video,
+                            image_data: image_data,
+                            thumbnail: compressed_img,
+                            video_path: video_url.absoluteString
+                        )
+                    }
                 }
             }
             else if let image_data = try? await item.loadTransferable(type: Data.self) {
@@ -125,11 +124,15 @@ final class MediaViewModel: ObservableObject {
                 let supported_types = item.supportedContentTypes
                 let isGIF = supported_types.contains(UTType.gif)
                 let type = isGIF ? MediaType.GIF : MediaType.Photo
-                self.add_media(
-                    to: album,
-                    type: type,
-                    image_data: image_data
-                )
+                if let thumbnail = UIImage(data: image_data)?.thumbnail(), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5)  {
+                    self.add_media(
+                        to: album,
+                        type: type,
+                        image_data: image_data,
+                        thumbnail: compressed_img
+                    )
+                }
+                
             }
         }
         
@@ -179,12 +182,13 @@ final class MediaViewModel: ObservableObject {
         to album: AlbumEntity,
         type: MediaType,
         image_data: Data,
+        thumbnail: Data,
         video_path: String? = nil
     ) {
-        if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, videoPath: video_path) {
+        if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, thumbnail: thumbnail, videoPath: video_path) {
             let select_media = SelectMediaEntity(media: media_entity)
             self.medias.append(select_media) // add to list
-            self.medias_dict[select_media] = select_media.media.image // add to dictionary
+            //self.medias_dict[select_media] = select_media.media.image // add to dictionary
             self.increment_alert_value()
             
             switch type {
@@ -206,7 +210,7 @@ final class MediaViewModel: ObservableObject {
         if let index = self.medias.firstIndex(of: selected) {
             self.medias.remove(at: index) //remove from list
             
-            self.medias_dict.removeValue(forKey: selected) // remove from dictionary
+            //self.medias_dict.removeValue(forKey: selected) // remove from dictionary
         }
     }
     

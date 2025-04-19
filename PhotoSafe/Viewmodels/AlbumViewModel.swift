@@ -46,11 +46,11 @@ final class AlbumViewModel: ObservableObject {
         self.set_albums()
     }
 
-    func create_album(name: String, image_data: Data?, password: String) {
+    func create_album(name: String, thumbnail: Data?, password: String) {
         do {
             try service.saveAlbum(
                 name: name,
-                image_data: image_data,
+                thumbnail: thumbnail,
                 password: password
             )
             self.set_albums()

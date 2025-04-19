@@ -104,7 +104,7 @@ struct MoveSheet: View {
                 // Create Album
                 self.album_VM.create_album(
                     name: self.album_name,
-                    image_data: nil,
+                    thumbnail: nil,
                     password: self.album_password
                 )
                 

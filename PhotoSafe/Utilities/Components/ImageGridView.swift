@@ -21,7 +21,7 @@ struct ImageGridView: View {
         Image(uiImage: ui_image)
             .resizable()
             .aspectRatio(1, contentMode: .fill)
-            .scaleEffect(1.3)
+            .scaleEffect(1.1)
             .clipShape(RoundedRectangle(cornerRadius: 5))
             .overlay(alignment: .topLeading) {
                 if show_background {

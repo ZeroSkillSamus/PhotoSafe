@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 
 @objc(AlbumEntity)
 public class AlbumEntity: NSManagedObject {
@@ -56,21 +57,28 @@ extension AlbumEntity {
         return nil
     }
     
-    var fetch_first_image: Data? {
+    var fetch_first_thumbnail_image: UIImage? {
         if let first = self.sorted_list?.first {
-            return first.image_data
+            return first.thumbnail_image
         }
         return nil
     }
     
-    var fetch_last_image: Data? {
+    var fetch_last_thumbnail_image: UIImage? {
         if let last = self.sorted_list?.last {
-            return last.image_data
+            return last.thumbnail_image
+        }
+        return nil
+    }
+    
+    var uploaded_thumbnail_image: UIImage? {
+        if let thumbnail {
+            return UIImage(data: thumbnail)
         }
         return nil
     }
 
-    @NSManaged public var image: Data?
+    @NSManaged public var thumbnail: Data?
     @NSManaged public var name: String
     @NSManaged public var password: String
     @NSManaged public var date_added: Date

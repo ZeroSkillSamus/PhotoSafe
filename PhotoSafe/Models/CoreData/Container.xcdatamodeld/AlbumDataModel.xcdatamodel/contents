@@ -3,9 +3,9 @@
     <entity name="AlbumEntity" representedClassName="AlbumEntity" syncable="YES">
         <attribute name="date_added" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="display_image_status" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="password" optional="YES" attributeType="String"/>
+        <attribute name="thumbnail" optional="YES" attributeType="Binary"/>
         <relationship name="media" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MediaEntity" inverseName="album" inverseEntity="MediaEntity"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -20,6 +20,7 @@
         <attribute name="date_added" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="image_data" optional="YES" attributeType="Binary"/>
         <attribute name="is_favorited" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="Binary"/>
         <attribute name="type" optional="YES" attributeType="String"/>
         <attribute name="video_path" optional="YES" attributeType="String"/>
         <relationship name="album" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AlbumEntity" inverseName="media" inverseEntity="AlbumEntity"/>

@@ -14,6 +14,7 @@ struct FullCoverSheet: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
     
+    //var dictionary: [SelectMediaEntity:UIImage]
     var select_media: SelectMediaEntity
     @Binding var list: [SelectMediaEntity]
     @ObservedObject var media_VM: MediaViewModel
@@ -65,14 +66,13 @@ struct FullCoverSheet: View {
                     .background(Color.c1_secondary)
                     .opacity(self.opacity)
                     .opacity(!self.did_user_tap ? 1 : 0)
-//                    .opacity(self.should_header_display ? 1 : 0)
                 }
  
                 LazyPager(data: self.list, page: self.$current_media_index) { element in
                     VStack {
                         switch element.media.type {
                         case MediaType.Photo.rawValue:
-                            if let image = self.media_VM.medias_dict[element] {
+                            if let image = element.media.full_image { // Needs to be changed to cache
                                 Image(uiImage: image)
                                     .resizable()
                                     .scaledToFit()

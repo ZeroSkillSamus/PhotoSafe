@@ -29,19 +29,19 @@ struct AlbumImageDisplay: View {
     var body: some View {
         switch album.image_upload_status {
         case .First:
-            if let first_image_data = album.fetch_first_image, let ui_image = UIImage(data: first_image_data) {
+            if let ui_image = album.fetch_first_thumbnail_image {
                 display_image_view(with: ui_image)
             } else {
                 display_image_view()
             }
         case .Last:
-            if let last_image_data = album.fetch_last_image, let ui_image = UIImage(data: last_image_data) {
+            if let ui_image = album.fetch_last_thumbnail_image {
                 display_image_view(with: ui_image)
             } else {
                 display_image_view()
             }
         case .Upload:
-            if let image_data = album.image, let ui_image = UIImage(data: image_data){
+            if let ui_image = album.uploaded_thumbnail_image {
                 display_image_view(with: ui_image)
             } else {
                 display_image_view()

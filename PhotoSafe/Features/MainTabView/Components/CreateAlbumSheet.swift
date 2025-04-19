@@ -98,7 +98,7 @@ struct CreateAlbumSheet: View {
                         Button {
                             self.album_vm.create_album(
                                 name: self.name,
-                                image_data: self.avatar_data,
+                                thumbnail: self.avatar_data,
                                 password: self.password
                             )
                             
@@ -123,7 +123,9 @@ struct CreateAlbumSheet: View {
                 .onChange(of: avatar) {
                     Task {
                         if let loaded = try? await avatar?.loadTransferable(type: Data.self) {
-                            avatar_data = loaded
+                            if let thumbnail_img = UIImage(data: loaded), let thumbnail_data = thumbnail_img.jpegData(compressionQuality: 0.5) {
+                                avatar_data = thumbnail_data 
+                            }
                         } else {
                             print("Failed")
                         }
