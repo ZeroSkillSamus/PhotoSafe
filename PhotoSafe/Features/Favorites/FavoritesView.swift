@@ -51,8 +51,6 @@ struct FavoritesView: View {
             withAnimation(.easeInOut) {
                 self.select_mode_active.toggle()
             }
-            //}
-            
         } label: {
             Text(self.select_mode_active ? "Cancel" : "Select")
         }
@@ -87,6 +85,7 @@ struct FavoritesView: View {
                             MediaImageGridView(
                                 is_select_mode_active: self.select_mode_active,
                                 ui_image: ui_image,
+                                display_if_favorited: false,
                                 media_select: $favorite,
                                 selected_media: self.$selected_media,
                                 select_count: self.$select_count

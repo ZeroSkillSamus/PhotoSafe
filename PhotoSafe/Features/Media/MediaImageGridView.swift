@@ -10,7 +10,8 @@ import SwiftUI
 struct MediaImageGridView: View {
     var is_select_mode_active: Bool
     var ui_image: UIImage
-
+    var display_if_favorited: Bool = true // Used to display if_favorited should be displayed
+    
     @Binding var media_select: SelectMediaEntity
     @Binding var selected_media: SelectMediaEntity? // Used for opening sheet when not in select mode
     @Binding var select_count: Int
@@ -20,7 +21,11 @@ struct MediaImageGridView: View {
     }
     
     var body: some View {
-        ImageGridView(ui_image: ui_image, media: self.media_select.media)
+        ImageGridView(
+            ui_image: ui_image,
+            media: self.media_select.media,
+            display_if_favorited: display_if_favorited
+        )
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(determine_color(media: media_select), lineWidth: 2)
