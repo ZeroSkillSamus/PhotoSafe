@@ -33,6 +33,15 @@ struct FullCoverSheet: View {
     @State private var did_user_tap: Bool = false
     
     @State private var opacity: CGFloat = 0
+    
+    private func image_view(_ ui_image: UIImage) -> some View {
+        return (
+            Image(uiImage: ui_image)
+                .resizable()
+                .scaledToFit()
+        )
+    }
+    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -72,10 +81,11 @@ struct FullCoverSheet: View {
                     VStack {
                         switch element.media.type {
                         case MediaType.Photo.rawValue:
-                            if let image = element.media.full_image { // Needs to be changed to cache
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
+                            if let cached_image = ImageCache.fetch_image(for: element.media.id.uuidString) {
+                                image_view(cached_image)
+                            } else if let ui_image = ImageCache.set_image_and_return(for: element.media) {
+                                // Time to set
+                                image_view(ui_image)
                             }
                         case MediaType.Video.rawValue:
                             if let video_path = element.media.video_path, let url = URL(string: video_path) {
@@ -87,9 +97,6 @@ struct FullCoverSheet: View {
                                         prev_orientation: self.prev_orientation,
                                         url: url
                                     )
-                                    .onAppear {
-                                        self.did_user_tap = true
-                                    }
                                 }
                             }
                         case MediaType.GIF.rawValue:

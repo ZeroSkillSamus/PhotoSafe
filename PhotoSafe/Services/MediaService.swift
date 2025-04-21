@@ -53,6 +53,7 @@ final class MediaService: MediaServiceProtocol {
         media.video_path = videoPath
         media.is_favorited = false
         media.thumbnail = thumbnail
+        media.id = UUID() 
         
         try self.context.save()
         return media

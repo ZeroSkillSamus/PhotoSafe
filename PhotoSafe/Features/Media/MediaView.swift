@@ -117,6 +117,9 @@ struct MediaView: View {
         }
         .onAppear {
             self.media_VM.set_media_and_counts(from: album)
+            
+            // Load cache
+            ImageCache.preloadImages(medias: self.media_VM.medias)
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity)
         .toolbar {

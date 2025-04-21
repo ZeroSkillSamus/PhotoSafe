@@ -35,6 +35,7 @@ extension MediaEntity {
     @NSManaged public var album: AlbumEntity
     @NSManaged public var is_favorited: Bool
     @NSManaged public var thumbnail: Data
+    @NSManaged public var id: UUID
 }
 
 extension MediaEntity : Identifiable {
