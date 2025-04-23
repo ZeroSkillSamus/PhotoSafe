@@ -48,22 +48,27 @@ final class MediaViewModel: ObservableObject {
     /// Handles exporting media to the users photo library
     /// Still need to implement proper way to relay progress to user
     func export_selected_media_to_photo_library() {
-        let media_saver = MediaHandler()
         self.selected_media.forEach { selected in
-            switch selected.media.type {
-            case MediaType.Photo.rawValue:
-                if let ui_image = selected.media.full_image {
-                    media_saver.save_photo_to_user_library(image: ui_image)
-                }
-            case MediaType.Video.rawValue:
-                if let path = selected.media.video_path {
-                    media_saver.save_video_to_user_library(vid_path: path)
-                }
-            case MediaType.GIF.rawValue:
-                media_saver.save_gif_to_user_library(data: selected.media.image_data)
-            default:
-                print("Type Not Found!!")
+            self.export_media_to_library(selected: selected)
+        }
+    }
+    
+    ///
+    func export_media_to_library(selected: SelectMediaEntity) {
+        let media_saver = MediaHandler()
+        switch selected.media.type {
+        case MediaType.Photo.rawValue:
+            if let ui_image = selected.media.full_image {
+                media_saver.save_photo_to_user_library(image: ui_image)
             }
+        case MediaType.Video.rawValue:
+            if let vid_path = selected.media.video_path {
+                media_saver.save_video_to_user_library(vid_path: vid_path)
+            }
+        case MediaType.GIF.rawValue:
+            media_saver.save_gif_to_user_library(data: selected.media.image_data)
+        default:
+            print("Type Not Found!!")
         }
         self.export_finished = true
     }

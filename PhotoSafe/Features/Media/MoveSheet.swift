@@ -11,7 +11,6 @@ struct MoveSheet: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var album_VM: AlbumViewModel
    
-    @ObservedObject var media_VM: MediaViewModel
     var curr_album_name: String? = nil
 
     @State private var toggle_alert: Bool = false

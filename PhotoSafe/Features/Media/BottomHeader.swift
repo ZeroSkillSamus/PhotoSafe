@@ -47,8 +47,13 @@ struct BottomHeader: View {
                             withAnimation {
                                 self.select_mode_active = false // Get out of select mode
                             }
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                withAnimation {
+                                    self.media_VM.export_finished = false
+                                }
+                            }
                         }
-                        //.foregroundStyle(.white)
                     }
                     
                     
@@ -105,7 +110,7 @@ struct BottomHeader: View {
         }
         .sheet(isPresented: self.$is_move_sheet_active) {
             MoveSheet(
-                media_VM: self.media_VM,
+                //media_VM: self.media_VM,
                 curr_album_name: self.album.name
             ) { album in
                 self.num_selected_items = 0

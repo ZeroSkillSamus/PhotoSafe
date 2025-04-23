@@ -16,6 +16,8 @@ enum MediaType: String {
 }
 
 struct MediaView: View {
+    @EnvironmentObject private var favorite_VM: FavoriteViewModel
+    
     @ObservedObject var album: AlbumEntity
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
 
@@ -24,7 +26,9 @@ struct MediaView: View {
     @State private var selectedItem: SelectMediaEntity?
     @State private var is_select_mode_active: Bool = false
     @State private var selected_media: [PhotosPickerItem] = []
-  
+    @State private var sheet_media_index: Int = 0
+    @State private var display_move_sheet: Bool = false
+    
     /// If we are in select mode function will handle if a user taps on a photo it will highlight green for selected items
     /// User can tap the media again to uncheck the item
     /// If we are not in select mode we then set the selected_item, which will open our sheet
@@ -96,10 +100,15 @@ struct MediaView: View {
                     selected_media_count: self.selected_media.count,
                     alert_value: self.media_VM.alert_value
                 )
+            } else if self.media_VM.export_finished {
+                CustomAlertView {
+                    Text("Save Finished")
+                        .font(.title3.bold())
+                }
             }
         }
         .background{
-            if self.media_VM.progress_alert {
+            if self.media_VM.progress_alert || self.media_VM.export_finished {
                 Color.c1_background.opacity(0.35).ignoresSafeArea()
             } else {
                 Color.c1_background.ignoresSafeArea(edges: .bottom)
@@ -109,10 +118,10 @@ struct MediaView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(item: $selectedItem) { item in
             FullCoverSheet(
-                //dictionary: self.media_VM.medias_dict,
+                from_where: .Media,
+                media_VM: self.media_VM,
                 select_media: item,
-                list: self.$media_VM.medias,
-                media_VM: self.media_VM
+                list: self.$media_VM.medias
             )
         }
         .onAppear {

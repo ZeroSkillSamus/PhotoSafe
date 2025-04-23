@@ -11,12 +11,15 @@ import SDWebImageSwiftUI
 struct FavoritesView: View {
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
     @EnvironmentObject private var album_VM: AlbumViewModel
+    @StateObject private var media_VM: MediaViewModel = MediaViewModel()
     
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     @State private var selected_media: SelectMediaEntity?
     @State private var select_count: Int = 0
     @State private var current_media_index: Int = 0
-    
+    @State private var sheet_media_index: Int = 0
+    @State private var display_move_sheet: Bool = false
+    @State private var export_finished: Bool = false
     @Binding var select_mode_active: Bool
     
     func leading_button() -> some View {
@@ -112,10 +115,12 @@ struct FavoritesView: View {
         }
         .fullScreenCover(item: self.$selected_media) { element in
             FullCoverSheet(
+                from_where: .Favorite,
+                media_VM: MediaViewModel(),
                 select_media: element,
-                list: self.$favorite_VM.favorites_list,
-                media_VM: MediaViewModel()
+                list: self.$favorite_VM.favorites_list
             )
+
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         .background(Color.c1_background)
