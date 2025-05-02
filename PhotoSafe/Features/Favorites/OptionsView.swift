@@ -6,13 +6,20 @@
 //
 
 import SwiftUI
+enum SlideShowType: String, CaseIterable {
+    case Vertical = "Vertical"
+    case Horizontal = "Horizontal"
+}
 
 struct OptionsView: View {
     @Environment(\.dismiss) private var dismiss
     
+    @State private var slide_show_type: SlideShowType = .Vertical
+    
     let timer_options: [TimeInterval] = [2,3,5,10]
     
-    @Binding var display_slide_show: Bool
+    @Binding var display_vertical_slide: Bool
+    @Binding var display_horizontal_slide: Bool
     @Binding var toggle_shuffle: Bool
     @Binding var play_slides_auto: Bool
     @Binding var time_interval: TimeInterval
@@ -38,36 +45,50 @@ struct OptionsView: View {
                             .foregroundStyle(Color.c1_text)
                     }
                     
-                    //if play_slides_auto {
-                    Menu {
-                        ForEach(self.timer_options,id: \.self) { time in
-                            Button {
-                                self.time_interval = time
-                            } label: {
-                                HStack {
-                                    if time == time_interval {
-                                        Image(systemName: "checkmark")
-                                    }
-                                    Text("\(time) Seconds")
-                                }
-                            }
-                        }
-                    } label: {
-                        Text("Play Slides for \(time_interval) seconds")
+                    HStack {
+                        Text("Choose Swipe Direction")
                             .font(.system(size: 16,weight: .bold,design: .rounded))
                             .foregroundStyle(Color.c1_text)
+                        
+                        Spacer()
+                        
+                        Picker("SlideShow Direction Options", selection: self.$slide_show_type) {
+                            ForEach(SlideShowType.allCases, id:\.self) { type in
+                                Text(type.rawValue)
+                            }
+                        }
+                        .menuIndicator(.hidden)
+                    }
+
+                    HStack {
+                        Text("Set Time Interval")
+                            .font(.system(size: 16,weight: .bold,design: .rounded))
+                            .foregroundStyle(Color.c1_text)
+                        
+                        Spacer()
+                        
+                        Picker("TimeInterval", selection: self.$time_interval) {
+                            ForEach(self.timer_options, id:\.self) { type in
+                                Text("\(String(format: "%.0f", type)) seconds")
+                            }
+                        }
+                        .menuIndicator(.hidden)
                     }
                     .opacity(self.play_slides_auto ? 1 : 0)
-                    .frame(maxWidth: .infinity,alignment: .leading)
                 }
                 
                 Spacer()
                 
                 Button {
                     self.dismiss()
-                    print(self.display_slide_show)
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.display_slide_show = true
+                        switch self.slide_show_type {
+                        case .Vertical:
+                            display_vertical_slide = true
+                        case .Horizontal:
+                            display_horizontal_slide = true
+                        }
                     }
                     
                 } label: {
@@ -83,6 +104,6 @@ struct OptionsView: View {
             }
             .padding()
         }
-        .presentationDetents([.medium, .fraction(0.35)])
+        .presentationDetents([.medium, .fraction(0.45)])
     }
 }

@@ -63,7 +63,7 @@ final class MediaViewModel: ObservableObject {
             }
         case MediaType.Video.rawValue:
             if let vid_path = selected.media.video_path {
-                media_saver.save_video_to_user_library(vid_path: vid_path)
+                media_saver.save_video_to_user_library(at: vid_path)
             }
         case MediaType.GIF.rawValue:
             media_saver.save_gif_to_user_library(data: selected.media.image_data)

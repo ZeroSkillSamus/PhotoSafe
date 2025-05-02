@@ -26,10 +26,8 @@ struct VerticalMediaVIew: View {
     
     @Binding var shuffle_list: Bool
     @Binding var time_interval: TimeInterval
-    var auto_slide_enabled: Bool
-    
-    //let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
-    
+    @Binding var auto_slide_enabled: Bool
+
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -83,13 +81,13 @@ struct VerticalMediaVIew: View {
                     }
                 }
                 .onReceive(self.timer) { _ in
+                    print(self.auto_slide_enabled)
                     guard self.auto_slide_enabled else { return } // Stops timer from changing index
                     
                     withAnimation {
                         self.current_media_index = (self.current_media_index + 1) % self.new_list.count
                     }
                 }
-                
             }
         }
         .onAppear {
