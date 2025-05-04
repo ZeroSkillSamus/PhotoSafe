@@ -16,6 +16,31 @@ enum ScreenType {
 }
 
 struct FullCoverSheet: View {
+    private struct FullCoverUIState {
+        var orientation = UIDeviceOrientation.unknown
+        var prev_orientation = UIDeviceOrientation.unknown
+        var current_media_index = 0
+        var display_move_sheet = false
+        var did_user_tap = false
+        var opacity: CGFloat = 0
+        var did_export = false
+        
+        // Computed properties work too
+        var should_header_display: Bool {
+            orientation.isPortrait || (orientation.isFlat && !prev_orientation.isLandscape) || orientation == .unknown
+        }
+        
+        mutating func delete_from_current_media_index(count: Int) {
+            if self.current_media_index == count - 1 && self.current_media_index != 0 {
+                self.current_media_index -= 1
+            }
+        }
+        
+//        var opacity_value: Double {
+//            !self.did_user_tap ? 1 : 0
+//        }
+    }
+    
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
     
@@ -25,27 +50,13 @@ struct FullCoverSheet: View {
     var select_media: SelectMediaEntity
     @Binding var list: [SelectMediaEntity]
    
-    @State private var orientation = UIDeviceOrientation.unknown
-    @State private var prev_orientation = UIDeviceOrientation.unknown
-    
-    @State private var current_media_index: Int = 0
-    @State private var curr_media: SelectMediaEntity?
-    @State private var display_move_sheet: Bool = false
-    @State private var did_user_tap: Bool = false
-    @State private var opacity: CGFloat = 0
-    @State private var did_export: Bool = false
-    
-    var should_header_display: Bool {
-        self.orientation.isPortrait || (self.orientation.isFlat && !self.prev_orientation.isLandscape) || self.orientation == .unknown
-    }
+    @State private var uiState = FullCoverUIState()
 
     private func delete_button() -> some View {
         SelectBottomButton(label: "Delete", system_name: "trash") {
             withAnimation {
-                self.list[self.current_media_index].select = .checked
-                if self.current_media_index == self.list.count - 1 && self.current_media_index != 0 {
-                    self.current_media_index -= 1
-                }
+                self.list[self.uiState.current_media_index].select = .checked
+                self.uiState.delete_from_current_media_index(count: self.list.count)
                 self.media_VM.delete_selected()
             }
             if self.list.isEmpty { self.dismiss() }
@@ -61,7 +72,7 @@ struct FullCoverSheet: View {
     
     private func move_button() -> some View {
         SelectBottomButton(label: "Move", system_name: "rectangle.2.swap") {
-            self.display_move_sheet.toggle()
+            self.uiState.display_move_sheet.toggle()
         }
         .frame(maxWidth: .infinity)
     }
@@ -69,7 +80,7 @@ struct FullCoverSheet: View {
     private func export_button() -> some View {
         return (
             SelectBottomButton(label: "Export", system_name: "square.and.arrow.up") {
-                let selected_media = self.list[self.current_media_index]
+                let selected_media = self.list[self.uiState.current_media_index]
                 self.media_VM.export_media_to_library(selected: selected_media)
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -83,20 +94,20 @@ struct FullCoverSheet: View {
     }
     
     private func favorite_button() -> some View {
-        SelectBottomButton(label: "Favorite", system_name: list[self.current_media_index].media.is_favorited ? "heart.fill" : "heart") {
-            let prev_status = self.list[self.current_media_index].media.is_favorited
+        SelectBottomButton(
+            label: "Favorite",
+            system_name: list[self.uiState.current_media_index].media.is_favorited ? "heart.fill" : "heart") {
+            let prev_status = self.list[self.uiState.current_media_index].media.is_favorited
             let change_to = prev_status ? false : true // False means dislike, true means like
             
             // Get updated media and overwrite current element in list
-            let new_media = self.media_VM.favorite_media(for: list[self.current_media_index].media, with: change_to)
+            let new_media = self.media_VM.favorite_media(for: list[self.uiState.current_media_index].media, with: change_to)
             
-            self.list[self.current_media_index] = SelectMediaEntity(media: new_media)
+            self.list[self.uiState.current_media_index] = SelectMediaEntity(media: new_media)
             
             // Update Favorites List
             if self.from_where == .Favorite {
-                if self.current_media_index == self.list.count - 1 && self.current_media_index != 0 {
-                    self.current_media_index -= 1
-                }
+                self.uiState.delete_from_current_media_index(count: self.list.count)
             }
             
             self.favorite_VM.add_or_delete_from_favorites(for: new_media)
@@ -116,7 +127,7 @@ struct FullCoverSheet: View {
                 move_button()
             }
             
-            if list.indices.contains(self.current_media_index) {
+            if list.indices.contains(self.uiState.current_media_index) {
                 favorite_button()
             }
             
@@ -126,8 +137,8 @@ struct FullCoverSheet: View {
         }
         .padding(.horizontal)
         .background(Color.c1_secondary)
-        .opacity(self.opacity)
-        .opacity(!self.did_user_tap ? 1 : 0)
+        .opacity(self.uiState.opacity)
+        .opacity(!self.uiState.did_user_tap ? 1 : 0)
     }
     
     private func top_header() -> some View {
@@ -152,24 +163,24 @@ struct FullCoverSheet: View {
         .frame(maxWidth: .infinity, maxHeight: 40,alignment: .topLeading)
         .padding(.horizontal)
         .overlay(alignment: .top) {
-            Text("\(current_media_index + 1) of \(list.count)")
+            Text("\(self.uiState.current_media_index + 1) of \(list.count)")
                 .font(.title3)
                 .padding(5)
                 .foregroundStyle(.primary)
         }
         .background(Color.c1_secondary)
-        .opacity(self.opacity)
-        .opacity(!self.did_user_tap ? 1 : 0)
+        .opacity(self.uiState.opacity)
+        .opacity(!self.uiState.did_user_tap ? 1 : 0)
     }
     
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
-                if should_header_display || !self.did_user_tap {
+                if self.uiState.should_header_display || !self.uiState.did_user_tap {
                     top_header()
                 }
  
-                LazyPager(data: self.list, page: self.$current_media_index) { element in
+                LazyPager(data: self.list, page: self.$uiState.current_media_index) { element in
                     VStack {
                         switch element.media.type {
                         case MediaType.Photo.rawValue:
@@ -181,11 +192,11 @@ struct FullCoverSheet: View {
                         case MediaType.Video.rawValue:
                             if let video_path = element.media.video_path, let url = URL(string: video_path) {
                                 //if self.current_media_index == elment. { // Needed to stop video from preloading
-                                if list[self.current_media_index] == element {
+                                if list[self.uiState.current_media_index] == element {
                                     PlayerView(
-                                        did_user_tap: self.$did_user_tap,
-                                        curr_orientation: self.orientation,
-                                        prev_orientation: self.prev_orientation,
+                                        did_user_tap: self.$uiState.did_user_tap,
+                                        curr_orientation: self.uiState.orientation,
+                                        prev_orientation: self.uiState.prev_orientation,
                                         url: url
                                     )
                                 }
@@ -203,30 +214,30 @@ struct FullCoverSheet: View {
                 }
                 // Make the content zoomable
                 .zoomable(min: 1, max: 5)
-                .onDismiss(backgroundOpacity: $opacity) {
+                .onDismiss(backgroundOpacity: self.$uiState.opacity) {
                     self.dismiss()
                 }
                 .onTap {
                     withAnimation {
-                        self.did_user_tap.toggle()
+                        self.uiState.did_user_tap.toggle()
                     }
                 }
-                .opacity(self.opacity)
+                .opacity(self.uiState.opacity)
                 .frame(maxWidth:.infinity,maxHeight: .infinity)
                 .ignoresSafeArea(edges: [.bottom, .top])
                 
                 // Shows Bottom Header
-                if should_header_display || !self.did_user_tap {
+                if self.uiState.should_header_display || !self.uiState.did_user_tap {
                     bottom_header()
                 }
             }
             .onRotate { newOrientation in
-                self.prev_orientation = self.orientation
-                self.orientation = newOrientation
+                self.uiState.prev_orientation = self.uiState.orientation
+                self.uiState.orientation = newOrientation
             }
         }
         .onAppear {
-            self.current_media_index = self.list.firstIndex(of: self.select_media) ?? 0
+            self.uiState.current_media_index = self.list.firstIndex(of: self.select_media) ?? 0
         }
         .overlay(alignment: .center) {
             if self.media_VM.export_finished {
@@ -236,20 +247,18 @@ struct FullCoverSheet: View {
                 }
             }
         }
-        .sheet(isPresented: self.$display_move_sheet) {
+        .sheet(isPresented: self.$uiState.display_move_sheet) {
             MoveSheet(curr_album_name: self.select_media.media.album.name) { album in
-                self.list[self.current_media_index].select = .checked
-                if self.current_media_index == self.list.count - 1 && self.current_media_index != 0 {
-                    self.current_media_index -= 1
-                }
+                self.list[self.uiState.current_media_index].select = .checked
+                self.uiState.delete_from_current_media_index(count: self.list.count)
                 self.media_VM.move_selected(to: album)
                 
                 if self.list.isEmpty { self.dismiss() }
             }
         }
-        .ignoresSafeArea(edges: !self.did_user_tap ? [] : [.bottom,.top])
+        .ignoresSafeArea(edges: !self.uiState.did_user_tap ? [] : [.bottom,.top])
         .persistentSystemOverlays(.hidden)
-        .background(.black.opacity(opacity))
+        .background(.black.opacity(self.uiState.opacity))
         .background(ClearFullScreenBackground())
     }
 }
