@@ -7,7 +7,7 @@
 
 import SwiftUI
 import PhotosUI
-
+import CoreData
 
 enum MediaType: String {
     case Photo = "Photo"
@@ -16,8 +16,9 @@ enum MediaType: String {
 }
 
 struct MediaView: View {
-    @ObservedObject var album: AlbumEntity
+    @EnvironmentObject private var favorite_VM: FavoriteViewModel
     
+    @ObservedObject var album: AlbumEntity
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
 
     @State private var is_select_all: Bool = false
@@ -25,7 +26,27 @@ struct MediaView: View {
     @State private var selectedItem: SelectMediaEntity?
     @State private var is_select_mode_active: Bool = false
     @State private var selected_media: [PhotosPickerItem] = []
-  
+    @State private var sheet_media_index: Int = 0
+    @State private var display_move_sheet: Bool = false
+    
+    /// If we are in select mode function will handle if a user taps on a photo it will highlight green for selected items
+    /// User can tap the media again to uncheck the item
+    /// If we are not in select mode we then set the selected_item, which will open our sheet
+    private func handle_select_image(for select_media: inout SelectMediaEntity) {
+        if self.is_select_mode_active {
+            switch select_media.select {
+            case .blank:
+                select_media.select = .checked
+                self.select_count = select_count + 1
+            case .checked:
+                select_media.select = .blank
+                self.select_count = select_count - 1
+            }
+        } else {
+            self.selectedItem = select_media
+        }
+    }
+    
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     var body: some View {
         VStack(spacing: 0) {
@@ -45,13 +66,16 @@ struct MediaView: View {
                 }
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
-                    ForEach(self.$media_VM.medias) { $media_select in
-                        MediaImageGridView(
-                            is_selected: self.is_select_mode_active,
-                            media_select: $media_select,
-                            selected_item: self.$selectedItem,
-                            select_count: self.$select_count
-                        )
+                    ForEach(self.$media_VM.medias) { $select_media in
+                        if let ui_image = select_media.media.thumbnail_image {
+                            MediaImageGridView(
+                                is_select_mode_active: self.is_select_mode_active,
+                                ui_image: ui_image,
+                                media_select: $select_media,
+                                selected_media: self.$selectedItem,
+                                select_count: self.$select_count
+                            )
+                        }
                     }
                 }
                 .padding(.top,10)
@@ -76,10 +100,15 @@ struct MediaView: View {
                     selected_media_count: self.selected_media.count,
                     alert_value: self.media_VM.alert_value
                 )
+            } else if self.media_VM.export_finished {
+                CustomAlertView {
+                    Text("Save Finished")
+                        .font(.title3.bold())
+                }
             }
         }
         .background{
-            if self.media_VM.progress_alert {
+            if self.media_VM.progress_alert || self.media_VM.export_finished {
                 Color.c1_background.opacity(0.35).ignoresSafeArea()
             } else {
                 Color.c1_background.ignoresSafeArea(edges: .bottom)
@@ -88,10 +117,18 @@ struct MediaView: View {
         .toolbarBackground(Color.c1_background, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(item: $selectedItem) { item in
-            FullCoverSheet(select_media: item, list: self.$media_VM.medias, media_VM: self.media_VM)
+            FullCoverSheet(
+                from_where: .Media,
+                media_VM: self.media_VM,
+                select_media: item,
+                list: self.$media_VM.medias
+            )
         }
         .onAppear {
             self.media_VM.set_media_and_counts(from: album)
+            
+            // Load cache
+            ImageCache.preloadImages(medias: self.media_VM.medias)
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity)
         .toolbar {

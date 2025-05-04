@@ -14,7 +14,7 @@ enum MediaError: Error {
 
 // Define the blueprint for AlbumService
 protocol MediaServiceProtocol {
-    func save_media(to album: AlbumEntity, type: MediaType, imageData: Data, videoPath: String?) throws -> MediaEntity
+    func save_media(to album: AlbumEntity, type: MediaType, imageData: Data, thumbnail: Data, videoPath: String?) throws -> MediaEntity
     func fetch_media(from album: AlbumEntity) -> [MediaEntity]
     func delete(media: MediaEntity) throws
     func move(media: MediaEntity, to album: AlbumEntity) throws
@@ -38,6 +38,7 @@ final class MediaService: MediaServiceProtocol {
         to album: AlbumEntity,
         type: MediaType,
         imageData: Data,
+        thumbnail: Data,
         videoPath: String? = nil
     ) throws -> MediaEntity {
         guard !imageData.isEmpty else {
@@ -51,13 +52,16 @@ final class MediaService: MediaServiceProtocol {
         media.type = type.rawValue
         media.video_path = videoPath
         media.is_favorited = false
+        media.thumbnail = thumbnail
+        media.id = UUID() 
         
         try self.context.save()
         return media
     }
     
     func fetch_media(from album: AlbumEntity) -> [MediaEntity] {
-        let medias = (try? self.context.fetch(MediaEntity.fetchRequest())) ?? []
+        let fetchRequest: NSFetchRequest<MediaEntity> = MediaEntity.fetchRequest()
+        let medias = (try? self.context.fetch(fetchRequest)) ?? []
         return medias.filter({ $0.album.name == album.name })
     }
     

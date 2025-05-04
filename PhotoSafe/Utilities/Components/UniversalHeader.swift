@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct UniversalHeader<Leading: View, Trailing: View>: View {
-    let header: String
+struct UniversalHeader<Header: View, Leading: View, Trailing: View>: View {
+    @ViewBuilder var header: Header
     
-    @ViewBuilder let leading_button: Leading
-    @ViewBuilder let trailing_button: Trailing
+    @ViewBuilder var leading_button: Leading
+    @ViewBuilder var trailing_button: Trailing
     
     var body: some View {
         HStack {
@@ -25,10 +25,16 @@ struct UniversalHeader<Leading: View, Trailing: View>: View {
         .padding(.horizontal)
         .padding(.vertical,10)
         .overlay(
-            Text(header)
-                .font(.title2.bold())
-                .foregroundColor(.c1_text)
+            header
         )
         .background(Color.c1_secondary)
+    }
+}
+
+extension Text {
+    func default_header() -> Self {
+        self
+            .font(.title2.bold())
+            .foregroundColor(.c1_text)
     }
 }

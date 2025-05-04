@@ -40,8 +40,43 @@ class MediaHandler: NSObject {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(save_completed), nil)
     }
     
-    func save_video_to_user_library(vid_path: String) {
-        UISaveVideoAtPathToSavedPhotosAlbum(vid_path, self, #selector(save_completed), nil)
+    func save_video_to_user_library(at path: String) {
+        let fileManager = FileManager.default
+        let isReadable = fileManager.isReadableFile(atPath: path)
+        print("Is file readable? \(isReadable)")
+    
+        let originalURL = URL(fileURLWithPath: path)
+        
+        guard FileManager.default.fileExists(atPath: originalURL.path) else {
+            print(originalURL.path)
+            print("Error: Video file doesn't exist at path")
+            return
+        }
+        
+        
+        PHPhotoLibrary.requestAuthorization { status in
+            guard status == .authorized else {
+                print("Photo library access denied")
+                return
+            }
+            
+            PHPhotoLibrary.shared().performChanges({
+                        let url = URL(fileURLWithPath: path)
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+                    }) { success, error in
+                    DispatchQueue.main.async {
+                        if success {
+                            print("Video saved to Photos library")
+                        } else {
+                            print("Error saving video: \(error?.localizedDescription ?? "Unknown error")")
+                            // Additional error inspection:
+                            if let error = error as NSError? {
+                                print("Full error details: \(error)")
+                            }
+                        }
+                    }
+                }
+        }
     }
     
     func save_gif_to_user_library(data: Data) {
@@ -58,7 +93,13 @@ class MediaHandler: NSObject {
     }
     
     @objc func save_completed(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        print("Save Finished!")
+        if let error = error {
+            print("Error saving Media: \(error.localizedDescription)")
+            // Show error to user
+        } else {
+            print("Media Saved Successfully!")
+            // Show success message
+        }
     }
     
 }

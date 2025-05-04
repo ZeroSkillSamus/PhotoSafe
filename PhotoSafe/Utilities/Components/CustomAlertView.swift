@@ -12,9 +12,9 @@ struct CustomAlertView<Content: View>: View {
     
     var body: some View {
         VStack(spacing: 15) {
-            VStack(spacing: 5) {
-                content
-            }
+            
+            content
+            
         }
         .padding(.vertical, 25)
         .frame(maxWidth: 270)

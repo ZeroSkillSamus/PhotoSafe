@@ -9,7 +9,18 @@ import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-        Text("Settings")
+        VStack {
+            UniversalHeader(header: {
+                Text("Settings")
+                    .default_header()
+            }) {
+                EmptyView()
+            } trailing_button: {
+                EmptyView()
+            }
+        }
+        .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
+        .background(Color.c1_background)
     }
 }
 

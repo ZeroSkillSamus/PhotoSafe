@@ -43,6 +43,7 @@
 		028C6F492DAD879000BB8BB9 /* ProgressAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F482DAD879000BB8BB9 /* ProgressAlert.swift */; };
 		028C6F4C2DADEAD200BB8BB9 /* UniversalHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F4B2DADEAD200BB8BB9 /* UniversalHeader.swift */; };
 		028C6F4E2DADFCE400BB8BB9 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F4D2DADFCE400BB8BB9 /* ImageGridView.swift */; };
+		028EF8212DB3F91A00361AFD /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028EF8202DB3F91A00361AFD /* ImageCache.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
@@ -56,6 +57,8 @@
 		02D801492DA5ECEA002AE361 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801482DA5ECEA002AE361 /* CustomAlertView.swift */; };
 		02EBCE322DA34C24004181A3 /* AlbumVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE312DA34C24004181A3 /* AlbumVView.swift */; };
 		02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */; };
+		02F3E5FC2DC1769D004FA2DE /* VerticalMediaVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F3E5FA2DC1769D004FA2DE /* VerticalMediaVIew.swift */; };
+		02F3E5FD2DC1769D004FA2DE /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F3E5FB2DC1769D004FA2DE /* OptionsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +118,7 @@
 		028C6F482DAD879000BB8BB9 /* ProgressAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressAlert.swift; sourceTree = "<group>"; };
 		028C6F4B2DADEAD200BB8BB9 /* UniversalHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversalHeader.swift; sourceTree = "<group>"; };
 		028C6F4D2DADFCE400BB8BB9 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
+		028EF8202DB3F91A00361AFD /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
@@ -127,6 +131,8 @@
 		02D801482DA5ECEA002AE361 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 		02EBCE312DA34C24004181A3 /* AlbumVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumVView.swift; sourceTree = "<group>"; };
 		02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumImageDisplay.swift; sourceTree = "<group>"; };
+		02F3E5FA2DC1769D004FA2DE /* VerticalMediaVIew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalMediaVIew.swift; sourceTree = "<group>"; };
+		02F3E5FB2DC1769D004FA2DE /* OptionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -367,6 +373,7 @@
 				028C6F482DAD879000BB8BB9 /* ProgressAlert.swift */,
 				028C6F4B2DADEAD200BB8BB9 /* UniversalHeader.swift */,
 				028C6F4D2DADFCE400BB8BB9 /* ImageGridView.swift */,
+				028EF8202DB3F91A00361AFD /* ImageCache.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -398,6 +405,8 @@
 		02D8013F2DA5A822002AE361 /* Favorites */ = {
 			isa = PBXGroup;
 			children = (
+				02F3E5FB2DC1769D004FA2DE /* OptionsView.swift */,
+				02F3E5FA2DC1769D004FA2DE /* VerticalMediaVIew.swift */,
 				02D801402DA5A82D002AE361 /* FavoritesView.swift */,
 			);
 			path = Favorites;
@@ -562,10 +571,12 @@
 				0245023C2D9E0F5200E9A862 /* URL+Thumbnail.swift in Sources */,
 				027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */,
 				020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */,
+				02F3E5FD2DC1769D004FA2DE /* OptionsView.swift in Sources */,
 				02D8013E2DA5A6A0002AE361 /* WebView.swift in Sources */,
 				0248E9582D9B56D700272924 /* MediaImageGridView.swift in Sources */,
 				0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */,
 				020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */,
+				02F3E5FC2DC1769D004FA2DE /* VerticalMediaVIew.swift in Sources */,
 				028C6F452DAAB99F00BB8BB9 /* Color+CustomScheme.swift in Sources */,
 				028C6F432DAAB8E500BB8BB9 /* Color+Hex.swift in Sources */,
 				0248E9532D9B4CC100272924 /* VideoFileTranferable.swift in Sources */,
@@ -601,6 +612,7 @@
 				02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
 				02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */,
+				028EF8212DB3F91A00361AFD /* ImageCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -768,7 +780,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Media To Library";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to delete images ";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to delete images and save images ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -799,7 +811,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Media To Library";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to delete images ";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to delete images and save images ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

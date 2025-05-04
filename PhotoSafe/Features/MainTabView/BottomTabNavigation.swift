@@ -23,6 +23,8 @@ struct BottomTabNavigation: View {
     @State private var display_sheet: Bool = false
     @State private var toggle_plus_mode: Bool = false
     
+    @State private var select_mode_active: Bool = false
+    
     @ViewBuilder
     private func TabButton(tab:Tab, image: String) -> some View {
         Button {
@@ -91,7 +93,7 @@ struct BottomTabNavigation: View {
                             .background(Color.c1_background)
                         
                         
-                        FavoritesView()
+                        FavoritesView(select_mode_active: self.$select_mode_active)
                             .tag(Tab.favorites)
                             .toolbar(.hidden, for: .tabBar)
                             .background(Color.c1_background)
@@ -101,10 +103,9 @@ struct BottomTabNavigation: View {
                     VStack(spacing:0) {
                         CustomNavHeader()
                             .background(Color.c1_secondary)
-                            .opacity(self.toggle_plus_mode ? 0 : 1)
+                            .opacity(self.toggle_plus_mode || self.select_mode_active ? 0 : 1)
                     }
                     .background(Color.c1_background)
-                    
                 }
             }
             .ignoresSafeArea(.keyboard)

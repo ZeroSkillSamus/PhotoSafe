@@ -71,7 +71,7 @@ struct PlusMode: View {
             }
         }
         .sheet(isPresented: self.$show_move_sheet) {
-            MoveSheet(media_VM: self.media_VM) { album in
+            MoveSheet() { album in
                 Task {
                     await self.media_VM.add_imported_photos(to: album, from: self.selected_media)
                     

@@ -13,11 +13,17 @@ struct ProgressAlert: View {
     
     var body: some View {
         CustomAlertView {
-            Text("Progress")
-                .font(.title3.bold())
+            VStack(spacing: 5) {
+                Text("Progress")
+                    .font(.title3.bold())
+                
+                Text("\(Int(self.alert_value))/\(self.selected_media_count)")
+                    .font(.footnote.bold())
+            }
             
-            Text("\(Int(self.alert_value))/\(self.selected_media_count)")
-                .font(.footnote.bold())
+            ProgressView(value: self.alert_value,total: Float(self.selected_media_count))
+                            .progressViewStyle(.linear)
+                            .padding(.horizontal)
         }
     }
 }
