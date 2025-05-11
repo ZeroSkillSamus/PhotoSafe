@@ -15,7 +15,7 @@ extension URL {
         imageGenerator.appliesPreferredTrackTransform = true
         
         do {
-            let cgImage = try imageGenerator.copyCGImage(at: CMTime(seconds: 10, preferredTimescale: 60), actualTime: nil)
+            let cgImage = try imageGenerator.copyCGImage(at: CMTime.zero, actualTime: nil)
             return UIImage(cgImage: cgImage).jpegData(compressionQuality: 1)
         } catch {
             print("Error generating thumbnail: \(error.localizedDescription)")
