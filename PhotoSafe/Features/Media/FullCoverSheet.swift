@@ -24,6 +24,7 @@ struct FullCoverSheet: View {
         var did_user_tap = false
         var opacity: CGFloat = 0
         var did_export = false
+        var display_index: Int = 0
         
         // Computed properties work too
         var should_header_display: Bool {
@@ -35,10 +36,19 @@ struct FullCoverSheet: View {
                 self.current_media_index -= 1
             }
         }
-        
-//        var opacity_value: Double {
-//            !self.did_user_tap ? 1 : 0
-//        }
+    }
+
+    private let windowSize = 5 // Load 2 items before and after current index
+    
+    // Helper function to update the windowed list
+    private func updateWindowedList(currentIndex: Int) {
+        let lowerBound = max(0, currentIndex - windowSize/2)
+        let upperBound = min(list.count - 1, currentIndex + windowSize/2)
+        print("Current Index \(self.uiState.current_media_index)   Passeed In Index: \(currentIndex)")
+        print("LowerBound \(lowerBound)     UpperBound \(upperBound)")
+        windowedList = Array(list[lowerBound...upperBound])
+        let new_Index = self.windowedList.firstIndex(of: self.select_media) ?? 0
+        self.uiState.display_index = new_Index
     }
     
     @Environment(\.dismiss) var dismiss
@@ -48,6 +58,7 @@ struct FullCoverSheet: View {
     @ObservedObject var media_VM: MediaViewModel
     
     var select_media: SelectMediaEntity
+    @State private var windowedList: [SelectMediaEntity] = []
     @Binding var list: [SelectMediaEntity]
    
     @State private var uiState = FullCoverUIState()
@@ -180,36 +191,33 @@ struct FullCoverSheet: View {
                     top_header()
                 }
  
-                LazyPager(data: self.list, page: self.$uiState.current_media_index) { element in
-                    VStack {
-                        switch element.media.type {
-                        case MediaType.Photo.rawValue:
-                            if let cached_image = ImageCache.fetch_image(for: element.media.id.uuidString) {
-                                image_view(cached_image)
-                            } else if let ui_image = ImageCache.set_image_and_return(for: element.media) {
-                                image_view(ui_image)
-                            }
-                        case MediaType.Video.rawValue:
-                            if let video_path = element.media.video_path, let url = URL(string: video_path) {
-                                //if self.current_media_index == elment. { // Needed to stop video from preloading
-                                if list[self.uiState.current_media_index] == element {
-                                    PlayerView(
-                                        did_user_tap: self.$uiState.did_user_tap,
-                                        curr_orientation: self.uiState.orientation,
-                                        prev_orientation: self.uiState.prev_orientation,
-                                        url: url
-                                    )
-                                }
-                            }
-                        case MediaType.GIF.rawValue:
-                            AnimatedImage(data: element.media.image_data)
-                                .resizable()
-                                .customLoopCount(0)
-                                .scaledToFit()
-                        default:
-                            EmptyView()
+                LazyPager(data: self.windowedList, page: self.$uiState.display_index) { element in
+                    switch element.media.type {
+                    case MediaType.Photo.rawValue:
+                        if let cached_image = ImageCache.fetch_image(for: element.media.id.uuidString) {
+                            image_view(cached_image)
+                        } else if let ui_image = ImageCache.set_image_and_return(for: element.media) {
+                            image_view(ui_image)
                         }
-                        
+                    case MediaType.Video.rawValue:
+                        if let video_path = element.media.video_path, let url = URL(string: video_path) {
+                            //if self.current_media_index == elment. { // Needed to stop video from preloading
+                            if list[self.uiState.current_media_index] == element {
+                                PlayerView(
+                                    did_user_tap: self.$uiState.did_user_tap,
+                                    curr_orientation: self.uiState.orientation,
+                                    prev_orientation: self.uiState.prev_orientation,
+                                    url: url
+                                )
+                            }
+                        }
+                    case MediaType.GIF.rawValue:
+                        AnimatedImage(data: element.media.image_data)
+                            .resizable()
+                            .customLoopCount(0)
+                            .scaledToFit()
+                    default:
+                        EmptyView()
                     }
                 }
                 // Make the content zoomable
@@ -235,9 +243,17 @@ struct FullCoverSheet: View {
                 self.uiState.prev_orientation = self.uiState.orientation
                 self.uiState.orientation = newOrientation
             }
+            .onChange(of: uiState.current_media_index) { old_index, new_index in
+                updateWindowedList(currentIndex: new_index)
+            }
         }
         .onAppear {
             self.uiState.current_media_index = self.list.firstIndex(of: self.select_media) ?? 0
+            //print("Current Index \(self.uiState.current_media_index)")
+            updateWindowedList(currentIndex: uiState.current_media_index)
+            let new_Index = self.windowedList.firstIndex(of: self.select_media) ?? 0
+            self.uiState.display_index = new_Index
+            print("The New Index Should Be \(new_Index)")
         }
         .overlay(alignment: .center) {
             if self.media_VM.export_finished {
