@@ -10,23 +10,6 @@ import SwiftUI
 struct VideoFileTranferable: Transferable {
     let url: URL
 
-    static var get_application_support_dir: URL {
-        let urls = FileManager.default.urls(
-            for: .applicationSupportDirectory,
-            in: .userDomainMask
-        )
-        let appSupportURL = urls.first!
-        
-        // Create the directory if it doesn't exist
-        if !FileManager.default.fileExists(atPath: appSupportURL.path) {
-            try? FileManager.default.createDirectory(
-                at: appSupportURL,
-                withIntermediateDirectories: true
-            )
-        }
-        return appSupportURL
-    }
-    
     static var transferRepresentation: some TransferRepresentation {
         FileRepresentation(contentType: .movie) { file in
             // Use COPY instead of MOVE to preserve original
@@ -53,16 +36,17 @@ struct VideoFileTranferable: Transferable {
             var permanentURL = videosDir
                 .appendingPathComponent(UUID().uuidString)
                 .appendingPathExtension("mov")
-            
-            // 4. COPY (not move) from received location
-            try FileManager.default.copyItem(at: received.file, to: permanentURL)
 
-            // 5. Clean up: Remove the temporary file
-            try? FileManager.default.removeItem(at: received.file)
+            try FileManager.default.moveItem(at: received.file, to: permanentURL)
+
+            try FileManager.default.setAttributes(
+                [.protectionKey: FileProtectionType.complete],
+                ofItemAtPath: permanentURL.path
+            )
             
             // 6. Mark as non-temporary for persistence
             var resourceValues = URLResourceValues()
-            resourceValues.isExcludedFromBackup = false
+            resourceValues.isExcludedFromBackup = true
             try? permanentURL.setResourceValues(resourceValues)
             
             return Self(url: permanentURL)
