@@ -124,39 +124,24 @@ final class MediaViewModel: ObservableObject {
                             )
                         }
                     }
+                } else if let image_data = try? await item.loadTransferable(type: Data.self) {
+                    // Code determines if image is either a gif
+                    let supported_types = item.supportedContentTypes
+                    let isGIF = supported_types.contains(UTType.gif)
+                    let type = isGIF ? MediaType.GIF : MediaType.Photo
+                    if let thumbnail = UIImage(data: image_data)?.thumbnail(), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5)  {
+                        self.add_media(
+                            to: album,
+                            type: type,
+                            image_data: image_data,
+                            thumbnail: compressed_img
+                        )
+                    }
+                    
                 }
             } catch(let error) {
                 print("Video load failed: \(error)")
             }
-//            if let video_url = try? await item.loadTransferable(type: VideoFileTranferable.self)?.url {
-//                if let image_data = video_url.generateVideoThumbnail() {
-//                    if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
-//                        self.add_media(
-//                            to: album,
-//                            type: MediaType.Video,
-//                            image_data: image_data,
-//                            thumbnail: compressed_img,
-//                            video_path: video_url.absoluteString
-//                        )
-//                    }
-//                }
-//            }
-            
-//            else if let image_data = try? await item.loadTransferable(type: Data.self) {
-//                // Code determines if image is either a gif
-//                let supported_types = item.supportedContentTypes
-//                let isGIF = supported_types.contains(UTType.gif)
-//                let type = isGIF ? MediaType.GIF : MediaType.Photo
-//                if let thumbnail = UIImage(data: image_data)?.thumbnail(), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5)  {
-//                    self.add_media(
-//                        to: album,
-//                        type: type,
-//                        image_data: image_data,
-//                        thumbnail: compressed_img
-//                    )
-//                }
-//                
-//            }
         }
         
         // Batch delete

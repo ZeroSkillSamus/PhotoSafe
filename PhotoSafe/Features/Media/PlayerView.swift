@@ -29,7 +29,7 @@ extension View {
 
 struct PlayerView: View {
     @State private var controller: AVPlayerViewController = AVPlayerViewController()
-    @State private var is_controls_active: Bool = false
+    @State private var is_controls_active: Bool = true
     @State private var player_value: Float = 0
     @State private var is_video_playing: Bool = true
 
@@ -91,6 +91,7 @@ struct PlayerView: View {
                     self.controller.player?.play()
                 }
                 .onTapGesture {
+                    print("asdfdssa")
                     withAnimation {
                         self.is_controls_active.toggle()
                         self.did_user_tap.toggle()

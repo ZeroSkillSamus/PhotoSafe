@@ -35,6 +35,7 @@
 		027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250DB2D9B2A6E00280DB2 /* AlbumService.swift */; };
 		027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250DE2D9B308D00280DB2 /* MediaService.swift */; };
 		027250E12D9B327E00280DB2 /* MediaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250E02D9B327E00280DB2 /* MediaViewModel.swift */; };
+		02867A592FD317C000DC00C4 /* OrientationLockModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02867A582FD317AF00DC00C4 /* OrientationLockModifier.swift */; };
 		028C6F3D2DA72AB000BB8BB9 /* AlbumEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F3C2DA72AB000BB8BB9 /* AlbumEditView.swift */; };
 		028C6F3F2DA8903B00BB8BB9 /* EditSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F3E2DA8903B00BB8BB9 /* EditSheetViewModel.swift */; };
 		028C6F432DAAB8E500BB8BB9 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F422DAAB8E500BB8BB9 /* Color+Hex.swift */; };
@@ -44,6 +45,10 @@
 		028C6F4C2DADEAD200BB8BB9 /* UniversalHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F4B2DADEAD200BB8BB9 /* UniversalHeader.swift */; };
 		028C6F4E2DADFCE400BB8BB9 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028C6F4D2DADFCE400BB8BB9 /* ImageGridView.swift */; };
 		028EF8212DB3F91A00361AFD /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028EF8202DB3F91A00361AFD /* ImageCache.swift */; };
+		029710602FC7DA43002427F2 /* KeychainWrapperService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0297105F2FC7DA30002427F2 /* KeychainWrapperService.swift */; };
+		029710632FC7DAC4002427F2 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 029710622FC7DAC4002427F2 /* KeychainAccess */; };
+		029710652FC7DE92002427F2 /* AuthStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029710642FC7DE85002427F2 /* AuthStorageService.swift */; };
+		029710672FC7E487002427F2 /* AuthStorageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 029710662FC7E479002427F2 /* AuthStorageViewModel.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
@@ -110,6 +115,7 @@
 		027250DB2D9B2A6E00280DB2 /* AlbumService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumService.swift; sourceTree = "<group>"; };
 		027250DE2D9B308D00280DB2 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
 		027250E02D9B327E00280DB2 /* MediaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewModel.swift; sourceTree = "<group>"; };
+		02867A582FD317AF00DC00C4 /* OrientationLockModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationLockModifier.swift; sourceTree = "<group>"; };
 		028C6F3C2DA72AB000BB8BB9 /* AlbumEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumEditView.swift; sourceTree = "<group>"; };
 		028C6F3E2DA8903B00BB8BB9 /* EditSheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSheetViewModel.swift; sourceTree = "<group>"; };
 		028C6F422DAAB8E500BB8BB9 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
@@ -120,6 +126,9 @@
 		028C6F4D2DADFCE400BB8BB9 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
 		028EF8202DB3F91A00361AFD /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		0297105E2FC51052002427F2 /* PhotoSafe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhotoSafe.entitlements; sourceTree = "<group>"; };
+		0297105F2FC7DA30002427F2 /* KeychainWrapperService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainWrapperService.swift; sourceTree = "<group>"; };
+		029710642FC7DE85002427F2 /* AuthStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStorageService.swift; sourceTree = "<group>"; };
+		029710662FC7E479002427F2 /* AuthStorageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStorageViewModel.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
@@ -143,6 +152,7 @@
 			files = (
 				02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */,
 				0248E94E2D9B4B8100272924 /* SDWebImageSwiftUI in Frameworks */,
+				029710632FC7DAC4002427F2 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,6 +238,7 @@
 		0215FDE22D934B4E00E2B546 /* Viewmodels */ = {
 			isa = PBXGroup;
 			children = (
+				029710662FC7E479002427F2 /* AuthStorageViewModel.swift */,
 				02B397002D96436B00952274 /* AlbumViewModel.swift */,
 				027250E02D9B327E00280DB2 /* MediaViewModel.swift */,
 				028C6F3E2DA8903B00BB8BB9 /* EditSheetViewModel.swift */,
@@ -330,6 +341,7 @@
 		027250D42D9B27A800280DB2 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				02867A572FD317A600DC00C4 /* Modifiers */,
 				028C6F4A2DADE77F00BB8BB9 /* Components */,
 				0245023A2D9E0F0900E9A862 /* Extensions */,
 			);
@@ -359,10 +371,20 @@
 		027250DA2D9B2A5900280DB2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				029710642FC7DE85002427F2 /* AuthStorageService.swift */,
+				0297105F2FC7DA30002427F2 /* KeychainWrapperService.swift */,
 				027250DB2D9B2A6E00280DB2 /* AlbumService.swift */,
 				027250DE2D9B308D00280DB2 /* MediaService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		02867A572FD317A600DC00C4 /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				02867A582FD317AF00DC00C4 /* OrientationLockModifier.swift */,
+			);
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		028C6F4A2DADE77F00BB8BB9 /* Components */ = {
@@ -451,6 +473,7 @@
 			packageProductDependencies = (
 				0248E94D2D9B4B8100272924 /* SDWebImageSwiftUI */,
 				02D8012E2DA4546A002AE361 /* LazyPager */,
+				029710622FC7DAC4002427F2 /* KeychainAccess */,
 			);
 			productName = PhotoSafe;
 			productReference = 0215FDB52D933EA800E2B546 /* PhotoSafe.app */;
@@ -527,6 +550,7 @@
 			packageReferences = (
 				0248E94C2D9B4B8100272924 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				02D8012D2DA4546A002AE361 /* XCRemoteSwiftPackageReference "LazyPager" */,
+				029710612FC7DAC4002427F2 /* XCRemoteSwiftPackageReference "keychainaccess" */,
 			);
 			productRefGroup = 0215FDB62D933EA800E2B546 /* Products */;
 			projectDirPath = "";
@@ -571,6 +595,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0245023C2D9E0F5200E9A862 /* URL+Thumbnail.swift in Sources */,
+				029710602FC7DA43002427F2 /* KeychainWrapperService.swift in Sources */,
 				027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */,
 				020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */,
 				02F3E5FD2DC1769D004FA2DE /* OptionsView.swift in Sources */,
@@ -581,6 +606,7 @@
 				02F3E5FC2DC1769D004FA2DE /* VerticalMediaVIew.swift in Sources */,
 				028C6F452DAAB99F00BB8BB9 /* Color+CustomScheme.swift in Sources */,
 				028C6F432DAAB8E500BB8BB9 /* Color+Hex.swift in Sources */,
+				02867A592FD317C000DC00C4 /* OrientationLockModifier.swift in Sources */,
 				0248E9532D9B4CC100272924 /* VideoFileTranferable.swift in Sources */,
 				028C6F492DAD879000BB8BB9 /* ProgressAlert.swift in Sources */,
 				027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */,
@@ -593,6 +619,7 @@
 				028C6F4E2DADFCE400BB8BB9 /* ImageGridView.swift in Sources */,
 				0248E95E2D9B5BD700272924 /* TopHeader.swift in Sources */,
 				0248E9632D9B5CDC00272924 /* NumPad.swift in Sources */,
+				029710672FC7E487002427F2 /* AuthStorageViewModel.swift in Sources */,
 				025019B02DA1F2A000F7BCE6 /* MediaHandler.swift in Sources */,
 				02EBCE322DA34C24004181A3 /* AlbumVView.swift in Sources */,
 				0215FDE42D94414C00E2B546 /* LockView.swift in Sources */,
@@ -609,6 +636,7 @@
 				02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */,
 				02D801362DA5733A002AE361 /* SelectMediaEntity.swift in Sources */,
 				02D801452DA5BA85002AE361 /* PlusMode.swift in Sources */,
+				029710652FC7DE92002427F2 /* AuthStorageService.swift in Sources */,
 				02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */,
 				028C6F3D2DA72AB000BB8BB9 /* AlbumEditView.swift in Sources */,
 				02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */,
@@ -960,6 +988,14 @@
 				minimumVersion = 3.1.3;
 			};
 		};
+		029710612FC7DAC4002427F2 /* XCRemoteSwiftPackageReference "keychainaccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/keychainaccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		02D8012D2DA4546A002AE361 /* XCRemoteSwiftPackageReference "LazyPager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gh123man/LazyPager";
@@ -975,6 +1011,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0248E94C2D9B4B8100272924 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
+		};
+		029710622FC7DAC4002427F2 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 029710612FC7DAC4002427F2 /* XCRemoteSwiftPackageReference "keychainaccess" */;
+			productName = KeychainAccess;
 		};
 		02D8012E2DA4546A002AE361 /* LazyPager */ = {
 			isa = XCSwiftPackageProductDependency;
