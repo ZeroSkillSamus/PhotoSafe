@@ -8,23 +8,32 @@
 import SwiftUI
 
 struct NumPad: View {
-    let numbers: [String] = ["1","2","3","4","5","6","7","8","9"]
+    @EnvironmentObject var authViewmodel: AuthStorageViewModel
+    
     @Binding var passcode: String
-    @Binding var is_secure: Bool
+    @Binding var isSecure: Bool
     
     var body: some View {
         LazyVGrid(columns: [GridItem(),GridItem(),GridItem()]) {
-            ForEach(self.numbers,id:\.self) { num in
-                NumButton(num: num, passcode: self.$passcode)
+            ForEach(1...9,id:\.self) { num in
+                NumButton(num: String(num), passcode: self.$passcode)
             }
             
-            // Reveal Hidden Passcode
-            Button {
-                self.is_secure.toggle()
-            } label: {
-                Image(systemName: "eye")
-                    .font(.title2)
-                    .foregroundColor(.blue)
+            if !authViewmodel.isPinSet{
+                Button {
+                    authViewmodel.createPin(pin: self.passcode)
+                } label: {
+                    Text("Set Pin")
+                }
+                .opacity(self.passcode.count == 6 ? 1 : 0)
+            } else {
+                Button {
+                    print("soon")
+                } label: {
+                    Image(systemName: "faceid")
+                        .font(.title2)
+                        .foregroundStyle(Color.c1_accent)
+                }
             }
             
             NumButton(num: "0", passcode: self.$passcode)
@@ -37,7 +46,10 @@ struct NumPad: View {
                     .font(.title2)
                     .foregroundColor(.red)
             }
+            .opacity(self.passcode.isEmpty ? 0 : 1)
+            //.animation(.easeInOut, value: self.passcode.isEmpty)
         }
+        .animation(.easeInOut, value: self.passcode.isEmpty)
     }
     
     struct NumButton: View {
@@ -49,14 +61,13 @@ struct NumPad: View {
                 self.passcode.append(num)
             } label: {
                 Text(num)
-                    .padding()
                     .font(.system(size: 20,weight: .semibold,design: .rounded))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.secondary)
-                    .foregroundColor(.primary)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .frame(width: 70, height: 70) // Fixed size
+                    .background(Color.c1_secondary)
+                    .foregroundColor(Color.c1_text)
+                    .clipShape(Circle())
             }
+            .padding(.horizontal)
         }
     }
 }
-

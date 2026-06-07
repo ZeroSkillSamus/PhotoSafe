@@ -150,7 +150,7 @@ struct FullCoverSheet: View {
                       return
                   }
                   let decoded = await Task.detached(priority: .userInitiated) {
-                      ImageCache.set_image_and_return(for: media)
+                      ImageCache.set_image_and_return(data: imageData, key: key)
                   }.value
                   fullImage = decoded
               }
