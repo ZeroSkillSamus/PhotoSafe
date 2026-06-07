@@ -38,16 +38,23 @@ struct FullCoverSheet: View {
         }
     }
 
-    //private let windowSize = 9 // Load 2 items before and after current index
-    
+    private let windowSize = 9
+
+    private func updateWindowedList(currentIndex: Int) {
+        let lowerBound = max(0, currentIndex - windowSize / 2)
+        let upperBound = min(list.count - 1, currentIndex + windowSize / 2)
+        windowedList = Array(list[lowerBound...upperBound])
+    }
+
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
-    
+
     @State private var videoToDisplay: SelectMediaEntity? = nil
-    
+    @State private var windowedList: [SelectMediaEntity] = []
+
     var from_where: ScreenType
     @ObservedObject var media_VM: MediaViewModel
-    
+
     var select_media: SelectMediaEntity
     @Binding var list: [SelectMediaEntity]
    
@@ -119,6 +126,38 @@ struct FullCoverSheet: View {
         .frame(maxWidth: .infinity)
     }
     
+    struct AsyncPhotoView: View {
+          let media: MediaEntity
+          @State private var fullImage: UIImage? = nil
+
+          var body: some View {
+              Group {
+                  if let fullImage {
+                      Image(uiImage: fullImage)
+                          .resizable()
+                          .scaledToFit()
+                  } else if let thumbnail = media.thumbnail_image {
+                      Image(uiImage: thumbnail)
+                          .resizable()
+                          .scaledToFit()
+                  }
+              }
+              .task {
+                  let key = media.id.uuidString
+                  let imageData = media.image_data
+                  if let cached = ImageCache.fetch_image(for: key) {
+                      fullImage = cached
+                      return
+                  }
+                  let decoded = await Task.detached(priority: .userInitiated) {
+                      ImageCache.set_image_and_return(data: imageData, key: key)
+                  }.value
+                  fullImage = decoded
+              }
+          }
+      }
+
+    
     private func bottom_header() -> some View {
         HStack {
             export_button()
@@ -181,31 +220,22 @@ struct FullCoverSheet: View {
                     top_header()
                 }
  
-                //LazyPager(data: self.windowedList, page: self.$uiState.windowListIndex) { element in
-                LazyPager(data: self.list, page: self.$uiState.current_media_index) { element in
+                LazyPager(data: self.windowedList, page: self.$uiState.windowListIndex) { element in
                     switch element.media.type {
                     case MediaType.Photo.rawValue:
-                        if let cached_image = ImageCache.fetch_image(for: element.media.id.uuidString) {
-                            image_view(cached_image)
-                        } else if let ui_image = ImageCache.set_image_and_return(for: element.media) {
-                            image_view(ui_image)
-                        }
+                        AsyncPhotoView(media: element.media)
                     case MediaType.Video.rawValue:
-                        if let video_path = element.media.video_path,
-                            let url = URL(string: video_path),
-                            let thumbnail = element.media.thumbnail_image {
-                            if list[self.uiState.current_media_index] == element {
-                                // Display thumbail with play button in middle
-                                image_view(thumbnail)
-                                    .overlay(alignment: .center) {
-                                        Button {
-                                            self.videoToDisplay = element
-                                        } label: {
-                                            ImageCircleOverlay(icon: .symbol("play.fill"))
-                                        }
+                        // Display thumbnail for video with play overlay
+                        if let thumbnail = element.media.thumbnail_image {
+                            image_view(thumbnail)
+                                .overlay(alignment: .center) {
+                                    Button {
+                                        self.videoToDisplay = element
+                                    } label: {
+                                        ImageCircleOverlay(icon: .symbol("play.fill"))
                                     }
-                            }
-                        }	
+                                }
+                        }
                     case MediaType.GIF.rawValue:
                         AnimatedImage(data: element.media.image_data)
                             .resizable()
@@ -238,9 +268,33 @@ struct FullCoverSheet: View {
                 self.uiState.prev_orientation = self.uiState.orientation
                 self.uiState.orientation = newOrientation
             }
+            .onChange(of: uiState.windowListIndex) { _, new_index in
+                guard windowedList.indices.contains(new_index) else { return }
+
+                let currentItem = windowedList[new_index]
+                let newListIndex = list.firstIndex(of: currentItem) ?? 0
+                self.uiState.current_media_index = newListIndex
+
+                let atLeftEdge = new_index == 0
+                let atRightEdge = new_index == windowedList.count - 1
+
+                let windowLower = list.firstIndex(of: windowedList.first!) ?? 0
+                let windowUpper = list.firstIndex(of: windowedList.last!) ?? 0
+                let canShiftLeft = windowLower > 0
+                let canShiftRight = windowUpper < list.count - 1
+
+                guard (atLeftEdge && canShiftLeft) || (atRightEdge && canShiftRight) else { return }
+
+                updateWindowedList(currentIndex: newListIndex)
+                if let fixedIndex = windowedList.firstIndex(where: { $0 == currentItem }) {
+                    self.uiState.windowListIndex = fixedIndex
+                }
+            }
         }
         .onAppear {
             self.uiState.current_media_index = self.list.firstIndex(of: self.select_media) ?? 0
+            updateWindowedList(currentIndex: uiState.current_media_index)
+            self.uiState.windowListIndex = self.windowedList.firstIndex(of: self.select_media) ?? 0
         }
         .overlay(alignment: .center) {
             if self.media_VM.export_finished {

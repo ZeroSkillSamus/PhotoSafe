@@ -18,16 +18,21 @@ struct PhotoSafeApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
-                if !authViewModel.isPinSet || !authViewModel.isUnlocked {
+                let unlocked = authViewModel.isPinSet && authViewModel.isUnlocked
+                BottomTabNavigation()
+                    .allowsHitTesting(unlocked)
+                    .opacity(unlocked ? 1 : 0)
+                    .animation(.easeInOut, value: unlocked)
+                
+                if !unlocked {
                     LockView()
-                } else {
-                    BottomTabNavigation()
                 }
                 
                 if showPrivacyOverlay {
                     AppPrivacyOverlay()
                 }
             }
+            
         }
         .environmentObject(authViewModel)
         .onChange(of: scenePhase) { _, newPhase in

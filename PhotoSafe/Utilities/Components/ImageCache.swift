@@ -30,6 +30,15 @@ class ImageCache {
         return nil
     }
 
+    // Sendable-safe overload: takes raw Data so it can be called from Task.detached
+    static func set_image_and_return(data: Data, key: String) -> UIImage? {
+        if let ui_image = UIImage(data: data) {
+            self.image_only_cache.setObject(ui_image, forKey: key as NSString, cost: cost(for: ui_image))
+            return ui_image
+        }
+        return nil
+    }
+
     static func preloadImages(medias: [SelectMediaEntity]) {
         DispatchQueue.global(qos: .background).async {
             for media in medias {
