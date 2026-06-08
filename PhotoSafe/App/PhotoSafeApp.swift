@@ -5,47 +5,99 @@
 //  Created by Abraham Mitchell on 3/25/25.
 //
 
+import UIKit
 import SwiftUI
+
+class PassthroughWindow: UIWindow {
+    var authViewModel: AuthStorageViewModel?
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard let auth = authViewModel,
+              auth.showPrivacyOverlay || (auth.isPinSet && !auth.isUnlocked) else {
+            return nil
+        }
+        return super.hitTest(point, with: event)
+    }
+}
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+    var secureWindow: UIWindow?
+    
+    // Hold a reference to the view model so both windows can read it
+    private let authViewModel = AuthStorageViewModel()
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+        
+        // 1. App Window
+        let mainWindow = UIWindow(windowScene: windowScene)
+        mainWindow.rootViewController = UIHostingController(
+            rootView: BottomTabNavigation().environmentObject(authViewModel)
+        )
+        self.window = mainWindow
+        mainWindow.makeKeyAndVisible()
+        
+        // 2. Security/Privacy Window
+        let topWindow = PassthroughWindow(windowScene: windowScene)
+        topWindow.windowLevel = .alert + 1
+        topWindow.backgroundColor = .clear
+        topWindow.authViewModel = authViewModel
+
+        let secureVC = UIHostingController(
+            rootView: SecureOverlayContainer().environmentObject(authViewModel)
+        )
+        secureVC.view.backgroundColor = .clear
+        topWindow.rootViewController = secureVC
+
+        self.secureWindow = topWindow
+        topWindow.makeKeyAndVisible()
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        authViewModel.showPrivacyOverlay = false
+    }
+
+    func sceneWillResignActive(_ scene: UIScene) {
+        if authViewModel.isUnlocked {
+            authViewModel.showPrivacyOverlay = true
+        }
+    }
+
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        authViewModel.lockApp()
+    }
+}
+
+struct SecureOverlayContainer: View {
+    @EnvironmentObject var authViewModel: AuthStorageViewModel
+
+    var body: some View {
+        ZStack {
+            if authViewModel.showPrivacyOverlay {
+                AppPrivacyOverlay()
+                    .transition(.opacity)
+            }
+
+            if authViewModel.isPinSet && !authViewModel.isUnlocked {
+                LockView()
+                    .transition(.move(edge: .bottom))
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: authViewModel.showPrivacyOverlay)
+        .animation(.easeInOut(duration: 0.25), value: authViewModel.isUnlocked)
+    }
+}
 
 @main
 struct PhotoSafeApp: App {
+    // Tells SwiftUI to use UIKit's lifecycle via SceneDelegate
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
-    @StateObject private var authViewModel = AuthStorageViewModel()
-    @Environment(\.scenePhase) var scenePhase
-    
-    @State private var showPrivacyOverlay = true
+
     var body: some Scene {
+        // Leave this empty or standard. SceneDelegate handles window creation.
         WindowGroup {
-            ZStack {
-                let unlocked = authViewModel.isPinSet && authViewModel.isUnlocked
-                BottomTabNavigation()
-                    .allowsHitTesting(unlocked)
-                    .opacity(unlocked ? 1 : 0)
-                    .animation(.easeInOut, value: unlocked)
-                
-                if !unlocked {
-                    LockView()
-                }
-                
-                if showPrivacyOverlay {
-                    AppPrivacyOverlay()
-                }
-            }
-            
-        }
-        .environmentObject(authViewModel)
-        .onChange(of: scenePhase) { _, newPhase in
-            switch newPhase {
-            case .active:
-                showPrivacyOverlay = false
-            case .background:
-                authViewModel.lockApp()
-            case .inactive:
-                showPrivacyOverlay = !authViewModel.isUnlocked ? false : true
-            default:
-                break
-            }
+            EmptyView()
         }
     }
 }

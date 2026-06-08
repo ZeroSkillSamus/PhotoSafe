@@ -13,6 +13,7 @@ class AuthStorageViewModel: ObservableObject {
 
     @Published private(set) var isPinSet: Bool
     @Published private(set) var isUnlocked: Bool = false
+    @Published var showPrivacyOverlay: Bool = true
     
     init(authService: AuthStorageService = AuthStorageService.shared) {
         self.authService = authService
