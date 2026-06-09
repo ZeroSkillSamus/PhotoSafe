@@ -40,6 +40,7 @@ struct ImageCircleOverlay: View {
     var color: Color = Color.c1_accent
     var icon: IconType = .symbol("plus")
     var frame: CGSize = CGSize(width: 70, height: 70)
+    var iconFont: Font = .title3
     
     var body: some View {
         ZStack {
@@ -52,7 +53,7 @@ struct ImageCircleOverlay: View {
                     Text(text)
                 }
             }
-            .font(.title3)
+            .font(iconFont)
             .foregroundStyle(.white)
         }
         .frame(width: frame.width,height: frame.height)

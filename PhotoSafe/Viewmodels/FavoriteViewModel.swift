@@ -27,12 +27,8 @@ final class FavoriteViewModel: ObservableObject {
         }
     }
     
-    func set_favorites(with albums: [AlbumEntity]) {
-        albums.forEach { album in
-            if let list = album.sorted_list {
-                self.favorites_list = list.filter({$0.is_favorited}).map({SelectMediaEntity(media: $0)})
-            }
-        }
+    func setFavorites() {
+        self.favorites_list = self.service.fetchAll().filter({$0.is_favorited}).map({SelectMediaEntity(media: $0)})
     }
     
     func add_or_delete_from_favorites(for new_media: MediaEntity) {

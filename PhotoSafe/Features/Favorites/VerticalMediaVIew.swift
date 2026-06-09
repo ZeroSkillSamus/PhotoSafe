@@ -15,8 +15,9 @@ private func image_view(_ ui_image: UIImage) -> some View {
         .scaledToFit()
 }
 
-struct VerticalMediaVIew: View {
+struct VerticalMediaView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
     
     var list: [SelectMediaEntity]
     
@@ -24,10 +25,6 @@ struct VerticalMediaVIew: View {
     @State private var new_list: [SelectMediaEntity] = []
     @State private var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
     
-    @Binding var shuffle_list: Bool
-    @Binding var time_interval: TimeInterval
-    @Binding var auto_slide_enabled: Bool
-
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -70,7 +67,16 @@ struct VerticalMediaVIew: View {
                             image_view(ui_image)
                         }
                     case MediaType.Video.rawValue:
-                        EmptyView()
+                        if let thumbnail = element.media.thumbnail_image {
+                            image_view(thumbnail)
+                                .overlay(alignment: .center) {
+                                    Button {
+                                        //self.videoToDisplay = element
+                                    } label: {
+                                        ImageCircleOverlay(icon: .symbol("play.fill"))
+                                    }
+                                }
+                        }
                     case MediaType.GIF.rawValue:
                         AnimatedImage(data: element.media.image_data)
                             .resizable()
@@ -81,8 +87,7 @@ struct VerticalMediaVIew: View {
                     }
                 }
                 .onReceive(self.timer) { _ in
-                    print(self.auto_slide_enabled)
-                    guard self.auto_slide_enabled else { return } // Stops timer from changing index
+                    guard self.slideShowViewModel.autoPlayEnabled else { return } // Stops timer from changing index
                     
                     withAnimation {
                         self.current_media_index = (self.current_media_index + 1) % self.new_list.count
@@ -91,10 +96,10 @@ struct VerticalMediaVIew: View {
             }
         }
         .onAppear {
-            self.new_list = self.shuffle_list ? self.list.shuffled() : self.list
+            self.new_list = self.slideShowViewModel.isShuffleEnabled ? self.list.shuffled() : self.list
             
-            if self.auto_slide_enabled {
-                self.timer = Timer.publish(every: self.time_interval, on: .main, in: .common).autoconnect()
+            if self.slideShowViewModel.autoPlayEnabled {
+                self.timer = Timer.publish(every: self.slideShowViewModel.timeInteval, on: .main, in: .common).autoconnect()
             }
         }
     }

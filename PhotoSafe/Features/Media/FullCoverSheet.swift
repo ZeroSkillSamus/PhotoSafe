@@ -48,9 +48,11 @@ struct FullCoverSheet: View {
 
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
-
+    @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
+    
     @State private var videoToDisplay: SelectMediaEntity? = nil
     @State private var windowedList: [SelectMediaEntity] = []
+    @State private var showAutoScrollerSheet: Bool = false 
 
     var from_where: ScreenType
     @ObservedObject var media_VM: MediaViewModel
@@ -142,7 +144,7 @@ struct FullCoverSheet: View {
                           .scaledToFit()
                   }
               }
-              .task {
+              .task(id: media.id) {
                   let key = media.id.uuidString
                   let imageData = media.image_data
                   if let cached = ImageCache.fetch_image(for: key) {
@@ -185,27 +187,32 @@ struct FullCoverSheet: View {
             Button {
                 self.dismiss()
             } label: {
-                Image(systemName: "x.circle")
-                    .font(.title3)
+                ImageCircleOverlay(
+                    color: Color.red,
+                    icon: ImageCircleOverlay.IconType.text("X"),
+                    frame: CGSize(width: 27, height: 27),
+                    iconFont: .footnote
+                )
             }
-            .foregroundStyle(.red)
-            
             Spacer()
             
             Button {
-                print("Edit")
+                // Show sheet to configire & start auto scroller
+                self.showAutoScrollerSheet = true
             } label: {
-                Text("Edit")
+                ImageCircleOverlay(
+                    color: Color.c1_accent,
+                    icon: ImageCircleOverlay.IconType.symbol("gearshape"),
+                    frame: CGSize(width: 27, height: 27),
+                    iconFont: .footnote
+                )
             }
-            .foregroundStyle(.blue)
         }
         .frame(maxWidth: .infinity, maxHeight: 40,alignment: .topLeading)
         .padding(.horizontal)
         .overlay(alignment: .top) {
             Text("\(self.uiState.current_media_index + 1) of \(list.count)")
-            //Text("\(self.uiState.display_index + 1) of \(list.count)")
                 .font(.title3)
-                .padding(5)
                 .foregroundStyle(.primary)
         }
         .background(Color.c1_secondary)
@@ -286,7 +293,7 @@ struct FullCoverSheet: View {
                 guard (atLeftEdge && canShiftLeft) || (atRightEdge && canShiftRight) else { return }
 
                 updateWindowedList(currentIndex: newListIndex)
-                if let fixedIndex = windowedList.firstIndex(where: { $0 == currentItem }) {
+                if let fixedIndex = windowedList.firstIndex(where: { $0.media.id == currentItem.media.id }) {
                     self.uiState.windowListIndex = fixedIndex
                 }
             }
@@ -310,6 +317,9 @@ struct FullCoverSheet: View {
                 VideoPlayerView(url: url)
             }
         }
+        .sheet(isPresented: self.$showAutoScrollerSheet) {
+            OptionsView()
+        }
         .sheet(isPresented: self.$uiState.display_move_sheet) {
             MoveSheet(curr_album_name: self.select_media.media.album.name) { album in
                 self.list[self.uiState.current_media_index].select = .checked
@@ -319,6 +329,11 @@ struct FullCoverSheet: View {
                 if self.list.isEmpty { self.dismiss() }
             }
         }
+        .onChange(of: self.slideShowViewModel.displaySlideshow, { oldValue, newValue in
+            if newValue == true {
+                self.dismiss()
+            }
+        })
         .ignoresSafeArea(edges: !self.uiState.did_user_tap ? [] : [.bottom,.top])
         .persistentSystemOverlays(.hidden)
         .background(.black.opacity(self.uiState.opacity))

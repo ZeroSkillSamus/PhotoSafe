@@ -13,7 +13,7 @@ class PassthroughWindow: UIWindow {
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard let auth = authViewModel,
-              auth.showPrivacyOverlay || (auth.isPinSet && !auth.isUnlocked) else {
+              auth.showPrivacyOverlay || (!auth.isUnlocked) else {
             return nil
         }
         return super.hitTest(point, with: event)
@@ -26,14 +26,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // Hold a reference to the view model so both windows can read it
     private let authViewModel = AuthStorageViewModel()
-
+    private let slideShowViewModel = SlideShowViewModel()
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
         
         // 1. App Window
         let mainWindow = UIWindow(windowScene: windowScene)
         mainWindow.rootViewController = UIHostingController(
-            rootView: BottomTabNavigation().environmentObject(authViewModel)
+            rootView: BottomTabNavigation().environmentObject(authViewModel).environmentObject(slideShowViewModel)
         )
         self.window = mainWindow
         mainWindow.makeKeyAndVisible()
@@ -79,7 +80,7 @@ struct SecureOverlayContainer: View {
                     .transition(.opacity)
             }
 
-            if authViewModel.isPinSet && !authViewModel.isUnlocked {
+            if !authViewModel.isUnlocked {
                 LockView()
                     .transition(.move(edge: .bottom))
             }

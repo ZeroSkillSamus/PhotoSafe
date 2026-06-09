@@ -11,28 +11,20 @@ import SDWebImageSwiftUI
 struct FavoritesView: View {
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
     @EnvironmentObject private var album_VM: AlbumViewModel
+    @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
+    
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
     
     var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 3), count: 4)
     @State private var selected_media: SelectMediaEntity?
     @State private var select_count: Int = 0
     
-    @State private var show_slideshow_settings: Bool = false
-    @State private var display_slideshow: Bool = false
-    @State private var toggle_shuffle: Bool = false
-    @State private var play_slides_auto: Bool = false
-    @State private var display_horizontal_slide_show: Bool = false
-    @State private var time_interval: TimeInterval = 2
-//    @State private var current_media_index: Int = 0
-//    @State private var sheet_media_index: Int = 0
-//    @State private var display_move_sheet: Bool = false
-//    @State private var export_finished: Bool = false
-    
     @Binding var select_mode_active: Bool
     
     func leading_button() -> some View {
         Button {
-            self.show_slideshow_settings.toggle()
+            //self.show_slideshow_settings.toggle()
+            self.slideShowViewModel.showSlideShowOptions() 
         } label: {
             Image(systemName: "play.rectangle.fill")
                 .font(.title2)
@@ -113,22 +105,11 @@ struct FavoritesView: View {
                 list: self.$favorite_VM.favorites_list
             )
         }
-        .fullScreenCover(isPresented: self.$display_slideshow) {
-            VerticalMediaVIew(
-                list: self.favorite_VM.favorites_list,
-                shuffle_list: self.$toggle_shuffle,
-                time_interval: self.$time_interval,
-                auto_slide_enabled: self.$play_slides_auto
-            )
+        .fullScreenCover(isPresented: self.$slideShowViewModel.displaySlideshow) {
+            VerticalMediaView(list: self.favorite_VM.favorites_list)
         }
-        .sheet(isPresented: self.$show_slideshow_settings) {
-            OptionsView(
-                display_vertical_slide: self.$display_slideshow,
-                display_horizontal_slide: self.$display_horizontal_slide_show,
-                toggle_shuffle: self.$toggle_shuffle,
-                play_slides_auto: self.$play_slides_auto,
-                time_interval: self.$time_interval
-            )
+        .sheet(isPresented: self.$slideShowViewModel.showSettings) {
+            OptionsView()
         }
         
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)

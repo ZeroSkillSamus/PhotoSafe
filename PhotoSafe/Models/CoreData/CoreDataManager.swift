@@ -32,7 +32,7 @@ final class CoreDataManager {
           }
 
           // Exclude CoreData files from iCloud backup
-          if var storeURL = description.url {
+          if let storeURL = description.url {
               let shmURL = storeURL.deletingPathExtension().appendingPathExtension("sqlite-shm")
               let walURL = storeURL.deletingPathExtension().appendingPathExtension("sqlite-wal")
 
