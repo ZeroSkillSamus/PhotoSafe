@@ -25,12 +25,11 @@ struct FullCoverSheet: View {
         var opacity: CGFloat = 0
         var did_export = false
         var windowListIndex: Int = 0
-        
-        // Computed properties work too
+
         var should_header_display: Bool {
             orientation.isPortrait || (orientation.isFlat && !prev_orientation.isLandscape) || orientation == .unknown
         }
-        
+
         mutating func delete_from_current_media_index(count: Int) {
             if self.current_media_index == count - 1 && self.current_media_index != 0 {
                 self.current_media_index -= 1
@@ -49,17 +48,17 @@ struct FullCoverSheet: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
     @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
-    
+
     @State private var videoToDisplay: SelectMediaEntity? = nil
     @State private var windowedList: [SelectMediaEntity] = []
-    @State private var showAutoScrollerSheet: Bool = false 
+    @State private var showAutoScrollerSheet: Bool = false
 
     var from_where: ScreenType
     @ObservedObject var media_VM: MediaViewModel
 
     var select_media: SelectMediaEntity
     @Binding var list: [SelectMediaEntity]
-   
+
     @State private var uiState = FullCoverUIState()
 
     private func delete_button() -> some View {
@@ -72,14 +71,14 @@ struct FullCoverSheet: View {
         }
         .frame(maxWidth: .infinity)
     }
-    
+
     private func move_button() -> some View {
         SelectBottomButton(label: "Move", system_name: "rectangle.2.swap") {
             self.uiState.display_move_sheet.toggle()
         }
         .frame(maxWidth: .infinity)
     }
-    
+
     private func export_button() -> some View {
         return (
             SelectBottomButton(label: "Export", system_name: "square.and.arrow.up") {
@@ -95,56 +94,54 @@ struct FullCoverSheet: View {
             .frame(maxWidth: .infinity)
         )
     }
-    
+
     private func favorite_button() -> some View {
         SelectBottomButton(
             label: "Favorite",
             system_name: list[self.uiState.current_media_index].media.is_favorited ? "heart.fill" : "heart") {
             let prev_status = self.list[self.uiState.current_media_index].media.is_favorited
-            let change_to = prev_status ? false : true // False means dislike, true means like
-            
-            // Get updated media and overwrite current element in list
+            let change_to = prev_status ? false : true
+
             let new_media = self.media_VM.favorite_media(for: list[self.uiState.current_media_index].media, with: change_to)
-            
+
             self.list[self.uiState.current_media_index] = SelectMediaEntity(media: new_media)
-            
-            // Update Favorites List
+
             if self.from_where == .Favorite {
                 self.uiState.delete_from_current_media_index(count: self.list.count)
             }
-            
+
             self.favorite_VM.add_or_delete_from_favorites(for: new_media)
-            
+
             if self.from_where == .Favorite && self.list.isEmpty {
                 self.dismiss()
             }
         }
         .frame(maxWidth: .infinity)
     }
-    
+
     private func bottom_header() -> some View {
         HStack {
             export_button()
-            
+
             if from_where == .Media {
                 move_button()
             }
-            
+
             if list.indices.contains(self.uiState.current_media_index) {
                 favorite_button()
             }
-            
+
             if from_where == .Media {
                 delete_button()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: 30,alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: 30, alignment: .topLeading)
         .padding(.horizontal)
         .background(Color.c1_secondary)
         .opacity(self.uiState.opacity)
         .opacity(!self.uiState.did_user_tap ? 1 : 0)
     }
-    
+
     private func top_header() -> some View {
         HStack {
             Button {
@@ -158,9 +155,8 @@ struct FullCoverSheet: View {
                     .foregroundStyle(.red)
             }
             Spacer()
-            
+
             Button {
-                // Show sheet to configire & start auto scroller
                 self.showAutoScrollerSheet = true
             } label: {
                 Image(systemName: "play.rectangle.fill")
@@ -171,10 +167,10 @@ struct FullCoverSheet: View {
                     .foregroundStyle(Color.c1_accent)
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 30, maxHeight: 30,alignment: .topLeading)
+        .frame(maxWidth: .infinity, minHeight: 30, maxHeight: 30, alignment: .topLeading)
         .overlay(alignment: .top) {
             Text("\(self.uiState.current_media_index + 1) of \(list.count)")
-                .font(.system(size: 16, weight: .semibold,design: .rounded))
+                .font(.system(size: 16, weight: .semibold, design: .rounded))
                 .foregroundStyle(.primary)
         }
         .padding([.horizontal])
@@ -183,7 +179,7 @@ struct FullCoverSheet: View {
         .opacity(self.uiState.opacity)
         .opacity(!self.uiState.did_user_tap ? 1 : 0)
     }
-    
+
     var body: some View {
         ZStack {
             LazyPagerView(
@@ -240,7 +236,7 @@ struct FullCoverSheet: View {
                 self.list[self.uiState.current_media_index].select = .checked
                 self.uiState.delete_from_current_media_index(count: self.list.count)
                 self.media_VM.move_selected(to: album)
-                
+
                 if self.list.isEmpty { self.dismiss() }
             }
         }

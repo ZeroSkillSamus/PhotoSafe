@@ -17,17 +17,17 @@ import UIKit
 /// - Version: 1.0
 /// - Copyright: Your Company
 class MediaHandler: NSObject {
-    
+
     /// Convert the identifier to PHAsset
     static func fetchAsset(with identifier: String) -> PHAsset? {
         let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier], options: nil)
         return fetchResult.firstObject
     }
-    
+
     /// Function to delete multiple assets
     static func deleteAssets(_ assets: [PHAsset]) {
         if assets.isEmpty { return }
-        
+
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.deleteAssets(assets as NSArray)
         }) { success, error in
@@ -36,39 +36,36 @@ class MediaHandler: NSObject {
             }
         }
     }
-    
+
     func save_photo_to_user_library(image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(save_completed), nil)
     }
-    
+
     func saveVideoToUserLibrary(at path: String) {
-        // Convert to url first
         guard let urlObject = URL(string: path) else {
             print("Error: Could not parse string as a URL")
             return
         }
-        
-        let trueFilePath = urlObject.path
 
+        let trueFilePath = urlObject.path
         let managedAccess = urlObject.startAccessingSecurityScopedResource()
-        
+
         guard FileManager.default.fileExists(atPath: trueFilePath) else {
             print(urlObject.path)
             print("Error: Video file doesn't exist at path")
             return
         }
-        
+
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized else {
                 print("Photo library access denied")
                 return
             }
-            
+
             PHPhotoLibrary.shared().performChanges({
                         let url = URL(fileURLWithPath: trueFilePath)
                         PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
                     }) { success, error in
-                        // 2. Always release the resource when finished
                         if managedAccess {
                             urlObject.stopAccessingSecurityScopedResource()
                         }
@@ -77,7 +74,6 @@ class MediaHandler: NSObject {
                             print("Video saved to Photos library")
                         } else {
                             print("Error saving video: \(error?.localizedDescription ?? "Unknown error")")
-                            // Additional error inspection:
                             if let error = error as NSError? {
                                 print("Full error details: \(error)")
                             }
@@ -86,7 +82,7 @@ class MediaHandler: NSObject {
                 }
         }
     }
-    
+
     func save_gif_to_user_library(data: Data) {
         PHPhotoLibrary.shared().performChanges({
             let request = PHAssetCreationRequest.forAsset()
@@ -99,15 +95,13 @@ class MediaHandler: NSObject {
             }
         }
     }
-    
+
     @objc func save_completed(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         if let error = error {
             print("Error saving Media: \(error.localizedDescription)")
-            // Show error to user
         } else {
             print("Media Saved Successfully!")
-            // Show success message
         }
     }
-    
+
 }
