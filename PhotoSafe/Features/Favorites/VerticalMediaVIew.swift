@@ -25,6 +25,8 @@ struct VerticalMediaView: View {
     @State private var new_list: [SelectMediaEntity] = []
     @State private var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
     
+    @State private var backgroundOpacity: CGFloat = 1.0
+    
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -58,41 +60,20 @@ struct VerticalMediaView: View {
                 })
                 .padding(.horizontal)
                 
-                LazyPager(data: self.new_list,page: self.$current_media_index, direction: .vertical) { element in
-                    switch element.media.type {
-                    case MediaType.Photo.rawValue:
-                        if let cached_image = ImageCache.fetch_image(for: element.media.id.uuidString) {
-                            image_view(cached_image)
-                        } else if let ui_image = ImageCache.set_image_and_return(for: element.media) {
-                            image_view(ui_image)
+                LazyPagerView(
+                    direction: slideShowViewModel.slideShowDirection,
+                    windowedList: self.$new_list,
+                    windowListIndex: self.$current_media_index,
+                    backgroundOpacity: self.$backgroundOpacity,
+                    userTapped: .constant(false)
+                )
+                    .onReceive(self.timer) { _ in
+                        guard self.slideShowViewModel.autoPlayEnabled else { return } // Stops timer from changing index
+                        
+                        withAnimation {
+                            self.current_media_index = (self.current_media_index + 1) % self.new_list.count
                         }
-                    case MediaType.Video.rawValue:
-                        if let thumbnail = element.media.thumbnail_image {
-                            image_view(thumbnail)
-                                .overlay(alignment: .center) {
-                                    Button {
-                                        //self.videoToDisplay = element
-                                    } label: {
-                                        ImageCircleOverlay(icon: .symbol("play.fill"))
-                                    }
-                                }
-                        }
-                    case MediaType.GIF.rawValue:
-                        AnimatedImage(data: element.media.image_data)
-                            .resizable()
-                            .customLoopCount(0)
-                            .scaledToFit()
-                    default:
-                        EmptyView()
                     }
-                }
-                .onReceive(self.timer) { _ in
-                    guard self.slideShowViewModel.autoPlayEnabled else { return } // Stops timer from changing index
-                    
-                    withAnimation {
-                        self.current_media_index = (self.current_media_index + 1) % self.new_list.count
-                    }
-                }
             }
         }
         .onAppear {

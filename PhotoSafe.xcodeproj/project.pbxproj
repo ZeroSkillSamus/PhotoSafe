@@ -50,6 +50,7 @@
 		02A98DD32FD62836008E23B2 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 02A98DD22FD62836008E23B2 /* KeychainAccess */; };
 		02A98DD72FD62A31008E23B2 /* OrientationLockModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DD52FD62A31008E23B2 /* OrientationLockModifier.swift */; };
 		02A98DD92FD8BC81008E23B2 /* SlideshowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DD82FD8BC7D008E23B2 /* SlideshowViewModel.swift */; };
+		02A98DDB2FDB3A63008E23B2 /* LazyPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DDA2FDB3A57008E23B2 /* LazyPagerView.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
@@ -131,6 +132,7 @@
 		02A98DCF2FD627D9008E23B2 /* AuthStorageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStorageViewModel.swift; sourceTree = "<group>"; };
 		02A98DD52FD62A31008E23B2 /* OrientationLockModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationLockModifier.swift; sourceTree = "<group>"; };
 		02A98DD82FD8BC7D008E23B2 /* SlideshowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowViewModel.swift; sourceTree = "<group>"; };
+		02A98DDA2FDB3A57008E23B2 /* LazyPagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyPagerView.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
@@ -385,6 +387,7 @@
 		028C6F4A2DADE77F00BB8BB9 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				02A98DDA2FDB3A57008E23B2 /* LazyPagerView.swift */,
 				025019AF2DA1F2A000F7BCE6 /* MediaHandler.swift */,
 				02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */,
 				02D801462DA5BBE2002AE361 /* ImageCircleOverlay.swift */,
@@ -622,6 +625,7 @@
 				028C6F4E2DADFCE400BB8BB9 /* ImageGridView.swift in Sources */,
 				0248E95E2D9B5BD700272924 /* TopHeader.swift in Sources */,
 				02A98DD72FD62A31008E23B2 /* OrientationLockModifier.swift in Sources */,
+				02A98DDB2FDB3A63008E23B2 /* LazyPagerView.swift in Sources */,
 				0248E9632D9B5CDC00272924 /* NumPad.swift in Sources */,
 				025019B02DA1F2A000F7BCE6 /* MediaHandler.swift in Sources */,
 				02A98DD92FD8BC81008E23B2 /* SlideshowViewModel.swift in Sources */,
