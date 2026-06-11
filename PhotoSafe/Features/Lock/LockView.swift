@@ -135,5 +135,8 @@ struct LockView: View {
             }
         }
         .orientationLock(.portrait)
+        .onAppear {
+            self.numberInput = ""
+        }
     }
 }

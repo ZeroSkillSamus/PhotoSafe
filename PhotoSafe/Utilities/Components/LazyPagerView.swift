@@ -14,6 +14,8 @@ struct LazyPagerView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var videoToDisplay: SelectMediaEntity? = nil
+    var isDisplay: Bool = false
+    
     var direction: SlideShowType = .horizontal
     
     @Binding var windowedList: [SelectMediaEntity]
@@ -128,23 +130,28 @@ struct LazyPagerView: View {
               }
           }
       }
-    
+
     var body: some View {
         LazyPager(data: self.windowedList, page: self.$windowListIndex, direction: self.directionDecoded) { element in
             switch element.media.type {
             case MediaType.Photo.rawValue:
                 AsyncPhotoView(media: element.media)
             case MediaType.Video.rawValue:
-                // Display thumbnail for video with play overlay
                 if let thumbnail = element.media.thumbnail_image {
-                    image_view(thumbnail)
-                        .overlay(alignment: .center) {
-                            Button {
-                                self.videoToDisplay = element
-                            } label: {
-                                ImageCircleOverlay(icon: .symbol("play.fill"))
-                            }
+                    if isDisplay, let path = element.media.video_path, let url = URL(string: path) {
+                        if self.windowedList[self.windowListIndex] == element { // needed to stop video from preloading
+                            PlayerView(url: url)
                         }
+                    } else {
+                        image_view(thumbnail)
+                            .overlay(alignment: .center) {
+                                Button {
+                                    self.videoToDisplay = element
+                                } label: {
+                                    ImageCircleOverlay(icon: .symbol("play.fill"))
+                                }
+                            }
+                    }
                 }
             case MediaType.GIF.rawValue:
                 GifView(element: element)
@@ -152,26 +159,19 @@ struct LazyPagerView: View {
                 EmptyView()
             }
         }
-        
-        // Make the content zoomable
-        .zoomable(min: 1, max: 5)
-        .onDismiss(backgroundOpacity: self.$backgroundOpacity) {
-            self.dismiss()
-        }
-        .onTap {
-            withAnimation {
-                self.userTapped.toggle()
+            .zoomable(min: 1, max: 5)
+            .onDismiss(backgroundOpacity: self.$backgroundOpacity) {
+                self.dismiss()
             }
-        }
-        .opacity(self.backgroundOpacity)
-        .frame(maxWidth:.infinity,maxHeight: .infinity)
-        .ignoresSafeArea(edges: [.bottom, .top])
-        .fullScreenCover(item: self.$videoToDisplay) { video in
-            if let video_path = video.media.video_path,
-               let url = URL(string: video_path) {
-                VideoPlayerView(url: url)
-            }
-         }
-         
+            .onTap { withAnimation { userTapped.toggle() } }
+            .opacity(self.backgroundOpacity)
+            .frame(maxWidth:.infinity,maxHeight: .infinity)
+            .ignoresSafeArea(edges: [.bottom, .top])
+            .fullScreenCover(item: self.$videoToDisplay) { video in
+                if let video_path = video.media.video_path,
+                   let url = URL(string: video_path) {
+                    VideoPlayerView(url: url)
+                }
+             }
     }
 }

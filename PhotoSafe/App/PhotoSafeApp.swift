@@ -75,14 +75,16 @@ struct SecureOverlayContainer: View {
 
     var body: some View {
         ZStack {
-            if authViewModel.showPrivacyOverlay {
-                AppPrivacyOverlay()
-                    .transition(.opacity)
-            }
-
+            // Lower priority (bottom)
             if !authViewModel.isUnlocked {
                 LockView()
                     .transition(.move(edge: .bottom))
+            }
+            
+            // Higher priority (top)
+            if authViewModel.showPrivacyOverlay {
+                AppPrivacyOverlay()
+                    .transition(.opacity)
             }
         }
         .animation(.easeInOut(duration: 0.25), value: authViewModel.showPrivacyOverlay)

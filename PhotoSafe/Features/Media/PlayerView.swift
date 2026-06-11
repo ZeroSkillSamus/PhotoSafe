@@ -33,10 +33,6 @@ struct PlayerView: View {
     @State private var player_value: Float = 0
     @State private var is_video_playing: Bool = true
 
-    @Binding var did_user_tap: Bool
-    var curr_orientation: UIDeviceOrientation
-    var prev_orientation: UIDeviceOrientation
-  
     let url: URL
     
     func add_time_observer() {
@@ -69,45 +65,33 @@ struct PlayerView: View {
         self.convert_seconds(self.controller.player?.currentItem?.duration.seconds ?? 1.0)
     }
     
-    var bottom_padding_length: CGFloat {
-        //Flat & Portrait
-        if self.curr_orientation.isPortrait || (self.prev_orientation.isPortrait && self.curr_orientation.isFlat) {
-            return 40
-        }
-        
-        // Flat & Landscape
-        if self.curr_orientation.isLandscape || (self.prev_orientation.isLandscape && self.curr_orientation.isFlat) {
-            return 5
-        }
-        
-        return 40 // curr_orientation is Flat
-    }
-    
     var body: some View {
         ZStack {
-            CustomVideoPlayer(url: self.url,controller: self.$controller)
+            CustomVideoPlayer(url: self.url, controller: self.$controller)
                 .onAppear {
                     self.add_time_observer()
                     self.controller.player?.play()
                 }
-                .onTapGesture {
-                    withAnimation {
-                        self.is_controls_active.toggle()
-                        self.did_user_tap.toggle()
-                    }
-                }
                 .onDisappear {
                     self.controller.player?.pause()
                 }
-                
-            
+
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation {
+                        self.is_controls_active.toggle()
+                    }
+                }
+
             if self.is_controls_active {
                 VStack(spacing: 0) {
-                    playback_controls()
+                    playbackControls()
                     
                     HStack {
                         Text(current_timestamp)
                             .font(.caption)
+                            .foregroundStyle(.white)
                             .bold()
                         
                         NewCustomProgressBar(
@@ -118,11 +102,10 @@ struct PlayerView: View {
         
                         Text(self.duration_timestamp)
                             .font(.caption)
+                            .foregroundStyle(.white)
                             .bold()
-                            
                     }
-                    .padding(.horizontal)
-                    .padding(.bottom,bottom_padding_length)
+                    .padding(.horizontal,8)
                     .background(Color.black.opacity(0.35))
                 }
                 .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
@@ -132,18 +115,17 @@ struct PlayerView: View {
 
     }
     
-    func playback_controls() -> some View {
+    func playbackControls() -> some View {
         return (
             HStack(spacing:50) {
                 Button {
-                    let curr_time = (self.controller.player?.currentTime().seconds ?? 0)
-                    let new_time = curr_time - 10 <= 0 ? 0 : curr_time - 10
+                    let currTime = (self.controller.player?.currentTime().seconds ?? 0)
+                    let newTime = currTime - 10 <= 0 ? 0 : currTime - 10
                     
-                    self.controller.player?.seek(to: CMTime(seconds: new_time, preferredTimescale: 800))
+                    self.controller.player?.seek(to: CMTime(seconds: newTime, preferredTimescale: 800))
                 } label: {
-                    //goforward.15
                     Image(systemName: "gobackward.10")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.c1_accent)
                         .font(.system(size: 30))
                 }
                 
@@ -154,7 +136,7 @@ struct PlayerView: View {
                     }
                 } label: {
                     Image(systemName: self.is_video_playing ? "pause.circle" : "play.circle")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.c1_accent)
                         .font(.system(size: 50))
                 }
                 
@@ -166,7 +148,7 @@ struct PlayerView: View {
                     self.controller.player?.seek(to: CMTime(seconds: new_time, preferredTimescale: 800))
                 } label: {
                     Image(systemName: "goforward.10")
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(Color.c1_accent)
                         .font(.system(size: 30))
                 }
             }
@@ -175,7 +157,6 @@ struct PlayerView: View {
             .onTapGesture {
                 withAnimation {
                     self.is_controls_active = false
-                    self.did_user_tap.toggle()
                 }
                 
             }
