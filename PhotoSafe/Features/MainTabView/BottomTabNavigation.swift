@@ -119,8 +119,7 @@ struct BottomTabNavigation: View {
         .environmentObject(self.album_VM)
         .environmentObject(self.favorite_VM)
         .onAppear {
-            //Populate Favorites
-            self.favorite_VM.set_favorites(with: self.album_VM.albums)
+            self.favorite_VM.setFavorites()
         }
         .background(self.toggle_plus_mode ? Color.red.opacity(0.25) : Color.orange)
     }

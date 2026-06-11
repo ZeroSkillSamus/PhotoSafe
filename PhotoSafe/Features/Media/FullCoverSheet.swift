@@ -48,9 +48,11 @@ struct FullCoverSheet: View {
 
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
-
+    @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
+    
     @State private var videoToDisplay: SelectMediaEntity? = nil
     @State private var windowedList: [SelectMediaEntity] = []
+    @State private var showAutoScrollerSheet: Bool = false 
 
     var from_where: ScreenType
     @ObservedObject var media_VM: MediaViewModel
@@ -69,12 +71,6 @@ struct FullCoverSheet: View {
             }
         }
         .frame(maxWidth: .infinity)
-    }
-    
-    private func image_view(_ ui_image: UIImage) -> some View {
-        Image(uiImage: ui_image)
-            .resizable()
-            .scaledToFit()
     }
     
     private func move_button() -> some View {
@@ -126,38 +122,6 @@ struct FullCoverSheet: View {
         .frame(maxWidth: .infinity)
     }
     
-    struct AsyncPhotoView: View {
-          let media: MediaEntity
-          @State private var fullImage: UIImage? = nil
-
-          var body: some View {
-              Group {
-                  if let fullImage {
-                      Image(uiImage: fullImage)
-                          .resizable()
-                          .scaledToFit()
-                  } else if let thumbnail = media.thumbnail_image {
-                      Image(uiImage: thumbnail)
-                          .resizable()
-                          .scaledToFit()
-                  }
-              }
-              .task {
-                  let key = media.id.uuidString
-                  let imageData = media.image_data
-                  if let cached = ImageCache.fetch_image(for: key) {
-                      fullImage = cached
-                      return
-                  }
-                  let decoded = await Task.detached(priority: .userInitiated) {
-                      ImageCache.set_image_and_return(data: imageData, key: key)
-                  }.value
-                  fullImage = decoded
-              }
-          }
-      }
-
-    
     private func bottom_header() -> some View {
         HStack {
             export_button()
@@ -185,27 +149,32 @@ struct FullCoverSheet: View {
             Button {
                 self.dismiss()
             } label: {
-                Image(systemName: "x.circle")
-                    .font(.title3)
+                ImageCircleOverlay(
+                    color: Color.red,
+                    icon: ImageCircleOverlay.IconType.text("X"),
+                    frame: CGSize(width: 28, height: 28),
+                    iconFont: .footnote
+                )
             }
-            .foregroundStyle(.red)
-            
             Spacer()
             
             Button {
-                print("Edit")
+                // Show sheet to configire & start auto scroller
+                self.showAutoScrollerSheet = true
             } label: {
-                Text("Edit")
+                ImageCircleOverlay(
+                    color: Color.c1_accent,
+                    icon: ImageCircleOverlay.IconType.symbol("play.rectangle.fill"),
+                    frame: CGSize(width: 28, height: 28),
+                    iconFont: .footnote
+                )
             }
-            .foregroundStyle(.blue)
         }
         .frame(maxWidth: .infinity, maxHeight: 40,alignment: .topLeading)
         .padding(.horizontal)
         .overlay(alignment: .top) {
             Text("\(self.uiState.current_media_index + 1) of \(list.count)")
-            //Text("\(self.uiState.display_index + 1) of \(list.count)")
                 .font(.title3)
-                .padding(5)
                 .foregroundStyle(.primary)
         }
         .background(Color.c1_secondary)
@@ -220,44 +189,12 @@ struct FullCoverSheet: View {
                     top_header()
                 }
  
-                LazyPager(data: self.windowedList, page: self.$uiState.windowListIndex) { element in
-                    switch element.media.type {
-                    case MediaType.Photo.rawValue:
-                        AsyncPhotoView(media: element.media)
-                    case MediaType.Video.rawValue:
-                        // Display thumbnail for video with play overlay
-                        if let thumbnail = element.media.thumbnail_image {
-                            image_view(thumbnail)
-                                .overlay(alignment: .center) {
-                                    Button {
-                                        self.videoToDisplay = element
-                                    } label: {
-                                        ImageCircleOverlay(icon: .symbol("play.fill"))
-                                    }
-                                }
-                        }
-                    case MediaType.GIF.rawValue:
-                        AnimatedImage(data: element.media.image_data)
-                            .resizable()
-                            .customLoopCount(0)
-                            .scaledToFit()
-                    default:
-                        EmptyView()
-                    }
-                }
-                // Make the content zoomable
-                .zoomable(min: 1, max: 5)
-                .onDismiss(backgroundOpacity: self.$uiState.opacity) {
-                    self.dismiss()
-                }
-                .onTap {
-                    withAnimation {
-                        self.uiState.did_user_tap.toggle()
-                    }
-                }
-                .opacity(self.uiState.opacity)
-                .frame(maxWidth:.infinity,maxHeight: .infinity)
-                .ignoresSafeArea(edges: [.bottom, .top])
+                LazyPagerView(
+                    windowedList: self.$windowedList,
+                    windowListIndex: self.$uiState.windowListIndex,
+                    backgroundOpacity: self.$uiState.opacity,
+                    userTapped: self.$uiState.did_user_tap
+                )
                 
                 // Shows Bottom Header
                 if self.uiState.should_header_display || !self.uiState.did_user_tap {
@@ -267,28 +204,6 @@ struct FullCoverSheet: View {
             .onRotate { newOrientation in
                 self.uiState.prev_orientation = self.uiState.orientation
                 self.uiState.orientation = newOrientation
-            }
-            .onChange(of: uiState.windowListIndex) { _, new_index in
-                guard windowedList.indices.contains(new_index) else { return }
-
-                let currentItem = windowedList[new_index]
-                let newListIndex = list.firstIndex(of: currentItem) ?? 0
-                self.uiState.current_media_index = newListIndex
-
-                let atLeftEdge = new_index == 0
-                let atRightEdge = new_index == windowedList.count - 1
-
-                let windowLower = list.firstIndex(of: windowedList.first!) ?? 0
-                let windowUpper = list.firstIndex(of: windowedList.last!) ?? 0
-                let canShiftLeft = windowLower > 0
-                let canShiftRight = windowUpper < list.count - 1
-
-                guard (atLeftEdge && canShiftLeft) || (atRightEdge && canShiftRight) else { return }
-
-                updateWindowedList(currentIndex: newListIndex)
-                if let fixedIndex = windowedList.firstIndex(where: { $0 == currentItem }) {
-                    self.uiState.windowListIndex = fixedIndex
-                }
             }
         }
         .onAppear {
@@ -304,11 +219,30 @@ struct FullCoverSheet: View {
                 }
             }
         }
-        .fullScreenCover(item: self.$videoToDisplay) { video in
-            if let video_path = video.media.video_path,
-               let url = URL(string: video_path) {
-                VideoPlayerView(url: url)
+        .onChange(of: uiState.windowListIndex) { _, new_index in
+            guard windowedList.indices.contains(new_index) else { return }
+
+            let currentItem = windowedList[new_index]
+            let newListIndex = list.firstIndex(of: currentItem) ?? 0
+            self.uiState.current_media_index = newListIndex
+
+            let atLeftEdge = new_index == 0
+            let atRightEdge = new_index == windowedList.count - 1
+
+            let windowLower = list.firstIndex(of: windowedList.first!) ?? 0
+            let windowUpper = list.firstIndex(of: windowedList.last!) ?? 0
+            let canShiftLeft = windowLower > 0
+            let canShiftRight = windowUpper < list.count - 1
+
+            guard (atLeftEdge && canShiftLeft) || (atRightEdge && canShiftRight) else { return }
+
+            updateWindowedList(currentIndex: newListIndex)
+            if let fixedIndex = windowedList.firstIndex(where: { $0.media.id == currentItem.media.id }) {
+                self.uiState.windowListIndex = fixedIndex
             }
+        }
+        .sheet(isPresented: self.$showAutoScrollerSheet) {
+            OptionsView()
         }
         .sheet(isPresented: self.$uiState.display_move_sheet) {
             MoveSheet(curr_album_name: self.select_media.media.album.name) { album in
@@ -319,44 +253,14 @@ struct FullCoverSheet: View {
                 if self.list.isEmpty { self.dismiss() }
             }
         }
+        .onChange(of: self.slideShowViewModel.displaySlideshow, { oldValue, newValue in
+            if newValue == true {
+                self.dismiss()
+            }
+        })
         .ignoresSafeArea(edges: !self.uiState.did_user_tap ? [] : [.bottom,.top])
         .persistentSystemOverlays(.hidden)
         .background(.black.opacity(self.uiState.opacity))
         .background(ClearFullScreenBackground())
     }
 }
-
-struct VideoPlayerView: View {
-      let url: URL
-      @State private var player: AVPlayer?
-      @Environment(\.dismiss) var dismiss
-  
-      var body: some View {
-          ZStack(alignment: .topLeading) {
-              VideoPlayer(player: player ?? AVPlayer())
-                  .ignoresSafeArea()
-
-              Button {
-                  dismiss()
-              } label: {
-                  Image(systemName: "xmark.circle.fill")
-                      .font(.title)
-                      .foregroundStyle(.white)
-                      .shadow(radius: 4)
-              }
-              .ignoresSafeArea(edges: .horizontal)
-              .padding(.top, 12)
-              .padding(.leading, 2)
-          }
-          .onAppear {
-              player = AVPlayer(url: url)
-              player?.allowsExternalPlayback = false // disable airplay
-              
-              player?.play()
-          }
-          .onDisappear {
-              player?.pause()
-              player = nil
-          }
-      }
-  }

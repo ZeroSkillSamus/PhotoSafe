@@ -17,6 +17,7 @@ enum MediaType: String {
 
 struct MediaView: View {
     @EnvironmentObject private var favorite_VM: FavoriteViewModel
+    @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
     
     @ObservedObject var album: AlbumEntity
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
@@ -83,6 +84,7 @@ struct MediaView: View {
                 Color.clear  // Add extra space to the bottom of the view
                     .frame(height: 50)
             }
+            .padding(.horizontal,5)
             .overlay(alignment: .bottom) {
                 // Bottom Header
                 BottomHeader(
@@ -111,7 +113,7 @@ struct MediaView: View {
             if self.media_VM.progress_alert || self.media_VM.export_finished {
                 Color.c1_background.opacity(0.35).ignoresSafeArea()
             } else {
-                Color.c1_background.ignoresSafeArea(edges: .bottom)
+                Color.c1_background.ignoresSafeArea(edges: .all)
             }
         }
         .toolbarBackground(Color.c1_background, for: .navigationBar)
@@ -164,6 +166,10 @@ struct MediaView: View {
                 }
             }
         }
+        .fullScreenCover(isPresented: self.$slideShowViewModel.displaySlideshow) {
+            VerticalMediaView(list: self.media_VM.medias)
+        }
+        .orientationLock(.all)
     }
     
     var header: Text {

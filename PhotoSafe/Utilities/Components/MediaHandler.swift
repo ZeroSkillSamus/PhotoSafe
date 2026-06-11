@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Photos
+import UIKit
 
 /// Class that handles saving & deleting from the user photo library.
 ///
@@ -40,19 +41,24 @@ class MediaHandler: NSObject {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(save_completed), nil)
     }
     
-    func save_video_to_user_library(at path: String) {
-        let fileManager = FileManager.default
-        let isReadable = fileManager.isReadableFile(atPath: path)
-        print("Is file readable? \(isReadable)")
-    
-        let originalURL = URL(fileURLWithPath: path)
-        
-        guard FileManager.default.fileExists(atPath: originalURL.path) else {
-            print(originalURL.path)
-            print("Error: Video file doesn't exist at path")
+    func saveVideoToUserLibrary(at path: String) {
+        // Convert to url first
+        guard let urlObject = URL(string: path) else {
+            print("Error: Could not parse string as a URL")
             return
         }
         
+        let trueFilePath = urlObject.path
+        let fileManager = FileManager.default
+        //let isReadable = fileManager.isReadableFile(atPath: trueFilePath)
+   
+        let managedAccess = urlObject.startAccessingSecurityScopedResource()
+        
+        guard FileManager.default.fileExists(atPath: trueFilePath) else {
+            print(urlObject.path)
+            print("Error: Video file doesn't exist at path")
+            return
+        }
         
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized else {
@@ -61,9 +67,13 @@ class MediaHandler: NSObject {
             }
             
             PHPhotoLibrary.shared().performChanges({
-                        let url = URL(fileURLWithPath: path)
+                        let url = URL(fileURLWithPath: trueFilePath)
                         PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
                     }) { success, error in
+                        // 2. Always release the resource when finished
+                        if managedAccess {
+                            urlObject.stopAccessingSecurityScopedResource()
+                        }
                     DispatchQueue.main.async {
                         if success {
                             print("Video saved to Photos library")

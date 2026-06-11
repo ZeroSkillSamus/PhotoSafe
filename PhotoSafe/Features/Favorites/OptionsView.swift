@@ -7,22 +7,15 @@
 
 import SwiftUI
 enum SlideShowType: String, CaseIterable {
-    case Vertical = "Vertical"
-    case Horizontal = "Horizontal"
+    case vertical = "Vertical"
+    case horizontal = "Horizontal"
 }
 
 struct OptionsView: View {
     @Environment(\.dismiss) private var dismiss
-    
-    @State private var slide_show_type: SlideShowType = .Vertical
+    @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
     
     let timer_options: [TimeInterval] = [2,3,5,10]
-    
-    @Binding var display_vertical_slide: Bool
-    @Binding var display_horizontal_slide: Bool
-    @Binding var toggle_shuffle: Bool
-    @Binding var play_slides_auto: Bool
-    @Binding var time_interval: TimeInterval
     
     var body: some View {
         ZStack {
@@ -33,13 +26,13 @@ struct OptionsView: View {
                         .font(.title2.bold())
                         .foregroundStyle(Color.c1_text)
                     
-                    Toggle(isOn: self.$toggle_shuffle) {
+                    Toggle(isOn: self.$slideShowViewModel.isShuffleEnabled) {
                         Text("Shuffle")
                             .font(.system(size: 16,weight: .bold,design: .rounded))
                             .foregroundStyle(Color.c1_text)
                     }
                     
-                    Toggle(isOn: self.$play_slides_auto) {
+                    Toggle(isOn: self.$slideShowViewModel.autoPlayEnabled) {
                         Text("Play Slides Auto")
                             .font(.system(size: 16,weight: .bold,design: .rounded))
                             .foregroundStyle(Color.c1_text)
@@ -52,9 +45,11 @@ struct OptionsView: View {
                         
                         Spacer()
                         
-                        Picker("SlideShow Direction Options", selection: self.$slide_show_type) {
+                        Picker("SlideShow Direction Options", selection: self.$slideShowViewModel.slideShowDirection) {
                             ForEach(SlideShowType.allCases, id:\.self) { type in
                                 Text(type.rawValue)
+                                    .foregroundStyle(Color.c1_text)
+                                    .opacity(0.75)
                             }
                         }
                         .menuIndicator(.hidden)
@@ -67,14 +62,16 @@ struct OptionsView: View {
                         
                         Spacer()
                         
-                        Picker("TimeInterval", selection: self.$time_interval) {
+                        Picker("TimeInterval", selection: self.$slideShowViewModel.timeInteval) {
                             ForEach(self.timer_options, id:\.self) { type in
                                 Text("\(String(format: "%.0f", type)) seconds")
+                                    .foregroundStyle(Color.c1_text)
+                                    .opacity(0.75)
                             }
                         }
                         .menuIndicator(.hidden)
                     }
-                    .opacity(self.play_slides_auto ? 1 : 0)
+                    .opacity(self.slideShowViewModel.autoPlayEnabled ? 1 : 0)
                 }
                 
                 Spacer()
@@ -83,12 +80,7 @@ struct OptionsView: View {
                     self.dismiss()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        switch self.slide_show_type {
-                        case .Vertical:
-                            display_vertical_slide = true
-                        case .Horizontal:
-                            display_horizontal_slide = true
-                        }
+                        self.slideShowViewModel.showSlideShow()
                     }
                     
                 } label: {

@@ -15,8 +15,9 @@ private func image_view(_ ui_image: UIImage) -> some View {
         .scaledToFit()
 }
 
-struct VerticalMediaVIew: View {
+struct VerticalMediaView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
     
     var list: [SelectMediaEntity]
     
@@ -24,10 +25,8 @@ struct VerticalMediaVIew: View {
     @State private var new_list: [SelectMediaEntity] = []
     @State private var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
     
-    @Binding var shuffle_list: Bool
-    @Binding var time_interval: TimeInterval
-    @Binding var auto_slide_enabled: Bool
-
+    @State private var backgroundOpacity: CGFloat = 1.0
+    
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -61,40 +60,27 @@ struct VerticalMediaVIew: View {
                 })
                 .padding(.horizontal)
                 
-                LazyPager(data: self.new_list,page: self.$current_media_index, direction: .vertical) { element in
-                    switch element.media.type {
-                    case MediaType.Photo.rawValue:
-                        if let cached_image = ImageCache.fetch_image(for: element.media.id.uuidString) {
-                            image_view(cached_image)
-                        } else if let ui_image = ImageCache.set_image_and_return(for: element.media) {
-                            image_view(ui_image)
+                LazyPagerView(
+                    direction: slideShowViewModel.slideShowDirection,
+                    windowedList: self.$new_list,
+                    windowListIndex: self.$current_media_index,
+                    backgroundOpacity: self.$backgroundOpacity,
+                    userTapped: .constant(false)
+                )
+                    .onReceive(self.timer) { _ in
+                        guard self.slideShowViewModel.autoPlayEnabled else { return } // Stops timer from changing index
+                        
+                        withAnimation {
+                            self.current_media_index = (self.current_media_index + 1) % self.new_list.count
                         }
-                    case MediaType.Video.rawValue:
-                        EmptyView()
-                    case MediaType.GIF.rawValue:
-                        AnimatedImage(data: element.media.image_data)
-                            .resizable()
-                            .customLoopCount(0)
-                            .scaledToFit()
-                    default:
-                        EmptyView()
                     }
-                }
-                .onReceive(self.timer) { _ in
-                    print(self.auto_slide_enabled)
-                    guard self.auto_slide_enabled else { return } // Stops timer from changing index
-                    
-                    withAnimation {
-                        self.current_media_index = (self.current_media_index + 1) % self.new_list.count
-                    }
-                }
             }
         }
         .onAppear {
-            self.new_list = self.shuffle_list ? self.list.shuffled() : self.list
+            self.new_list = self.slideShowViewModel.isShuffleEnabled ? self.list.shuffled() : self.list
             
-            if self.auto_slide_enabled {
-                self.timer = Timer.publish(every: self.time_interval, on: .main, in: .common).autoconnect()
+            if self.slideShowViewModel.autoPlayEnabled {
+                self.timer = Timer.publish(every: self.slideShowViewModel.timeInteval, on: .main, in: .common).autoconnect()
             }
         }
     }
