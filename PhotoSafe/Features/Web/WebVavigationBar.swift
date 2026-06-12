@@ -10,15 +10,14 @@ import SwiftUI
 struct WebVavigationBar: View {
     var webViewModel: WebViewModel
     var folderBookmarkViewModel: FolderBookmarkViewModel
-    
-    
+
     @State private var userInputText: String = ""
     @State private var userSubmitedText: String = ""
-    
+
     @Binding var showHistorySheet: Bool
     @Binding var toast: ToastItem?
     @FocusState.Binding var isFocused: Bool
-    
+
     var body: some View {
         HStack {
             HStack {
@@ -35,16 +34,14 @@ struct WebVavigationBar: View {
                     webViewModel.goForward()
                 } label: {
                     Image(systemName: "chevron.forward")
-                        
                 }
                 .opacity(!webViewModel.canGoFoward ? 0.5 : 1)
                 .foregroundStyle(Color.c1_accent)
                 .disabled(!webViewModel.canGoFoward)
-                
             }
             .padding(10)
             .applyLiquidGlassIfSupported()
-            
+
             TextField("Enter url here...", text: self.$userInputText)
                 .focused($isFocused)
                 .textFieldStyle(.plain)
@@ -57,14 +54,13 @@ struct WebVavigationBar: View {
                 .textInputAutocapitalization(.never)
                 .onSubmit {
                     self.userSubmitedText = self.userInputText
-                    
                     self.webViewModel.update(url: URL(string: userSubmitedText))
                     self.webViewModel.userNavigateTo(urlString: userSubmitedText)
                 }
                 .frame(maxWidth: .infinity)
-            
+
             Spacer()
-            
+
             Menu {
                 Button {
                     self.showHistorySheet.toggle()
@@ -72,22 +68,22 @@ struct WebVavigationBar: View {
                     Label("Saved this session", systemImage: "folder.fill")
                         .foregroundStyle(Color.c1_accent)
                 }
-                
+
                 Button {
                     Task {
-                        if webViewModel.currentUrl == nil  {
+                        if webViewModel.currentUrl == nil {
                             self.toast = ToastItem(message: "Url can not be empty", status: .failure)
                             return
                         }
-                        if webViewModel.url == nil  {
+                        if webViewModel.url == nil {
                             self.toast = ToastItem(message: "Url can not be empty", status: .failure)
                             return
                         }
-                        
+
                         let urlToSave = webViewModel.currentUrl
                         let title = webViewModel.webView?.title ?? webViewModel.webView?.url?.host ?? ""
                         let faviconData = await webViewModel.fetchFaviconData()
-                        
+
                         self.toast = folderBookmarkViewModel.addBookmark(
                             folder: nil,
                             url: urlToSave,
@@ -95,23 +91,21 @@ struct WebVavigationBar: View {
                             title: title
                         )
                     }
-                    
                 } label: {
                     Label("Add to bookmarks", systemImage: "book.fill")
                 }
                 .foregroundStyle(Color.c1_accent)
-                
+
             } label: {
                 Image(systemName: "ellipsis")
-                    .padding(10) // Establishes clean sizing container bounds natively
+                    .padding(10)
             }
             .foregroundStyle(Color.c1_accent)
-            .applyLiquidGlassIfSupported() // Safely applies the effect without changing view structural identity
-
+            .applyLiquidGlassIfSupported()
         }
-        .frame(height:24)
+        .frame(height: 24)
         .padding(.horizontal)
-        .padding(.vertical,10)
+        .padding(.vertical, 10)
         .background(Color.c1_secondary)
         .onAppear {
             self.userInputText = self.webViewModel.currentUrl?.absoluteString ?? ""
@@ -136,7 +130,6 @@ extension View {
                 .contentShape(shape)
                 .glassEffect(.regular, in: shape)
         } else {
-            // Safe pre-iOS 26 structural fallback layout
             self
                 .contentShape(Capsule())
         }
