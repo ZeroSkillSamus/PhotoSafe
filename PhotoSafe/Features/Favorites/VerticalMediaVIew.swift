@@ -68,29 +68,25 @@ struct VerticalMediaView: View {
                     }
                     .overlay(alignment: .center, content: {
                         Text("\(current_media_index + 1) of \(new_list.count)")
-                            .font(.system(size: 16, weight: .semibold,design: .rounded))
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white)
                     })
                     .padding(.horizontal)
-                    .padding([.top],10)
+                    .padding([.top], 10)
                 }
                 .onReceive(self.timer) { _ in
                     guard self.slideShowViewModel.autoPlayEnabled else { return }
-                    // Check if current index is on video
-                    // If it is disable timer until user gets off video
                     let element = self.new_list[self.current_media_index]
                     if element.media.type == MediaType.Video.rawValue { return }
-                    
+
                     withAnimation {
                         self.current_media_index = (self.current_media_index + 1) % self.new_list.count
                     }
                 }
-                
             }
         }
         .onAppear {
             guard self.new_list.isEmpty else { return }
-            
             self.new_list = self.slideShowViewModel.isShuffleEnabled ? self.list.shuffled() : self.list
 
             if self.slideShowViewModel.autoPlayEnabled {
