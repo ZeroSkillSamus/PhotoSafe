@@ -26,6 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // Hold a reference to the view model so both windows can read it
     private let authViewModel = AuthStorageViewModel()
+    private let webViewModel = WebViewModel()
     private let slideShowViewModel = SlideShowViewModel()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -34,7 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // 1. App Window
         let mainWindow = UIWindow(windowScene: windowScene)
         mainWindow.rootViewController = UIHostingController(
-            rootView: BottomTabNavigation().environmentObject(authViewModel).environmentObject(slideShowViewModel)
+            rootView: BottomTabNavigation().environmentObject(authViewModel).environmentObject(slideShowViewModel).environment(webViewModel)
         )
         self.window = mainWindow
         mainWindow.makeKeyAndVisible()
@@ -67,6 +68,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         authViewModel.lockApp()
+        webViewModel.clear()  // clear alongside lock
+        print("sdakjsdakj")
     }
 }
 
