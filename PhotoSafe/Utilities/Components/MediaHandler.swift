@@ -49,9 +49,7 @@ class MediaHandler: NSObject {
         }
         
         let trueFilePath = urlObject.path
-        let fileManager = FileManager.default
-        //let isReadable = fileManager.isReadableFile(atPath: trueFilePath)
-   
+
         let managedAccess = urlObject.startAccessingSecurityScopedResource()
         
         guard FileManager.default.fileExists(atPath: trueFilePath) else {

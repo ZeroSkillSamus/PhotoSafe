@@ -141,14 +141,14 @@ struct SelectBottomButton: View {
                     .resizable()
                     .renderingMode(.template)
                     .scaledToFit()
-                    .frame(width:23,height:22)
+                    .frame(width:18,height:18)
 
                 Text(label)
-                    .font(.caption2)
+                    .font(.system(size: 13, design: .rounded))
             }
             .foregroundStyle(Color.c1_primary)
         }
-        .padding(.top,15)
+        .padding(.top,5)
         
     }
 }

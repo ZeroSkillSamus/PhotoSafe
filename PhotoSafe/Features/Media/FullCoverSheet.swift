@@ -138,6 +138,7 @@ struct FullCoverSheet: View {
                 delete_button()
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: 30,alignment: .topLeading)
         .padding(.horizontal)
         .background(Color.c1_secondary)
         .opacity(self.uiState.opacity)
@@ -149,12 +150,12 @@ struct FullCoverSheet: View {
             Button {
                 self.dismiss()
             } label: {
-                ImageCircleOverlay(
-                    color: Color.red,
-                    icon: ImageCircleOverlay.IconType.text("X"),
-                    frame: CGSize(width: 28, height: 28),
-                    iconFont: .footnote
-                )
+                Image(systemName: "xmark.circle")
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width:20,height:20)
+                    .foregroundStyle(.red)
             }
             Spacer()
             
@@ -162,21 +163,22 @@ struct FullCoverSheet: View {
                 // Show sheet to configire & start auto scroller
                 self.showAutoScrollerSheet = true
             } label: {
-                ImageCircleOverlay(
-                    color: Color.c1_accent,
-                    icon: ImageCircleOverlay.IconType.symbol("play.rectangle.fill"),
-                    frame: CGSize(width: 28, height: 28),
-                    iconFont: .footnote
-                )
+                Image(systemName: "play.rectangle.fill")
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width:20,height:20)
+                    .foregroundStyle(Color.c1_accent)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: 40,alignment: .topLeading)
-        .padding(.horizontal)
+        .frame(maxWidth: .infinity, minHeight: 30, maxHeight: 30,alignment: .topLeading)
         .overlay(alignment: .top) {
             Text("\(self.uiState.current_media_index + 1) of \(list.count)")
-                .font(.title3)
+                .font(.system(size: 16, weight: .semibold,design: .rounded))
                 .foregroundStyle(.primary)
         }
+        .padding([.horizontal])
+        .padding([.top],10)
         .background(Color.c1_secondary)
         .opacity(self.uiState.opacity)
         .opacity(!self.uiState.did_user_tap ? 1 : 0)
@@ -184,26 +186,15 @@ struct FullCoverSheet: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                if self.uiState.should_header_display || !self.uiState.did_user_tap {
-                    top_header()
-                }
- 
-                LazyPagerView(
-                    windowedList: self.$windowedList,
-                    windowListIndex: self.$uiState.windowListIndex,
-                    backgroundOpacity: self.$uiState.opacity,
-                    userTapped: self.$uiState.did_user_tap
-                )
-                
-                // Shows Bottom Header
-                if self.uiState.should_header_display || !self.uiState.did_user_tap {
-                    bottom_header()
-                }
-            }
-            .onRotate { newOrientation in
-                self.uiState.prev_orientation = self.uiState.orientation
-                self.uiState.orientation = newOrientation
+            LazyPagerView(
+                windowedList: self.$windowedList,
+                windowListIndex: self.$uiState.windowListIndex,
+                backgroundOpacity: self.$uiState.opacity,
+                userTapped: self.$uiState.did_user_tap
+            ).overlay(alignment: .top) {
+                top_header()
+            }.overlay(alignment: .bottom) {
+                bottom_header()
             }
         }
         .onAppear {
@@ -258,7 +249,6 @@ struct FullCoverSheet: View {
                 self.dismiss()
             }
         })
-        .ignoresSafeArea(edges: !self.uiState.did_user_tap ? [] : [.bottom,.top])
         .persistentSystemOverlays(.hidden)
         .background(.black.opacity(self.uiState.opacity))
         .background(ClearFullScreenBackground())
