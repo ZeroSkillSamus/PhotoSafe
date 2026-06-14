@@ -12,6 +12,9 @@ struct WebVavigationBar: View {
     @State private var userInputText: String = ""
     @State private var userSubmitedText: String = ""
     
+    @Binding var showHistorySheet: Bool
+    @FocusState.Binding var isFocused: Bool
+    
     var body: some View {
         HStack {
             Button {
@@ -34,10 +37,11 @@ struct WebVavigationBar: View {
             .disabled(!webViewModel.canGoFoward)
             
             TextField("Enter url here...", text: self.$userInputText)
+                .focused($isFocused)
                 .textFieldStyle(.plain)
                 .padding(6)
                 .truncationMode(.middle)
-                .background(Color.white.opacity(0.75))
+                .background(Color.white.opacity(0.7))
                 .cornerRadius(8)
                 .foregroundStyle(Color.c1_accent)
                 .autocorrectionDisabled()
@@ -52,12 +56,18 @@ struct WebVavigationBar: View {
             
             Spacer()
             
-            Button {
-                webViewModel.refresh()
+//
+            Menu {
+                Button {
+                    self.showHistorySheet.toggle()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+                .foregroundStyle(Color.c1_accent)
+                
             } label: {
                 Image(systemName: "arrow.clockwise")
             }
-            .foregroundStyle(Color.c1_accent)
         }
         .frame(height:24)
         .padding(.horizontal)

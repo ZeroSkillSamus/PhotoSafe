@@ -8,8 +8,54 @@
 import SwiftUI
 import WebKit
 
+enum Status: String {
+    //case loading
+    case success
+    case failure
+}
+
+struct ToastItem {
+    let message:String
+    let status: Status
+}
+
+struct DownloadMediaItem: Hashable {
+    let url: String
+    var status: Status
+    var downloadedAt: Date
+    var albumDownloadedTo: String
+    var domain: String?
+    
+    var timeSinceCreated: Text {
+        let today = Date()
+        let components = Calendar.current.dateComponents([.day, .month, .hour,.year,.minute,.second, .weekday], from: today, to: downloadedAt)
+        
+        if let year = components.year, year < 0 {
+            return Text(downloadedAt.formatted(date: .abbreviated, time: .shortened))
+        } else if let month = components.month, month < 0 {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM d"
+            return Text(formatter.string(from: downloadedAt))
+        } else if let day = components.day, day < 0 {
+            return Text("^[\(abs(day)) day](inflect: true) ago")
+        } else if let hour = components.hour, hour < 0 {
+            return Text("^[\(abs(hour)) hour](inflect: true) ago")
+        } else if let minute = components.minute, minute < 0 {
+            return Text("^[\(abs(minute)) min](inflect: true) ago")
+        } else if let second = components.second, second < 0 {
+            return Text("^[\(abs(second)) sec](inflect: true) ago")
+        }
+        return Text("")
+    }
+}
+
 struct WebViewWrapper: View {
     @Environment(WebViewModel.self) var webViewModel
+    @State private var isPresented: Bool = false
+
+    @State private var toast: ToastItem? = nil
+    @State private var showHistorySheet: Bool = false
+    @FocusState private var isInputFocused: Bool
     
     @ViewBuilder
     func serverNotFoundView() -> some View {
@@ -37,6 +83,31 @@ struct WebViewWrapper: View {
             
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity, alignment: .center)
+        .background(Color.c1_background)
+    }
+    
+    @ViewBuilder
+    func bookmarkShowView() -> some View {
+        VStack(spacing: 15) {
+            Label {
+                Text("Bookmarks")
+                    .font(.system(size: 22,weight: .semibold,design: .rounded))
+            } icon: {
+                Image(systemName: "bookmark.circle")
+                    .resizable()
+                    .frame(width: 24,height: 24)
+                    .fontWeight(.semibold)
+            }
+            .foregroundStyle(Color.c1_text)
+            .frame(maxWidth: .infinity,alignment: .leading)
+            
+            Spacer()
+        }
+        .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity
+        )
+        .padding()
         .background(Color.c1_background)
     }
     
@@ -73,30 +144,126 @@ struct WebViewWrapper: View {
         .background(Color.c1_background)
     }
     
+    func displayMediaHistoryView() -> some View {
+        VStack {
+            Text("Saved This Session")
+                .frame(maxWidth: .infinity,alignment: .leading)
+                
+                .font(.system(size: 22,weight: .semibold, design: .rounded))
+                .foregroundStyle(Color.c1_text)
+            
+            ScrollView {
+                LazyVStack {
+                    ForEach(self.webViewModel.sessionHistory, id: \.self) { item in
+                        HStack(spacing: 15) {
+                            AsyncImage(url: URL(string: item.url)) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                case .success(let image):
+                                    image.resizable()
+                                        //.aspectRatio(contentMode: .init(rawValue: "fill"))
+                                        .frame(width: 85, height: 85)
+                                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                                case .failure(_):
+                                    Text("Failure")
+                                @unknown default:
+                                    Text("Failure")
+                                }
+                            }
+                            
+                            VStack {
+                                Text(item.domain ?? "")
+                                    .font(.system(size: 14,weight: .semibold, design: .rounded))
+                                    .frame(maxWidth: .infinity,alignment: .leading)
+                                Text(item.albumDownloadedTo)
+                                    .font(.system(size: 14, design: .rounded))
+                                    .frame(maxWidth: .infinity,alignment: .leading)
+                            }
+                            .foregroundStyle(Color.c1_text)
+                            
+                            item.timeSinceCreated
+                                .font(.system(size: 12, design: .rounded))
+                                //.opacity(0.75)
+                                .foregroundStyle(Color.c1_text)
+                        }
+                    }
+                }
+            }
+        }
+        .padding()
+        .presentationDragIndicator(.visible)
+        .background(Color.c1_background)
+    }
+    
     var body: some View {
         // Create a local Bindable reference to generate bindings ($)
         @Bindable var webViewModel = webViewModel
         
         VStack(spacing: 0) {
-            WebVavigationBar(webViewModel: self.webViewModel)
+            WebVavigationBar(webViewModel: self.webViewModel, showHistorySheet: self.$showHistorySheet, isFocused: self.$isInputFocused)
             
-            if webViewModel.url != nil {
-                ZStack {
-                    if webViewModel.error != nil {
-                        serverNotFoundView()
-                    } else {
-                        WebView(webViewModel: webViewModel)
+            Group {
+                if webViewModel.url != nil {
+                    ZStack {
+                        if webViewModel.error != nil {
+                            serverNotFoundView()
+                        } else {
+                            WebView(webViewModel: webViewModel)
+                        }
                     }
+                } else {
+                    defaultView()
                 }
-            } else {
-                defaultView()
+                
             }
+            .overlay {
+                if isPresented { bookmarkShowView() }
+            }
+            
+        }
+        .animation(.easeInOut(duration: 0.25), value: isPresented)
+        .onChange(of: self.isInputFocused) { oldValue, newValue in
+            self.isPresented = newValue
+            // When in focused highlights all text
+            if newValue {
+                DispatchQueue.main.async {
+                    UIApplication.shared.sendAction(#selector(UIResponder.selectAll(_:)), to: nil, from: nil, for: nil)
+                }
+            }
+        }
+        // Stop keyboard from lifting up entire view
+        .ignoresSafeArea(.keyboard, edges: .bottom)
+        .sheet(isPresented: self.$showHistorySheet){
+            self.displayMediaHistoryView()
         }
         .sheet(item: $webViewModel.pendingImageURL) { item in
-            VStack {
-                Text(item.url)
+            MoveSheet { album in
+                Task {
+                    self.toast = await MediaViewModel().addPhotoFromWebToAlbum(from: item.url, to: album)
+                    guard let toast else {  return }
+                    self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
+                }
             }
         }
+        .overlay(alignment: .bottom) {
+              if let toast {
+                  Text(toast.message)
+                      .font(.system(size: 14, weight: .medium, design: .rounded))
+                      .foregroundStyle(.white)
+                      .padding(.horizontal, 16)
+                      .padding(.vertical, 10)
+                      .background(toast.status == .failure ? Color.red.opacity(0.85) : Color.c1_accent.opacity(0.75))
+                      .clipShape(Capsule())
+                      .padding(.bottom, 15)
+                      .transition(.move(edge: .bottom).combined(with: .opacity))
+                      .onAppear {
+                          DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                              withAnimation { self.toast = nil }
+                          }
+                      }
+              }
+          }
     }
 }
 
@@ -121,7 +288,7 @@ struct WebView: UIViewRepresentable {
             source: """
             (function() {
                 var longPressTimer = null;
-                var DURATION = 500;
+                var DURATION = 1000;
 
                 function attachLongPress(img) {
                     img.addEventListener('touchstart', function(e) {

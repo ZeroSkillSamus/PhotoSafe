@@ -54,7 +54,7 @@ struct MoveSheet: View {
     
     var body: some View {
         ZStack {
-            Color.c1_secondary.ignoresSafeArea()
+            //Color.c1_secondary.ignoresSafeArea()
             
             VStack {
                 HStack {
@@ -65,25 +65,28 @@ struct MoveSheet: View {
                 .frame(maxWidth: .infinity,alignment: .leading)
                 .padding()
                 
-                LazyVStack(spacing: 0) {
-                    ForEach(self.album_VM.albums.filter({$0.name != curr_album_name ?? "" }),id:\.self) { album in
-                        MoveButtonLabel(name: album.name, image: AlbumImageDisplay(album: album)) {
-                            self.move_action(album)
-                            self.dismiss()
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(self.album_VM.albums.filter({$0.name != curr_album_name ?? "" }),id:\.self) { album in
+                            MoveButtonLabel(name: album.name, image: AlbumImageDisplay(album: album)) {
+                                self.move_action(album)
+                                self.dismiss()
+                            }
+                            Divider()
+                                .foregroundStyle(.black)
                         }
-                        Divider()
-                            .foregroundStyle(.black)
-                    }
-                    
-                    // Create New Album Button
-                    MoveButtonLabel(
-                        name: "Create & Move To New Album",
-                        image: Image("NoImageFound").resizable())
-                    {
-                        // Toggle alert that will prompt user to enter new album name
-                        self.toggle_alert = true
+                        
+                        // Create New Album Button
+                        MoveButtonLabel(
+                            name: "Create & Move To New Album",
+                            image: Image("NoImageFound").resizable())
+                        {
+                            // Toggle alert that will prompt user to enter new album name
+                            self.toggle_alert = true
+                        }
                     }
                 }
+                
             }
         }
         .alert("Create Album", isPresented: self.$toggle_alert) {
@@ -121,7 +124,9 @@ struct MoveSheet: View {
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         // Handles making the sheet height dynamic based on album_count + 2
+        //.presentationBackground(.ultraThinMaterial)
         .presentationDetents([.height(CGFloat(self.album_VM.albums.count + 2) * 80)])
         .presentationDragIndicator(.visible)
+        .presentationBackground(Color.c1_secondary.opacity(0.7)) 
     }
 }

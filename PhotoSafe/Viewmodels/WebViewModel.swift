@@ -18,6 +18,7 @@ class WebViewModel {
     private let defaultSearchEngine: String = "https://duckduckgo.com/?q="
     
     var pendingImageURL: ImageURLItem? = nil
+    private(set) var sessionHistory: [DownloadMediaItem] = []
     
     var url: URL? = nil
     var currentUrl: URL? = nil
@@ -53,6 +54,11 @@ class WebViewModel {
         self.canGoFoward = webView?.canGoForward ?? false
     }
     
+    func appendToHistory(urlString: String, status: Status, album: AlbumEntity) {
+        guard let url = URL(string: urlString) else { return }
+        sessionHistory.append(DownloadMediaItem(url: urlString, status: status, downloadedAt: Date.now,albumDownloadedTo: album.name,domain: url.host()))
+    }
+    
     func goBack() {
         if !canGoBack { return }
         print("back")
@@ -75,6 +81,7 @@ class WebViewModel {
         currentUrl = nil
         error = nil
         isLoading = false
+        sessionHistory = []
     }
 
     func userNavigateTo(urlString: String) {
