@@ -462,7 +462,6 @@
 			isa = PBXGroup;
 			children = (
 				02D8013D2DA5A6A0002AE361 /* WebView.swift */,
-				02A98DDE2FDCD0D9008E23B2 /* WebVavigationBar.swift */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -692,7 +691,6 @@
 				02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */,
 				02A98DD02FD627D9008E23B2 /* AuthStorageViewModel.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
-				02A98DDF2FDCD0D9008E23B2 /* WebVavigationBar.swift in Sources */,
 				02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */,
 				028EF8212DB3F91A00361AFD /* ImageCache.swift in Sources */,
 			);
