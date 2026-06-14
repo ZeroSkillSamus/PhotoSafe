@@ -133,7 +133,6 @@ struct WebViewWrapper: View {
                     .font(.system(size: 15,weight: .regular,design: .rounded))
                     .italic()
             }
-            
         }
         .frame(
             maxWidth: .infinity,
@@ -148,7 +147,6 @@ struct WebViewWrapper: View {
         VStack {
             Text("Saved This Session")
                 .frame(maxWidth: .infinity,alignment: .leading)
-                
                 .font(.system(size: 22,weight: .semibold, design: .rounded))
                 .foregroundStyle(Color.c1_text)
             
@@ -181,10 +179,11 @@ struct WebViewWrapper: View {
                                     .frame(maxWidth: .infinity,alignment: .leading)
                             }
                             .foregroundStyle(Color.c1_text)
-                            
+                        }
+                        .overlay(alignment: .topTrailing) {
                             item.timeSinceCreated
                                 .font(.system(size: 12, design: .rounded))
-                                //.opacity(0.75)
+                                .opacity(0.75)
                                 .foregroundStyle(Color.c1_text)
                         }
                     }
