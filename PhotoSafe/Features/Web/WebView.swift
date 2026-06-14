@@ -74,6 +74,9 @@ struct WebViewWrapper: View {
     }
     
     var body: some View {
+        // Create a local Bindable reference to generate bindings ($)
+        @Bindable var webViewModel = webViewModel
+        
         VStack(spacing: 0) {
             WebVavigationBar(webViewModel: self.webViewModel)
             
@@ -89,6 +92,11 @@ struct WebViewWrapper: View {
                 defaultView()
             }
         }
+        .sheet(item: $webViewModel.pendingImageURL) { item in
+            VStack {
+                Text(item.url)
+            }
+        }
     }
 }
 
@@ -97,6 +105,14 @@ struct WebView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
+        // Disable ios native way of handling longpress for images/gifs
+        let disableCallout = WKUserScript(
+              source: "document.documentElement.style.webkitTouchCallout = 'none';",
+              injectionTime: .atDocumentStart,
+              forMainFrameOnly: false
+          )
+        config.userContentController.addUserScript(disableCallout)
+        
         config.websiteDataStore = .nonPersistent()
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = .all
@@ -191,6 +207,7 @@ struct WebView: UIViewRepresentable {
                   let body = message.body as? [String: Any],
                   let src = body["src"] as? String else { return }
             print("Long pressed image: \(src)")
+            parent.webViewModel.pendingImageURL = ImageURLItem(url: src)
         }
         
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {

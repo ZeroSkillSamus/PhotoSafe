@@ -8,9 +8,16 @@
 import Foundation
 import WebKit
 
+struct ImageURLItem: Identifiable {
+    let id = UUID() // Satisfies Identifiable
+    let url: String
+}
+
 @Observable
 class WebViewModel {
     private let defaultSearchEngine: String = "https://duckduckgo.com/?q="
+    
+    var pendingImageURL: ImageURLItem? = nil
     
     var url: URL? = nil
     var currentUrl: URL? = nil
