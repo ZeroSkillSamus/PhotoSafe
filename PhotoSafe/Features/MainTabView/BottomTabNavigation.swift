@@ -82,7 +82,7 @@ struct BottomTabNavigation: View {
                             .toolbar(.hidden, for: .tabBar)
                             .background(Color.c1_background)
                         
-                        WebView()
+                        WebViewWrapper()
                             .tag(Tab.web)
                             .toolbar(.hidden, for: .tabBar)
                             .background(Color.c1_background)

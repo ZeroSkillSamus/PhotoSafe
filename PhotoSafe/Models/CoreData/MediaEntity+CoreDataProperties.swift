@@ -41,12 +41,3 @@ extension MediaEntity {
 extension MediaEntity : Identifiable {
 
 }
-
-extension UIImage {
-    func thumbnail(size: CGSize = CGSize(width: 100, height: 100)) -> UIImage? {
-        let imageRenderer = UIGraphicsImageRenderer(size: size)
-        return imageRenderer.image { _ in
-            self.draw(in: CGRect(origin: .zero, size: size))
-        }
-    }
-}

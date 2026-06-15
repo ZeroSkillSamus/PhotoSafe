@@ -10,6 +10,7 @@ import CoreData
 // Custom error type
 enum MediaError: Error {
     case invalidImageData
+    case invalidUrl
 }
 
 // Define the blueprint for AlbumService

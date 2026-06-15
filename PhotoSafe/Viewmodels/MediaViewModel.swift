@@ -99,6 +99,40 @@ final class MediaViewModel: ObservableObject {
         self.set_counts()
     }
     
+    func addPhotoFromWebToAlbum(from urlString: String, to album: AlbumEntity) async -> ToastItem  {
+        self.progress_alert = true
+        
+        guard let url = URL(string: urlString) else { return ToastItem(message: "Url not found!", status: .failure) }
+        do {
+            // Perform the network fetch
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            // Validate HTTP response status
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                print("Server error")
+                return ToastItem(message: "Server error!", status: .failure)
+            }
+            
+            if let thumbnail = UIImage(data: data)?.thumbnail(), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5)  {
+                self.add_media(
+                    to: album,
+                    type: data.isGIF  ? .GIF : .Photo,
+                    image_data: data,
+                    thumbnail: compressed_img
+                )
+                return ToastItem(message: "Saved", status: .success)
+            }
+            
+            print("Failed to load image data: \(url.absoluteString)")
+            return ToastItem(message: "Failed to load image data", status: .failure)
+            //
+        } catch {
+            print("Failed to load image data: \(error.localizedDescription)")
+            return ToastItem(message: "Failed to load image data", status: .failure)
+        }
+    }
+    
     func add_imported_photos(to album: AlbumEntity, from photos_list: [PhotosPickerItem]) async {
         self.reset_alert_value()
         self.progress_alert = true
