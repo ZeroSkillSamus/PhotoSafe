@@ -391,6 +391,7 @@ struct WebView: UIViewRepresentable {
 
         let view = WKWebView(frame: .zero, configuration: config)
 
+
         view.addObserver(context.coordinator, forKeyPath: "estimatedProgress", options: .new, context: nil)
         view.addObserver(context.coordinator, forKeyPath: "URL", options: .new, context: nil)
 
@@ -486,6 +487,7 @@ struct WebView: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             parent.webViewModel.update(isLoading: false, isNavigating: false)
             parent.webViewModel.update(currentUrl: webView.url)
+
 
             let preventEscapeScript = """
             (function() {
