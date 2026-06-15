@@ -9,32 +9,41 @@ import SwiftUI
 
 struct WebVavigationBar: View {
     var webViewModel: WebViewModel
+    var folderBookmarkViewModel: FolderBookmarkViewModel
+    
+    
     @State private var userInputText: String = ""
     @State private var userSubmitedText: String = ""
     
     @Binding var showHistorySheet: Bool
+    @Binding var toast: ToastItem?
     @FocusState.Binding var isFocused: Bool
     
     var body: some View {
         HStack {
-            Button {
-                webViewModel.goBack()
-            } label: {
-                Image(systemName: "chevron.backward")
+            HStack {
+                Button {
+                    webViewModel.goBack()
+                } label: {
+                    Image(systemName: "chevron.backward")
+                }
+                .opacity(!webViewModel.canGoBack ? 0.5 : 1)
+                .foregroundStyle(Color.c1_accent)
+                .disabled(!webViewModel.canGoBack)
+
+                Button {
+                    webViewModel.goForward()
+                } label: {
+                    Image(systemName: "chevron.forward")
+                        
+                }
+                .opacity(!webViewModel.canGoFoward ? 0.5 : 1)
+                .foregroundStyle(Color.c1_accent)
+                .disabled(!webViewModel.canGoFoward)
+                
             }
-            .opacity(!webViewModel.canGoBack ? 0.55 : 1)
-            .foregroundStyle(Color.c1_accent)
-            .disabled(!webViewModel.canGoBack)
-            
-            
-            Button {
-                webViewModel.goForward()
-            } label: {
-                Image(systemName: "chevron.forward")
-            }
-            .opacity(!webViewModel.canGoFoward ? 0.55 : 1)
-            .foregroundStyle(Color.c1_accent)
-            .disabled(!webViewModel.canGoFoward)
+            .padding(10)
+            .applyLiquidGlassIfSupported()
             
             TextField("Enter url here...", text: self.$userInputText)
                 .focused($isFocused)
@@ -56,18 +65,49 @@ struct WebVavigationBar: View {
             
             Spacer()
             
-//
             Menu {
                 Button {
                     self.showHistorySheet.toggle()
                 } label: {
-                    Image(systemName: "arrow.clockwise")
+                    Label("Saved this session", systemImage: "folder.fill")
+                        .foregroundStyle(Color.c1_accent)
+                }
+                
+                Button {
+                    Task {
+                        if webViewModel.currentUrl == nil  {
+                            self.toast = ToastItem(message: "Url can not be empty", status: .failure)
+                            return
+                        }
+                        if webViewModel.url == nil  {
+                            self.toast = ToastItem(message: "Url can not be empty", status: .failure)
+                            return
+                        }
+                        
+                        let urlToSave = webViewModel.currentUrl
+                        let title = webViewModel.webView?.title ?? webViewModel.webView?.url?.host ?? ""
+                        let faviconData = await webViewModel.fetchFaviconData()
+                        
+                        self.toast = folderBookmarkViewModel.addBookmark(
+                            folder: nil,
+                            url: urlToSave,
+                            favicon: faviconData,
+                            title: title
+                        )
+                    }
+                    
+                } label: {
+                    Label("Add to bookmarks", systemImage: "book.fill")
                 }
                 .foregroundStyle(Color.c1_accent)
                 
             } label: {
-                Image(systemName: "arrow.clockwise")
+                Image(systemName: "ellipsis")
+                    .padding(10) // Establishes clean sizing container bounds natively
             }
+            .foregroundStyle(Color.c1_accent)
+            .applyLiquidGlassIfSupported() // Safely applies the effect without changing view structural identity
+
         }
         .frame(height:24)
         .padding(.horizontal)
@@ -84,6 +124,21 @@ struct WebVavigationBar: View {
                 ProgressView(value: webViewModel.progress, total: 1.0)
                     .tint(Color.c1_primary)
             }
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func applyLiquidGlassIfSupported(shape: any Shape = .capsule) -> some View {
+        if #available(iOS 26.0, *) {
+            self
+                .contentShape(shape)
+                .glassEffect(.regular, in: shape)
+        } else {
+            // Safe pre-iOS 26 structural fallback layout
+            self
+                .contentShape(Capsule())
         }
     }
 }

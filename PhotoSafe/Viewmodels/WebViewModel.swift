@@ -129,4 +129,35 @@ class WebViewModel {
         
         return urlString.contains(".") && urlString.rangeOfCharacter(from: .whitespaces) == nil
     }
+    
+    @MainActor
+    func fetchFaviconData() async -> Data? {
+          guard let urlString = await fetchFaviconURL(),
+                let url = URL(string: urlString) else { return nil }
+      
+          guard let (data, response) = try? await URLSession.shared.data(from: url),
+                let http = response as? HTTPURLResponse,
+                http.statusCode == 200 else { return nil }
+
+          return data
+      }
+    
+    @MainActor
+    private func fetchFaviconURL() async -> String? {
+        guard let webView else { return nil }
+        
+        return await withCheckedContinuation { continuation in
+            let js = """
+            (function() {
+              var links = document.querySelectorAll('link[rel~="icon"], link[rel~="shortcut icon"]');
+              if (links.length > 0) return links[links.length - 1].href;
+              return window.location.origin + '/favicon.ico';
+            })()
+            """
+            
+            webView.evaluateJavaScript(js) { result, _ in
+                continuation.resume(returning: result as? String)
+            }
+        }
+    }
 }

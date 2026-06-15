@@ -51,6 +51,7 @@ struct DownloadMediaItem: Hashable {
 
 struct WebViewWrapper: View {
     @Environment(WebViewModel.self) var webViewModel
+    @State private var folderBookmarkViewModel = FolderBookmarkViewModel()
     @State private var isPresented: Bool = false
 
     @State private var toast: ToastItem? = nil
@@ -89,18 +90,70 @@ struct WebViewWrapper: View {
     @ViewBuilder
     func bookmarkShowView() -> some View {
         VStack(spacing: 15) {
-            Label {
-                Text("Bookmarks")
-                    .font(.system(size: 22,weight: .semibold,design: .rounded))
-            } icon: {
-                Image(systemName: "bookmark.circle")
-                    .resizable()
-                    .frame(width: 24,height: 24)
-                    .fontWeight(.semibold)
+            Section {
+                Text("No folders yet. Tap + to create one or create one when saving a bookmark.")
+                    .frame(maxWidth: .infinity,alignment: .leading)
+                    .foregroundStyle(Color.c1_text)
+                    .font(.system(size: 15,design: .rounded))
+                    .padding(7)
+                    .opacity(0.7)
+                
+            } header: {
+                HStack {
+                    Text("Folders")
+                        .font(.system(size: 20,weight: .semibold,design: .rounded))
+                        .foregroundStyle(Color.c1_text)
+                        .frame(maxWidth: .infinity,alignment: .leading)
+                    
+                    Button {
+                        print("Create folder")
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 18, design: .rounded))
+                            .foregroundStyle(Color.c1_text)
+                            .padding(8)
+                    }
+                    .applyLiquidGlassIfSupported(shape: .circle)
+                }
             }
-            .foregroundStyle(Color.c1_text)
-            .frame(maxWidth: .infinity,alignment: .leading)
             
+            Section {
+                if self.folderBookmarkViewModel.bookmarksNotInFolder.isEmpty {
+                    Text("No bookmarks yet. Navigate to a page and tap ••• to save it.")
+                        .frame(maxWidth: .infinity,alignment: .leading)
+                        .multilineTextAlignment(.leading)
+                        .foregroundStyle(Color.c1_text)
+                        .font(.system(size: 15,design: .rounded))
+                        .padding(7)
+                        .opacity(0.7)
+                } else {
+                    List(self.folderBookmarkViewModel.bookmarksNotInFolder) { bookmark in
+                        display(bookmark: bookmark)
+                    }
+                    .scrollContentBackground(.hidden) // 1. Hide default gray background
+                    .background(Color.c1_background)          // 2. Set your custom background color
+                    .listStyle(.plain) // Changes overall list structure style
+                }
+            } header: {
+                HStack {
+                    Text("Bookmarks")
+                        .font(.system(size: 20,weight: .semibold,design: .rounded))
+                        .foregroundStyle(Color.c1_text)
+                        .frame(maxWidth: .infinity,alignment: .leading)
+                    
+                    Button {
+                        self.toast = self.folderBookmarkViewModel.deleteAllBookmarksNotInFolder()
+                    } label: {
+                        Image(systemName: "trash.fill")
+                            .font(.system(size: 18, design: .rounded))
+                            .foregroundStyle(Color.red)
+                            .padding(8)
+                    }
+                    .applyLiquidGlassIfSupported(shape: .circle)
+                    .disabled(self.folderBookmarkViewModel.bookmarksNotInFolder.isEmpty)
+                    .opacity(self.folderBookmarkViewModel.bookmarksNotInFolder.isEmpty ? 0.55 : 1)
+                }
+            }
             Spacer()
         }
         .frame(
@@ -109,6 +162,30 @@ struct WebViewWrapper: View {
         )
         .padding()
         .background(Color.c1_background)
+    }
+    
+    @ViewBuilder
+    func display(bookmark: BookmarkEntity) -> some View {
+        HStack {
+            // Image
+            if let image = bookmark.faviconImage {
+                Image(uiImage: image)
+            } else {
+                Image(systemName: "questionmark.circle")
+            }
+            
+            Text(bookmark.title ?? "")
+                .foregroundStyle(Color.c1_text)
+                .font(.system(size: 15,design: .rounded))
+            // Title
+        }
+        .frame(maxWidth: .infinity,alignment: .leading)
+        .listRowBackground(
+            RoundedRectangle(cornerRadius: 25)
+                .fill(Color.c1_accent)
+                .padding(.horizontal, 5) // Creates a floating card effect
+                .padding(.vertical, 4)
+        )
     }
     
     @ViewBuilder
@@ -200,7 +277,13 @@ struct WebViewWrapper: View {
         @Bindable var webViewModel = webViewModel
         
         VStack(spacing: 0) {
-            WebVavigationBar(webViewModel: self.webViewModel, showHistorySheet: self.$showHistorySheet, isFocused: self.$isInputFocused)
+            WebVavigationBar(
+                webViewModel: self.webViewModel,
+                folderBookmarkViewModel: folderBookmarkViewModel,
+                showHistorySheet: self.$showHistorySheet,
+                toast: self.$toast,
+                isFocused: self.$isInputFocused
+            )
             
             Group {
                 if webViewModel.url != nil {

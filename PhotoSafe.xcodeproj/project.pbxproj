@@ -55,6 +55,11 @@
 		02A98DDF2FDCD0D9008E23B2 /* WebVavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DDE2FDCD0D9008E23B2 /* WebVavigationBar.swift */; };
 		02A98DE12FDE6091008E23B2 /* Data+IsGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DE02FDE608B008E23B2 /* Data+IsGif.swift */; };
 		02A98DE32FDE6AD0008E23B2 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DE22FDE6ACC008E23B2 /* ToastView.swift */; };
+		02A98DE92FE0816E008E23B2 /* BookmarkEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DE82FE08159008E23B2 /* BookmarkEntity+CoreDataProperties.swift */; };
+		02A98DEB2FE0825D008E23B2 /* FolderEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DEA2FE08256008E23B2 /* FolderEntity+CoreDataProperties.swift */; };
+		02A98DED2FE086E6008E23B2 /* UIImage+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DEC2FE086E5008E23B2 /* UIImage+Thumbnail.swift */; };
+		02A98DEF2FE087EC008E23B2 /* BookmarkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DEE2FE087E2008E23B2 /* BookmarkService.swift */; };
+		02A98DF12FE09149008E23B2 /* FolderBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A98DF02FE09142008E23B2 /* FolderBookmarkViewModel.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
@@ -141,6 +146,11 @@
 		02A98DDE2FDCD0D9008E23B2 /* WebVavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVavigationBar.swift; sourceTree = "<group>"; };
 		02A98DE02FDE608B008E23B2 /* Data+IsGif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+IsGif.swift"; sourceTree = "<group>"; };
 		02A98DE22FDE6ACC008E23B2 /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
+		02A98DE82FE08159008E23B2 /* BookmarkEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookmarkEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		02A98DEA2FE08256008E23B2 /* FolderEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FolderEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		02A98DEC2FE086E5008E23B2 /* UIImage+Thumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Thumbnail.swift"; sourceTree = "<group>"; };
+		02A98DEE2FE087E2008E23B2 /* BookmarkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkService.swift; sourceTree = "<group>"; };
+		02A98DF02FE09142008E23B2 /* FolderBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderBookmarkViewModel.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
@@ -250,6 +260,7 @@
 		0215FDE22D934B4E00E2B546 /* Viewmodels */ = {
 			isa = PBXGroup;
 			children = (
+				02A98DF02FE09142008E23B2 /* FolderBookmarkViewModel.swift */,
 				02A98DDC2FDC9FEB008E23B2 /* WebViewModel.swift */,
 				02A98DD82FD8BC7D008E23B2 /* SlideshowViewModel.swift */,
 				02A98DCF2FD627D9008E23B2 /* AuthStorageViewModel.swift */,
@@ -264,6 +275,7 @@
 		0245023A2D9E0F0900E9A862 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				02A98DEC2FE086E5008E23B2 /* UIImage+Thumbnail.swift */,
 				02A98DE02FDE608B008E23B2 /* Data+IsGif.swift */,
 				0245023B2D9E0F5200E9A862 /* URL+Thumbnail.swift */,
 				028C6F422DAAB8E500BB8BB9 /* Color+Hex.swift */,
@@ -375,6 +387,7 @@
 		027250D72D9B28AF00280DB2 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				02A98DE42FE042AF008E23B2 /* Bookmarks */,
 				0215FDE52D963E6D00E2B546 /* Container.xcdatamodeld */,
 				020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */,
 				020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */,
@@ -386,6 +399,7 @@
 		027250DA2D9B2A5900280DB2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				02A98DEE2FE087E2008E23B2 /* BookmarkService.swift */,
 				02A98DC92FD627B3008E23B2 /* AuthStorageService.swift */,
 				02A98DCA2FD627B3008E23B2 /* KeychainWrapperService.swift */,
 				027250DB2D9B2A6E00280DB2 /* AlbumService.swift */,
@@ -417,6 +431,15 @@
 				02A98DD52FD62A31008E23B2 /* OrientationLockModifier.swift */,
 			);
 			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		02A98DE42FE042AF008E23B2 /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				02A98DEA2FE08256008E23B2 /* FolderEntity+CoreDataProperties.swift */,
+				02A98DE82FE08159008E23B2 /* BookmarkEntity+CoreDataProperties.swift */,
+			);
+			path = Bookmarks;
 			sourceTree = "<group>";
 		};
 		02D801342DA57228002AE361 /* App */ = {
@@ -616,9 +639,11 @@
 				027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */,
 				020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */,
 				02F3E5FD2DC1769D004FA2DE /* OptionsView.swift in Sources */,
+				02A98DED2FE086E6008E23B2 /* UIImage+Thumbnail.swift in Sources */,
 				02D8013E2DA5A6A0002AE361 /* WebView.swift in Sources */,
 				0248E9582D9B56D700272924 /* MediaImageGridView.swift in Sources */,
 				0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */,
+				02A98DEF2FE087EC008E23B2 /* BookmarkService.swift in Sources */,
 				020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */,
 				02F3E5FC2DC1769D004FA2DE /* VerticalMediaVIew.swift in Sources */,
 				028C6F452DAAB99F00BB8BB9 /* Color+CustomScheme.swift in Sources */,
@@ -634,6 +659,7 @@
 				0245023E2D9E100700E9A862 /* PlayerView.swift in Sources */,
 				02A98DCB2FD627B3008E23B2 /* AuthStorageService.swift in Sources */,
 				02A98DCC2FD627B3008E23B2 /* KeychainWrapperService.swift in Sources */,
+				02A98DEB2FE0825D008E23B2 /* FolderEntity+CoreDataProperties.swift in Sources */,
 				028C6F4E2DADFCE400BB8BB9 /* ImageGridView.swift in Sources */,
 				0248E95E2D9B5BD700272924 /* TopHeader.swift in Sources */,
 				02A98DD72FD62A31008E23B2 /* OrientationLockModifier.swift in Sources */,
@@ -645,6 +671,7 @@
 				0215FDE42D94414C00E2B546 /* LockView.swift in Sources */,
 				02D8013B2DA5A679002AE361 /* SettingsView.swift in Sources */,
 				024502402D9E107B00E9A862 /* CustomPlayer.swift in Sources */,
+				02A98DF12FE09149008E23B2 /* FolderBookmarkViewModel.swift in Sources */,
 				02D801492DA5ECEA002AE361 /* CustomAlertView.swift in Sources */,
 				0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */,
 				0248E9602D9B5C0700272924 /* CreateAlbumSheet.swift in Sources */,
@@ -656,6 +683,7 @@
 				02D801382DA5A552002AE361 /* BottomTabNavigation.swift in Sources */,
 				0248E9512D9B4C7300272924 /* FullCoverSheet.swift in Sources */,
 				02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */,
+				02A98DE92FE0816E008E23B2 /* BookmarkEntity+CoreDataProperties.swift in Sources */,
 				02D801362DA5733A002AE361 /* SelectMediaEntity.swift in Sources */,
 				02A98DE12FDE6091008E23B2 /* Data+IsGif.swift in Sources */,
 				02D801452DA5BA85002AE361 /* PlusMode.swift in Sources */,

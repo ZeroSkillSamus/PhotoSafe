@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22222" systemVersion="23E224" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24837" systemVersion="25E253" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="AlbumEntity" representedClassName="AlbumEntity" syncable="YES">
         <attribute name="date_added" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="display_image_status" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -13,8 +13,25 @@
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
+    <entity name="BookmarkEntity" representedClassName="BookmarkEntity" syncable="YES">
+        <attribute name="dateAdded" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="favicon" optional="YES" attributeType="Binary"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="url" attributeType="URI"/>
+        <relationship name="folder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FolderEntity" inverseName="bookmarks" inverseEntity="FolderEntity"/>
+    </entity>
     <entity name="FavoriteEntity" representedClassName="FavoriteEntity" syncable="YES" codeGenerationType="class">
         <attribute name="date_added" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="FolderEntity" representedClassName="FolderEntity" syncable="YES">
+        <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="bookmarks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BookmarkEntity" inverseName="folder" inverseEntity="BookmarkEntity"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="name"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="MediaEntity" representedClassName="MediaEntity" syncable="YES">
         <attribute name="date_added" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
