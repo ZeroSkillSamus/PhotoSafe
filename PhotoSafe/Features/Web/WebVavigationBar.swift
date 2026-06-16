@@ -25,6 +25,8 @@ struct WebVavigationBar: View {
                     webViewModel.goBack()
                 } label: {
                     Image(systemName: "chevron.backward")
+                        .font(.system(size: 20, design: .rounded))
+                        .fontWeight(webViewModel.canGoBack ? .semibold : .regular)
                 }
                 .opacity(!webViewModel.canGoBack ? 0.5 : 1)
                 .foregroundStyle(Color.c1_accent)
@@ -34,6 +36,8 @@ struct WebVavigationBar: View {
                     webViewModel.goForward()
                 } label: {
                     Image(systemName: "chevron.forward")
+                        .font(.system(size: 20, design: .rounded))
+                        .fontWeight(webViewModel.canGoFoward ? .bold : .regular)
                 }
                 .opacity(!webViewModel.canGoFoward ? 0.5 : 1)
                 .foregroundStyle(Color.c1_accent)
@@ -61,49 +65,63 @@ struct WebVavigationBar: View {
 
             Spacer()
 
-            Menu {
+            if isFocused {
                 Button {
-                    self.showHistorySheet.toggle()
+                    self.isFocused = false
                 } label: {
-                    Label("Saved this session", systemImage: "folder.fill")
-                        .foregroundStyle(Color.c1_accent)
+                    Text("X")
+                        .font(.system(size: 20, weight: .semibold,design: .rounded))
+                        .padding(11)
                 }
-
-                Button {
-                    Task {
-                        if webViewModel.currentUrl == nil {
-                            self.toast = ToastItem(message: "Url can not be empty", status: .failure)
-                            return
-                        }
-                        if webViewModel.url == nil {
-                            self.toast = ToastItem(message: "Url can not be empty", status: .failure)
-                            return
-                        }
-
-                        let urlToSave = webViewModel.currentUrl
-                        let title = webViewModel.webView?.title ?? webViewModel.webView?.url?.host ?? ""
-                        let faviconData = await webViewModel.fetchFaviconData()
-
-                        self.toast = folderBookmarkViewModel.addBookmark(
-                            folder: nil,
-                            url: urlToSave,
-                            favicon: faviconData,
-                            title: title
-                        )
+                .applyLiquidGlassIfSupported(shape: .circle)
+                .foregroundStyle(Color.c1_accent)
+            } else {
+                Menu {
+                    Button {
+                        self.showHistorySheet.toggle()
+                    } label: {
+                        Label("Saved this session", systemImage: "folder.fill")
+                            .foregroundStyle(Color.c1_accent)
                     }
+
+                    Button {
+                        Task {
+                            if webViewModel.currentUrl == nil {
+                                self.toast = ToastItem(message: "Url can not be empty", status: .failure)
+                                return
+                            }
+                            if webViewModel.url == nil {
+                                self.toast = ToastItem(message: "Url can not be empty", status: .failure)
+                                return
+                            }
+
+                            let urlToSave = webViewModel.currentUrl
+                            let title = webViewModel.webView?.title ?? webViewModel.webView?.url?.host ?? ""
+                            let faviconData = await webViewModel.fetchFaviconData()
+
+                            self.toast = folderBookmarkViewModel.addBookmark(
+                                folder: nil,
+                                url: urlToSave,
+                                favicon: faviconData,
+                                title: title
+                            )
+                        }
+                    } label: {
+                        Label("Add to bookmarks", systemImage: "book.fill")
+                    }
+                    .foregroundStyle(Color.c1_accent)
+
                 } label: {
-                    Label("Add to bookmarks", systemImage: "book.fill")
+                    Image(systemName: "ellipsis")
+                        .font(.system(size: 20, design: .rounded))
+                        .padding(10)
                 }
                 .foregroundStyle(Color.c1_accent)
-
-            } label: {
-                Image(systemName: "ellipsis")
-                    .padding(10)
+                .applyLiquidGlassIfSupported()
             }
-            .foregroundStyle(Color.c1_accent)
-            .applyLiquidGlassIfSupported()
+            
         }
-        .frame(height: 24)
+        .frame(height: 30)
         .padding(.horizontal)
         .padding(.vertical, 10)
         .background(Color.c1_secondary)
@@ -119,19 +137,6 @@ struct WebVavigationBar: View {
                     .tint(Color.c1_primary)
             }
         }
-    }
-}
-
-extension View {
-    @ViewBuilder
-    func applyLiquidGlassIfSupported(shape: any Shape = .capsule) -> some View {
-        if #available(iOS 26.0, *) {
-            self
-                .contentShape(shape)
-                .glassEffect(.regular, in: shape)
-        } else {
-            self
-                .contentShape(Capsule())
-        }
+        .animation(.easeInOut, value: self.isFocused)
     }
 }
