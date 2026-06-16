@@ -24,12 +24,12 @@
         <attribute name="date_added" optional="YES" attributeType="String"/>
     </entity>
     <entity name="FolderEntity" representedClassName="FolderEntity" syncable="YES">
-        <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="name" attributeType="String"/>
+        <attribute name="dateAdded" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String"/>
         <relationship name="bookmarks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BookmarkEntity" inverseName="folder" inverseEntity="BookmarkEntity"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
-                <constraint value="name"/>
+                <constraint value="title"/>
             </uniquenessConstraint>
         </uniquenessConstraints>
     </entity>
