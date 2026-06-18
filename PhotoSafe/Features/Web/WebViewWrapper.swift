@@ -180,9 +180,17 @@ struct WebViewWrapper: View {
         .sheet(item: $webViewModel.pendingImageURL) { item in
             MoveSheet { album in
                 Task {
-                    self.toast = await MediaViewModel().addPhotoFromWebToAlbum(from: item.url, to: album)
-                    guard let toast else { return }
-                    self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
+                    switch item.mediaType {
+                    case .image:
+                        self.toast = await MediaViewModel().addPhotoFromWebToAlbum(from: item.url, to: album)
+                        guard let toast else { return }
+                        self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
+                    case .video:
+                        let cookies = await self.webViewModel.webView?.configuration.websiteDataStore.httpCookieStore.allCookies()
+                        self.toast = await MediaViewModel().downloadVideoToAlbum(from: item.url, to: album, cookies: cookies)
+                        guard let toast else { return }
+                        self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
+                    }
                 }
             }
         }

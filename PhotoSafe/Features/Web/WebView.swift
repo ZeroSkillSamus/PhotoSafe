@@ -25,6 +25,18 @@ struct WebView: UIViewRepresentable {
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = .all
 
+        // Disable geolocation
+        let blockGeolocationScript = WKUserScript(
+            source: """
+                    (function() {
+                    Object.defineProperty(navigator, 'geolocation', { get: function() { return undefined; } });
+                    })();
+                    """,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: false
+        )
+        config.userContentController.addUserScript(blockGeolocationScript)
+            
         let longPressScript = WKUserScript(
             source: """
             (function() {
@@ -36,10 +48,9 @@ struct WebView: UIViewRepresentable {
                         var src = img.src || img.currentSrc;
                         if (!src) return;
                         longPressTimer = setTimeout(function() {
-                            window.webkit.messageHandlers.imageLongPress.postMessage({ src: src });
+                            window.webkit.messageHandlers.imageLongPress.postMessage({ src: src, type: 'image' });
                         }, DURATION);
                     }, { passive: true });
-
                     img.addEventListener('touchend', function() { clearTimeout(longPressTimer); });
                     img.addEventListener('touchmove', function() { clearTimeout(longPressTimer); });
                 }
@@ -54,6 +65,24 @@ struct WebView: UIViewRepresentable {
                         });
                     });
                 }).observe(document.body, { childList: true, subtree: true });
+
+                // Video detection — separate capture listener using composedPath to pierce shadow DOM
+                var videoTimer = null;
+                document.addEventListener('touchstart', function(e) {
+                    var path = e.composedPath ? e.composedPath() : [];
+                    var video = null;
+                    for (var i = 0; i < path.length; i++) {
+                        if (path[i].nodeName === 'VIDEO') { video = path[i]; break; }
+                    }
+                    if (!video) return;
+                    var src = video.currentSrc || video.src;
+                    if (!src) return;
+                    videoTimer = setTimeout(function() {
+                        window.webkit.messageHandlers.imageLongPress.postMessage({ src: src, type: 'video' });
+                    }, DURATION);
+                }, { passive: true, capture: true });
+                document.addEventListener('touchend', function() { clearTimeout(videoTimer); }, { capture: true });
+                document.addEventListener('touchmove', function() { clearTimeout(videoTimer); }, { passive: true, capture: true });
             })();
             """,
             injectionTime: .atDocumentEnd,
@@ -109,8 +138,13 @@ struct WebView: UIViewRepresentable {
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             guard message.name == "imageLongPress",
                   let body = message.body as? [String: Any],
-                  let src = body["src"] as? String else { return }
-            parent.webViewModel.pendingImageURL = ImageURLItem(url: src)
+                  let src = body["src"] as? String,
+                  let url = URL(string: src),
+                  let scheme = url.scheme?.lowercased(),
+                  scheme == "https" || scheme == "http" else { return }
+            let mediaType = (body["type"] as? String) == "video" ? WebMediaType.video : WebMediaType.image
+            print("Longpressed", mediaType)
+            parent.webViewModel.pendingImageURL = ImageURLItem(url: src, mediaType: mediaType)
         }
 
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
@@ -120,6 +154,11 @@ struct WebView: UIViewRepresentable {
             } else if keyPath == "URL" {
                 parent.webViewModel.update(currentUrl: webView.url)
             }
+        }
+
+        // If a website wants mic/camera access auto block it 
+        func webView(_ webView: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin, initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType, decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+            decisionHandler(.deny)
         }
 
         func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration,

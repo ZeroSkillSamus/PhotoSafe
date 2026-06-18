@@ -8,9 +8,15 @@
 import Foundation
 import WebKit
 
+enum WebMediaType: String {
+    case image
+    case video
+}
+
 struct ImageURLItem: Identifiable {
     let id = UUID()
     let url: String
+    let mediaType: WebMediaType
 }
 
 @Observable

@@ -9,8 +9,16 @@ import Foundation
 import _PhotosUI_SwiftUI
 import CoreData
 
+enum VideoFormat {
+    case mp4
+    case hls
+    case unknown
+}
+
 @MainActor
 final class MediaViewModel: ObservableObject {
+    private let mp4DownloadService: VideoDownloaderProtocol
+    
     @Published var medias: [SelectMediaEntity] = []
     @Published var test_media: [MediaEntity] = []
     @Published var test: [UIImage] = []
@@ -33,8 +41,9 @@ final class MediaViewModel: ObservableObject {
     
     private let service: MediaServiceProtocol
     
-    init(media_service: MediaServiceProtocol = MediaService()) {
+    init(media_service: MediaServiceProtocol = MediaService(), mp4Downloader: VideoDownloaderProtocol = MP4Downloader()) {
         self.service = media_service
+        self.mp4DownloadService = mp4Downloader
     }
     
     var selected_media: [SelectMediaEntity] {
@@ -97,6 +106,47 @@ final class MediaViewModel: ObservableObject {
             self.medias = medias_sorted.map({SelectMediaEntity(media: $0)})
         }
         self.set_counts()
+    }
+    
+    func downloadVideoToAlbum(from urlString: String, to album: AlbumEntity, cookies: [HTTPCookie]?) async -> ToastItem {
+        guard let url = URL(string: urlString) else { return ToastItem(message: "Url not found!", status: .failure) }
+        print("url", urlString)
+        let videoType = await self.detectVideoFormat(url: url)
+        print("vidtypw",videoType)
+        switch videoType {
+        case .hls:
+            return ToastItem(message: "HLS", status: .success)
+        case .mp4:
+            // Download the file to a temporary location
+            do {
+                let permUrl = try await self.mp4DownloadService.download(from: url, referrer: urlString, cookies: cookies)
+                guard let permUrl else {
+                    return ToastItem(message: "Failed to download", status: .failure)
+                }
+                
+                if let image_data = permUrl.generateVideoThumbnail() {
+                    if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
+                        self.add_media(
+                            to: album,
+                            type: MediaType.Video,
+                            image_data: image_data,
+                            thumbnail: compressed_img,
+                            video_path: permUrl.absoluteString
+                        )
+                        return ToastItem(message: "Successfully Downloaded MP4 Video", status: .success)
+                    } else {
+                        return ToastItem(message: "Failed to download", status: .failure)
+                    }
+                } else {
+                    return ToastItem(message: "Failed to download", status: .failure)
+                }
+            } catch (let error) {
+                print("Failed to download mp4 video", error)
+                return ToastItem(message: error.localizedDescription, status: .failure)
+            }
+        case .unknown:
+            return ToastItem(message: "Failed to determine video type", status: .failure)
+        }
     }
     
     func addPhotoFromWebToAlbum(from urlString: String, to album: AlbumEntity) async -> ToastItem  {
@@ -217,6 +267,30 @@ final class MediaViewModel: ObservableObject {
         } catch {
             return media
         }
+    }
+    
+    private func detectVideoFormat(url: URL) async -> VideoFormat {
+        //guard let url = URL(string: urlString) else { return .unknown }
+
+        // Fast path: check path extension (ignores query params)
+        let ext = url.pathExtension.lowercased()
+        if ext == "mp4" || ext == "mov" || ext == "webm"  { return .mp4 }
+        if ext == "m3u8" { return .hls }
+
+        // Fallback: HEAD request for Content-Type
+        var request = URLRequest(url: url)
+        request.httpMethod = "HEAD"
+        guard let (_, response) = try? await URLSession.shared.data(for: request),
+              let http = response as? HTTPURLResponse,
+              let contentType = http.value(forHTTPHeaderField: "Content-Type") else {
+            return .unknown
+        }
+
+        let ct = contentType.lowercased()
+        if ct.contains("video/mp4") || ct.contains("video/quicktime") || ct.contains("video/webm") { return .mp4 }
+        if ct.contains("mpegurl") || ct.contains("m3u8") { return .hls }
+
+        return .unknown
     }
     
     private func add_media(
