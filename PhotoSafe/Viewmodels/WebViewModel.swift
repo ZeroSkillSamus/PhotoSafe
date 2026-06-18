@@ -145,6 +145,8 @@ class WebViewModel {
         return await withCheckedContinuation { continuation in
             let js = """
             (function() {
+                var apple = document.querySelector('link[rel~="apple-touch-icon"]');
+                if (apple) return apple.href;
                 var links = document.querySelectorAll('link[rel~="icon"], link[rel~="shortcut icon"]');
                 if (links.length > 0) return links[links.length - 1].href;
                 return window.location.origin + '/favicon.ico';

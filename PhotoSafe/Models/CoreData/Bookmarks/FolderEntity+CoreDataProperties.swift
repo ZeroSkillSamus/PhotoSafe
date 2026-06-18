@@ -19,6 +19,10 @@ extension FolderEntity {
         return NSFetchRequest<FolderEntity>(entityName: "FolderEntity")
     }
     
+    @nonobjc public class func deleteRequest() -> NSBatchDeleteRequest {
+        return NSBatchDeleteRequest(fetchRequest: self.fetchRequest())
+    }
+    
     @NSManaged public var dateAdded: Date
     @NSManaged public var title: String
     @NSManaged public var bookmarks: NSSet?

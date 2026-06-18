@@ -60,6 +60,7 @@
 		02B1E5812FE1D8B10033919A /* View+LiquidGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E5802FE1D8AD0033919A /* View+LiquidGlass.swift */; };
 		02B1E5832FE1D8C70033919A /* Data+IsGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E5822FE1D8C70033919A /* Data+IsGif.swift */; };
 		02B1E5852FE1DAC90033919A /* WebVavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E5842FE1DAC90033919A /* WebVavigationBar.swift */; };
+		02B1E5872FE23B980033919A /* FolderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E5862FE23B930033919A /* FolderService.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
@@ -151,6 +152,7 @@
 		02B1E5802FE1D8AD0033919A /* View+LiquidGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+LiquidGlass.swift"; sourceTree = "<group>"; };
 		02B1E5822FE1D8C70033919A /* Data+IsGif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+IsGif.swift"; sourceTree = "<group>"; };
 		02B1E5842FE1DAC90033919A /* WebVavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVavigationBar.swift; sourceTree = "<group>"; };
+		02B1E5862FE23B930033919A /* FolderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderService.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
@@ -401,6 +403,7 @@
 			isa = PBXGroup;
 			children = (
 				02A98DEE2FE087E2008E23B2 /* BookmarkService.swift */,
+				02B1E5862FE23B930033919A /* FolderService.swift */,
 				02A98DC92FD627B3008E23B2 /* AuthStorageService.swift */,
 				02A98DCA2FD627B3008E23B2 /* KeychainWrapperService.swift */,
 				027250DB2D9B2A6E00280DB2 /* AlbumService.swift */,
@@ -659,6 +662,7 @@
 				028C6F4C2DADEAD200BB8BB9 /* UniversalHeader.swift in Sources */,
 				02D801472DA5BBE2002AE361 /* ImageCircleOverlay.swift in Sources */,
 				0245023E2D9E100700E9A862 /* PlayerView.swift in Sources */,
+				02B1E5872FE23B980033919A /* FolderService.swift in Sources */,
 				02A98DCB2FD627B3008E23B2 /* AuthStorageService.swift in Sources */,
 				02A98DCC2FD627B3008E23B2 /* KeychainWrapperService.swift in Sources */,
 				02A98DEB2FE0825D008E23B2 /* FolderEntity+CoreDataProperties.swift in Sources */,
