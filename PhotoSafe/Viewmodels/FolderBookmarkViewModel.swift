@@ -43,7 +43,7 @@ class FolderBookmarkViewModel {
     }
     
     func deleteAllFolders() -> ToastItem {
-        do {
+        do {	
             try self.folderService.deleteAll()
             return ToastItem(message: "Deleted all Folders!", status: .success)
         } catch (let error) {

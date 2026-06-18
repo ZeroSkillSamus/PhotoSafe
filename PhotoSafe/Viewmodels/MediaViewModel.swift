@@ -18,6 +18,7 @@ enum VideoFormat {
 @MainActor
 final class MediaViewModel: ObservableObject {
     private let mp4DownloadService: VideoDownloaderProtocol
+    private let hlsDownloadService: VideoDownloaderProtocol
     
     @Published var medias: [SelectMediaEntity] = []
     @Published var test_media: [MediaEntity] = []
@@ -41,9 +42,10 @@ final class MediaViewModel: ObservableObject {
     
     private let service: MediaServiceProtocol
     
-    init(media_service: MediaServiceProtocol = MediaService(), mp4Downloader: VideoDownloaderProtocol = MP4Downloader()) {
+    init(media_service: MediaServiceProtocol = MediaService(), mp4Downloader: VideoDownloaderProtocol = MP4Downloader(), hlsDownlaodService: VideoDownloaderProtocol = HLSDownloader()) {
         self.service = media_service
         self.mp4DownloadService = mp4Downloader
+        self.hlsDownloadService = hlsDownlaodService
     }
     
     var selected_media: [SelectMediaEntity] {
@@ -108,22 +110,35 @@ final class MediaViewModel: ObservableObject {
         self.set_counts()
     }
     
-    func downloadVideoToAlbum(from urlString: String, to album: AlbumEntity, cookies: [HTTPCookie]?) async -> ToastItem {
+    func downloadVideoToAlbum(from urlString: String, referer: String?, to album: AlbumEntity, cookies: [HTTPCookie]?) async -> ToastItem {
         guard let url = URL(string: urlString) else { return ToastItem(message: "Url not found!", status: .failure) }
-        print("url", urlString)
         let videoType = await self.detectVideoFormat(url: url)
-        print("vidtypw",videoType)
         switch videoType {
         case .hls:
-            return ToastItem(message: "HLS", status: .success)
+            do {
+                async let permUrl = self.hlsDownloadService.download(from: url, referrer: cleanUrlForReferer(url: referer), cookies: cookies)
+
+                guard let location = try await permUrl else {
+                    return ToastItem(message: "Failed to download", status: .failure)
+                }
+
+                let imageData = UIImage(systemName: "play.rectangle.fill")!.pngData()!
+                let thumbnail = UIImage(data: imageData)?.jpegData(compressionQuality: 0.5) ?? imageData
+
+                self.add_media(to: album, type: .Video, image_data: imageData, thumbnail: thumbnail, video_path: location.absoluteString)
+                return ToastItem(message: "Successfully Downloaded HLS Video", status: .success)
+            } catch (let error) {
+                print("Failed to download hls video", error)
+                return ToastItem(message: error.localizedDescription, status: .failure)
+            }
         case .mp4:
             // Download the file to a temporary location
             do {
-                let permUrl = try await self.mp4DownloadService.download(from: url, referrer: urlString, cookies: cookies)
+                let permUrl = try await self.mp4DownloadService.download(from: url, referrer: referer, cookies: cookies)
                 guard let permUrl else {
                     return ToastItem(message: "Failed to download", status: .failure)
                 }
-                
+                print(permUrl)
                 if let image_data = permUrl.generateVideoThumbnail() {
                     if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
                         self.add_media(
@@ -135,10 +150,10 @@ final class MediaViewModel: ObservableObject {
                         )
                         return ToastItem(message: "Successfully Downloaded MP4 Video", status: .success)
                     } else {
-                        return ToastItem(message: "Failed to download", status: .failure)
+                        return ToastItem(message: "Failed to generate thumbnail", status: .failure)
                     }
                 } else {
-                    return ToastItem(message: "Failed to download", status: .failure)
+                    return ToastItem(message: "Failed to download mp4 video", status: .failure)
                 }
             } catch (let error) {
                 print("Failed to download mp4 video", error)
@@ -269,12 +284,17 @@ final class MediaViewModel: ObservableObject {
         }
     }
     
+    // Added to see if downloading anime was possible
+    private func cleanUrlForReferer(url: String?) -> String? {
+        return url?.replacingOccurrences(of: "api", with: "") ?? url
+    }
+    
     private func detectVideoFormat(url: URL) async -> VideoFormat {
         //guard let url = URL(string: urlString) else { return .unknown }
 
         // Fast path: check path extension (ignores query params)
         let ext = url.pathExtension.lowercased()
-        if ext == "mp4" || ext == "mov" || ext == "webm"  { return .mp4 }
+        if ext == "mp4" || ext == "mov" { return .mp4 }
         if ext == "m3u8" { return .hls }
 
         // Fallback: HEAD request for Content-Type
@@ -287,7 +307,7 @@ final class MediaViewModel: ObservableObject {
         }
 
         let ct = contentType.lowercased()
-        if ct.contains("video/mp4") || ct.contains("video/quicktime") || ct.contains("video/webm") { return .mp4 }
+        if ct.contains("video/mp4") || ct.contains("video/quicktime") { return .mp4 }
         if ct.contains("mpegurl") || ct.contains("m3u8") { return .hls }
 
         return .unknown
@@ -303,7 +323,6 @@ final class MediaViewModel: ObservableObject {
         if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, thumbnail: thumbnail, videoPath: video_path) {
             let select_media = SelectMediaEntity(media: media_entity)
             self.medias.append(select_media) // add to list
-            //self.medias_dict[select_media] = select_media.media.image // add to dictionary
             self.increment_alert_value()
             
             switch type {

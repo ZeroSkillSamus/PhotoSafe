@@ -187,7 +187,12 @@ struct WebViewWrapper: View {
                         self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
                     case .video:
                         let cookies = await self.webViewModel.webView?.configuration.websiteDataStore.httpCookieStore.allCookies()
-                        self.toast = await MediaViewModel().downloadVideoToAlbum(from: item.url, to: album, cookies: cookies)
+                        self.toast = await MediaViewModel().downloadVideoToAlbum(
+                            from: item.url,
+                            referer: self.webViewModel.currentUrl?.absoluteString,
+                            to: album,
+                            cookies: cookies
+                        )
                         guard let toast else { return }
                         self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
                     }
