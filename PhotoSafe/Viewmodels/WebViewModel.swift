@@ -59,17 +59,35 @@ class WebViewModel {
         self.canGoFoward = webView?.canGoForward ?? false
     }
 
-    func appendToHistory(urlString: String, status: Status, album: AlbumEntity) {
+    func appendToHistory(id: UUID, urlString: String, status: Status, album: AlbumEntity, thumbnail: Data?) {
         guard let url = URL(string: urlString) else { return }
         sessionHistory.append(DownloadMediaItem(
+            id: id,
             url: urlString,
-            status: status,
             downloadedAt: Date.now,
             albumDownloadedTo: album.name,
-            domain: url.host()
+            domain: url.host(),
+            thumbnail: thumbnail
         ))
     }
 
+    func appendToHistory(download: DownloadMediaItem) {
+        guard let url = URL(string: download.url) else { return }
+        var download = download
+        download.domain = url.host()
+        sessionHistory.append(download)
+    }
+    
+    func updateHistoryEntity(with newEntity: DownloadMediaItem) {
+        self.sessionHistory = self.sessionHistory.map { entity in
+            if entity.id != newEntity.id { return entity }
+            var mutableEntity = entity
+            mutableEntity.thumbnail = newEntity.thumbnail
+            return mutableEntity
+        }
+        //self.sessionHistory.firstIndex(where: { $0.id == id })
+    }
+    
     func goBack() {
         if !canGoBack { return }
         webView?.goBack()

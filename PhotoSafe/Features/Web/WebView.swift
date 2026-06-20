@@ -21,9 +21,9 @@ struct WebView: UIViewRepresentable {
         )
         config.userContentController.addUserScript(disableCallout)
 
-        config.websiteDataStore = .nonPersistent()
+        config.websiteDataStore = .default()
         config.allowsInlineMediaPlayback = true
-        config.mediaTypesRequiringUserActionForPlayback = .all
+        config.mediaTypesRequiringUserActionForPlayback = .audio
 
         // Disable geolocation
         let blockGeolocationScript = WKUserScript(

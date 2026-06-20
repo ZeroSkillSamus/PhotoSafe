@@ -8,6 +8,7 @@
 import Foundation
 
 @Observable
+@MainActor
 class FolderBookmarkViewModel {
     private let bookmarkService: BookmarkServiceProtocol
     private let folderService: FolderServiceProtocol
