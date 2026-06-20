@@ -14,7 +14,7 @@ struct NumPad: View {
     @Binding var isSecure: Bool
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(),GridItem(),GridItem()]) {
+        LazyVGrid(columns: [GridItem(),GridItem(),GridItem()], spacing: 15) {
             ForEach(1...9,id:\.self) { num in
                 NumButton(num: String(num), passcode: self.$passcode)
             }
@@ -61,13 +61,14 @@ struct NumPad: View {
                 self.passcode.append(num)
             } label: {
                 Text(num)
-                    .font(.system(size: 20,weight: .semibold,design: .rounded))
-                    .frame(width: 70, height: 70) // Fixed size
-                    .background(Color.c1_secondary)
+                    .font(.system(size: 22,weight: .semibold,design: .rounded))
                     .foregroundColor(Color.c1_text)
-                    .clipShape(Circle())
+                    .frame(width: 70, height: 70) // Fixed size
+//                    .background(Color.c1_secondary)
+//
+//                    .clipShape(Circle())
             }
-            .padding(.horizontal)
+            .applyLiquidGlassIfSupported(shape: .circle, color: Color.c1_secondary, isInteractive: true)
         }
     }
 }

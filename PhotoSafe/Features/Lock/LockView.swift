@@ -67,29 +67,50 @@ struct LockView: View {
                         .opacity(0.75)
                         .foregroundStyle(Color.c1_text)
                 } else {
-                    Text("Need Authorization")
-                        .font(
-                            .system(
-                                size: 25,
-                                weight: .semibold,
-                                design: .rounded
+                    if passwordAttempt > 0 {
+                        Text("Wrong Password")
+                            .font(
+                                .system(
+                                    size: 25,
+                                    weight: .bold,
+                                    design: .rounded
+                                )
                             )
-                        )
-                        .foregroundStyle(Color.c1_text)
-                    
-                    Text("Enter your PIN to unlock")
-                        .font(
-                            .system(
-                                size: 15,
-                                weight: .semibold,
-                                design: .rounded
+                            .foregroundStyle(Color.c1_text)
+                        
+                        Text("Please try again and remember your PIN")
+                            .font(
+                                .system(
+                                    size: 15,
+                                    weight: .semibold,
+                                    design: .rounded
+                                )
                             )
-                        )
-                        .opacity(0.75)
-                        .foregroundStyle(Color.c1_text)
+                            .opacity(0.75)
+                            .foregroundStyle(Color.c1_text)
+                    } else {
+                        Text("Need Authorization")
+                            .font(
+                                .system(
+                                    size: 25,
+                                    weight: .semibold,
+                                    design: .rounded
+                                )
+                            )
+                            .foregroundStyle(Color.c1_text)
+                        
+                        Text("Enter your PIN to unlock")
+                            .font(
+                                .system(
+                                    size: 15,
+                                    weight: .semibold,
+                                    design: .rounded
+                                )
+                            )
+                            .opacity(0.75)
+                            .foregroundStyle(Color.c1_text)
+                    }
                 }
-                
-                //Spacer()
             }
             Spacer()
             // Text Input
@@ -98,7 +119,7 @@ struct LockView: View {
                 .foregroundStyle(Color.c1_text)
                 .font(
                     .system(
-                        size: 18,
+                        size: self.numberInput.isEmpty ? 20 : 27,
                         weight: .semibold,
                         design: .rounded
                     )
@@ -132,6 +153,14 @@ struct LockView: View {
                 } else {
                     passwordAttempt = 0
                 }
+            }
+        }
+        .sensoryFeedback(trigger: passwordAttempt) { oldValue, newValue in
+            if newValue > oldValue {
+                return .impact(weight: .heavy, intensity: 1.0)
+            } else {
+                // Return nil to play no feedback
+                return nil
             }
         }
         .orientationLock(.portrait)

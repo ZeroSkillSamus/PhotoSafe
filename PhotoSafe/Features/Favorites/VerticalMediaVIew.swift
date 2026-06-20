@@ -45,25 +45,23 @@ struct VerticalMediaView: View {
                         Button {
                             self.dismiss()
                         } label: {
-                            Image(systemName: "xmark.circle")
-                                .resizable()
-                                .renderingMode(.template)
-                                .scaledToFit()
-                                .frame(width:20,height:20)
-                                .foregroundStyle(.red)
+                            Image(systemName: "xmark")
+                                .font(.system(size: 15, design: .rounded))
+                                .foregroundStyle(Color.c1_text)
                         }
-
+                        .padding(10)
+                        .applyLiquidGlassIfSupported(shape: .circle, color: Color.c1_accent,isInteractive: true)
+                        
                         Spacer()
 
                         Button {
                             print("TODO")
                         } label: {
-                            Image(systemName: "gearshape.circle.fill")
-                                .resizable()
-                                .renderingMode(.template)
-                                .scaledToFit()
-                                .frame(width:20,height:20)
-                                .foregroundStyle(Color.c1_accent)
+                            Image(systemName: "ellipsis")
+                                .foregroundStyle(Color.c1_text)
+                                .font(.system(size: 20, design: .rounded))
+                                .padding(10)
+                                .applyLiquidGlassIfSupported(color: Color.c1_accent)
                         }
                     }
                     .overlay(alignment: .center, content: {

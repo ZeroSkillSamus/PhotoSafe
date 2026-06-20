@@ -44,7 +44,8 @@ struct AlbumEditView: View {
                         .foregroundStyle(Color.c1_text)
                         .font(.footnote.bold())
                 }
-                
+                .padding(6)
+                .applyLiquidGlassIfSupported(color: Color.c1_accent)
             }
             .overlay {
                 Text("Edit Album")
