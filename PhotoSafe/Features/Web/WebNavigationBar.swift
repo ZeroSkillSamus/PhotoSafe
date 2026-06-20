@@ -64,6 +64,9 @@ struct WebNavigationBar: View {
                     self.userSubmitedText = self.userInputText
                     self.webViewModel.update(url: URL(string: userSubmitedText))
                     self.webViewModel.userNavigateTo(urlString: userSubmitedText)
+                    
+                    self.isFocused = false
+                    self.isPresented = false
                 }
                 .simultaneousGesture(TapGesture().onEnded {
                     self.isPresented = true

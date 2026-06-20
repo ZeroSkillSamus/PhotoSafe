@@ -68,6 +68,7 @@
 		02B1E5922FE393F30033919A /* BookmarkShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E58F2FE393F30033919A /* BookmarkShowView.swift */; };
 		02B1E5932FE393F30033919A /* AddBookmarkSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E58E2FE393F30033919A /* AddBookmarkSheet.swift */; };
 		02B1E5952FE393FB0033919A /* WebViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E5942FE393FB0033919A /* WebViewWrapper.swift */; };
+		02B1E5972FE47B7C0033919A /* VideoDownloaderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B1E5962FE47B780033919A /* VideoDownloaderProtocol.swift */; };
 		02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B397002D96436B00952274 /* AlbumViewModel.swift */; };
 		02D8012F2DA4546A002AE361 /* LazyPager in Frameworks */ = {isa = PBXBuildFile; productRef = 02D8012E2DA4546A002AE361 /* LazyPager */; };
 		02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D801322DA56D66002AE361 /* MoveSheet.swift */; };
@@ -167,6 +168,7 @@
 		02B1E58F2FE393F30033919A /* BookmarkShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkShowView.swift; sourceTree = "<group>"; };
 		02B1E5902FE393F30033919A /* CreateFolderSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderSheet.swift; sourceTree = "<group>"; };
 		02B1E5942FE393FB0033919A /* WebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewWrapper.swift; sourceTree = "<group>"; };
+		02B1E5962FE47B780033919A /* VideoDownloaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloaderProtocol.swift; sourceTree = "<group>"; };
 		02B397002D96436B00952274 /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		02D801322DA56D66002AE361 /* MoveSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveSheet.swift; sourceTree = "<group>"; };
 		02D801352DA5733A002AE361 /* SelectMediaEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMediaEntity.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 		027250DA2D9B2A5900280DB2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				02B1E5962FE47B780033919A /* VideoDownloaderProtocol.swift */,
 				02A98DEE2FE087E2008E23B2 /* BookmarkService.swift */,
 				02B1E5862FE23B930033919A /* FolderService.swift */,
 				02A98DC92FD627B3008E23B2 /* AuthStorageService.swift */,
@@ -724,6 +727,7 @@
 				028C6F3D2DA72AB000BB8BB9 /* AlbumEditView.swift in Sources */,
 				02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */,
 				02A98DD02FD627D9008E23B2 /* AuthStorageViewModel.swift in Sources */,
+				02B1E5972FE47B7C0033919A /* VideoDownloaderProtocol.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
 				02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */,
 				028EF8212DB3F91A00361AFD /* ImageCache.swift in Sources */,
