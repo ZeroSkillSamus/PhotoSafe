@@ -69,6 +69,7 @@ struct WebNavigationBar: View {
                     self.isPresented = false
                 }
                 .simultaneousGesture(TapGesture().onEnded {
+                    self.isFocused = true
                     self.isPresented = true
                 })
                 .frame(maxWidth: .infinity)

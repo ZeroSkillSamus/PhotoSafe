@@ -24,10 +24,13 @@ struct TopHeader: View {
             Button {
                 self.display_delete_alert = true
             } label: {
-                Image(systemName:"trash.fill")
-                    .font(.title2)
-                    .foregroundColor(self.album_vm.albums.isEmpty ? .gray : .red)
+                Image(systemName:"trash")
+                    .font(.system(size: 14,design: .rounded))
+                    //.font(.title2)
+                    .foregroundColor(Color.c1_text)
             }
+            .padding(7)
+            .applyLiquidGlassIfSupported(shape: .circle, color: Color.c1_accent, isInteractive: true)
             .disabled(self.album_vm.albums.isEmpty)
         } trailing_button: {
             // Created a menu for now
@@ -40,9 +43,13 @@ struct TopHeader: View {
                 }
             } label: {
                 Text(self.is_edit_enabled ? "Cancel" : "Edit")
+                    .foregroundStyle(Color.c1_text)
+                    .font(.system(size: 14,design: .rounded))
             }
+            .padding(7)
+            .applyLiquidGlassIfSupported(color: Color.c1_accent, isInteractive: true)
         }
-        .alert("Delete All Albums?", isPresented: $display_delete_alert) {
+        .alert("Delete All Albums", isPresented: $display_delete_alert) {
             Button("Delete", role: .destructive) {
                 withAnimation(.easeInOut) {
                     self.album_vm.deleteAll()
@@ -50,7 +57,8 @@ struct TopHeader: View {
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("Will Delete All Albums & Media, Are you Sure????")
+            Text("By pressing Delete you will lose all albums and media within that album. This cannot be undone.")
+                .multilineTextAlignment(.center)
         }
     }
 }
