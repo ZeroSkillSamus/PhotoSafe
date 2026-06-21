@@ -138,11 +138,12 @@ final class MediaViewModel: ObservableObject {
                     return (ToastItem(message: "Failed to download", status: .failure), nil)
                 }
 
-                let imageData = UIImage(systemName: "play.rectangle.fill")!.pngData()!
+                let fallbackData = UIImage(systemName: "play.rectangle.fill")!.pngData()!
+                let imageData = location.generateVideoThumbnail() ?? fallbackData
                 let thumbnail = UIImage(data: imageData)?.jpegData(compressionQuality: 0.5) ?? imageData
 
                 let entity = self.add_media(to: album, type: .Video, image_data: imageData, thumbnail: thumbnail, video_path: location.absoluteString)
-                return (ToastItem(message: "Successfully Downloaded HLS Video", status: .success),entity)
+                return (ToastItem(message: "Successfully Downloaded HLS Video", status: .success), entity)
             } catch (let error) {
                 print("Failed to download hls video", error)
                 return (ToastItem(message: error.localizedDescription, status: .failure), nil)

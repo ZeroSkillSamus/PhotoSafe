@@ -233,8 +233,7 @@ struct WebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        if let url = webViewModel.url,
-           uiView.url == nil,
+        if uiView.url == nil,
            !webViewModel.isNavigating {
             self.webViewModel.load(uiView)
         }
