@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct DownloadMediaItem: Hashable {
+    let id: UUID
     let url: String
-    var status: Status
+    //var status: Status
     var downloadedAt: Date
     var albumDownloadedTo: String
     var domain: String?
-
+    var thumbnail: Data?
+    
+    var thumbnailImage: UIImage? {
+        guard let thumbnail else { return nil }
+        return UIImage(data: thumbnail)
+    }
+    
     var timeSinceCreated: Text {
         let today = Date()
         let components = Calendar.current.dateComponents([.day, .month, .hour, .year, .minute, .second, .weekday], from: today, to: downloadedAt)

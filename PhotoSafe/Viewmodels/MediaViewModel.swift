@@ -17,6 +17,8 @@ enum VideoFormat {
 
 @MainActor
 final class MediaViewModel: ObservableObject {
+    @Published var downloadProgress: [UUID: Double] = [:]
+    
     private let mp4DownloadService: VideoDownloaderProtocol
     private let hlsDownloadService: VideoDownloaderProtocol
     
@@ -110,64 +112,82 @@ final class MediaViewModel: ObservableObject {
         self.set_counts()
     }
     
-    func downloadVideoToAlbum(from urlString: String, referer: String?, to album: AlbumEntity, cookies: [HTTPCookie]?) async -> ToastItem {
-        guard let url = URL(string: urlString) else { return ToastItem(message: "Url not found!", status: .failure) }
+    func downloadVideoToAlbum(
+        id: UUID,
+        from urlString: String,
+        referer: String?,
+        to album: AlbumEntity,
+        cookies: [HTTPCookie]?
+    ) async -> (ToastItem, MediaEntity?) {
+        guard let url = URL(string: urlString) else { return (ToastItem(message: "Url not found!", status: .failure), nil) }
         let videoType = await self.detectVideoFormat(url: url)
         switch videoType {
         case .hls:
             do {
-                async let permUrl = self.hlsDownloadService.download(from: url, referrer: cleanUrlForReferer(url: referer), cookies: cookies)
+                async let permUrl = self.hlsDownloadService.download(
+                    from: url,
+                    referrer: cleanUrlForReferer(url: referer),
+                    cookies: cookies,
+                    onProgress: { [weak self] progress in
+                        Task { @MainActor in
+                            self?.downloadProgress[id] = progress
+                        }
+                    })
 
                 guard let location = try await permUrl else {
-                    return ToastItem(message: "Failed to download", status: .failure)
+                    return (ToastItem(message: "Failed to download", status: .failure), nil)
                 }
 
                 let imageData = UIImage(systemName: "play.rectangle.fill")!.pngData()!
                 let thumbnail = UIImage(data: imageData)?.jpegData(compressionQuality: 0.5) ?? imageData
 
-                self.add_media(to: album, type: .Video, image_data: imageData, thumbnail: thumbnail, video_path: location.absoluteString)
-                return ToastItem(message: "Successfully Downloaded HLS Video", status: .success)
+                let entity = self.add_media(to: album, type: .Video, image_data: imageData, thumbnail: thumbnail, video_path: location.absoluteString)
+                return (ToastItem(message: "Successfully Downloaded HLS Video", status: .success),entity)
             } catch (let error) {
                 print("Failed to download hls video", error)
-                return ToastItem(message: error.localizedDescription, status: .failure)
+                return (ToastItem(message: error.localizedDescription, status: .failure), nil)
             }
         case .mp4:
             // Download the file to a temporary location
             do {
-                let permUrl = try await self.mp4DownloadService.download(from: url, referrer: referer, cookies: cookies)
+                let permUrl = try await self.mp4DownloadService.download(from: url, referrer: referer, cookies: cookies, onProgress: { [weak self] progress in
+                    Task { @MainActor in
+                        self?.downloadProgress[id] = progress
+                    }
+                })
                 guard let permUrl else {
-                    return ToastItem(message: "Failed to download", status: .failure)
+                    return (ToastItem(message: "Failed to download", status: .failure), nil)
                 }
                 print(permUrl)
                 if let image_data = permUrl.generateVideoThumbnail() {
                     if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
-                        self.add_media(
+                       let entity = self.add_media(
                             to: album,
                             type: MediaType.Video,
                             image_data: image_data,
                             thumbnail: compressed_img,
                             video_path: permUrl.absoluteString
                         )
-                        return ToastItem(message: "Successfully Downloaded MP4 Video", status: .success)
+                        return (ToastItem(message: "Successfully Downloaded MP4 Video", status: .success), entity)
                     } else {
-                        return ToastItem(message: "Failed to generate thumbnail", status: .failure)
+                        return (ToastItem(message: "Failed to generate thumbnail", status: .failure), nil)
                     }
                 } else {
-                    return ToastItem(message: "Failed to download mp4 video", status: .failure)
+                    return (ToastItem(message: "Failed to download mp4 video", status: .failure), nil)
                 }
             } catch (let error) {
                 print("Failed to download mp4 video", error)
-                return ToastItem(message: error.localizedDescription, status: .failure)
+                return (ToastItem(message: error.localizedDescription, status: .failure), nil)
             }
         case .unknown:
-            return ToastItem(message: "Failed to determine video type", status: .failure)
+            return (ToastItem(message: "Failed to determine video type", status: .failure), nil)
         }
     }
     
-    func addPhotoFromWebToAlbum(from urlString: String, to album: AlbumEntity) async -> ToastItem  {
+    func addPhotoFromWebToAlbum(from urlString: String, to album: AlbumEntity) async -> (ToastItem, MediaEntity?)  {
         self.progress_alert = true
         
-        guard let url = URL(string: urlString) else { return ToastItem(message: "Url not found!", status: .failure) }
+        guard let url = URL(string: urlString) else { return (ToastItem(message: "Url not found!", status: .failure), nil) }
         do {
             // Perform the network fetch
             let (data, response) = try await URLSession.shared.data(from: url)
@@ -176,25 +196,25 @@ final class MediaViewModel: ObservableObject {
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
                 print("Server error")
-                return ToastItem(message: "Server error!", status: .failure)
+                return (ToastItem(message: "Server error!", status: .failure), nil)
             }
             
             if let thumbnail = UIImage(data: data)?.thumbnail(), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5)  {
-                self.add_media(
+                let entity = self.add_media(
                     to: album,
                     type: data.isGIF  ? .GIF : .Photo,
                     image_data: data,
                     thumbnail: compressed_img
                 )
-                return ToastItem(message: "Saved", status: .success)
+                return (ToastItem(message: "Saved", status: .success), entity)
             }
             
             print("Failed to load image data: \(url.absoluteString)")
-            return ToastItem(message: "Failed to load image data", status: .failure)
+            return (ToastItem(message: "Failed to load image data", status: .failure), nil)
             //
         } catch {
             print("Failed to load image data: \(error.localizedDescription)")
-            return ToastItem(message: "Failed to load image data", status: .failure)
+            return (ToastItem(message: "Failed to load image data", status: .failure), nil)
         }
     }
     
@@ -319,7 +339,7 @@ final class MediaViewModel: ObservableObject {
         image_data: Data,
         thumbnail: Data,
         video_path: String? = nil
-    ) {
+    ) -> MediaEntity? {
         if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, thumbnail: thumbnail, videoPath: video_path) {
             let select_media = SelectMediaEntity(media: media_entity)
             self.medias.append(select_media) // add to list
@@ -331,8 +351,9 @@ final class MediaViewModel: ObservableObject {
             case .GIF, .Photo:
                 self.photo_count = self.photo_count + 1
             }
-            
+            return media_entity
         }
+        return nil
     }
     
     private func increment_alert_value() {

@@ -9,59 +9,69 @@ import SwiftUI
 import AVKit
 
 protocol VideoDownloaderProtocol {
-    func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?) async throws -> URL?
+    func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?, onProgress: ((Double) -> Void)?) async throws -> URL?
 }
 
-class MP4Downloader: VideoDownloaderProtocol {
-    func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?) async throws -> URL? {
+class MP4Downloader: NSObject, VideoDownloaderProtocol, URLSessionDownloadDelegate {
+    private var continuation: CheckedContinuation<URL?, Error>?
+    private var onProgress: ((Double) -> Void)?
+    private var session: URLSession?
+    
+    func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?, onProgress: ((Double) -> Void)?) async throws -> URL? {
+        self.onProgress = onProgress
+            return try await withCheckedThrowingContinuation { continuation in
+                self.continuation = continuation
+                let config = URLSessionConfiguration.default
+                self.session = URLSession(configuration: config, delegate: self, delegateQueue: .main)
+
+                var request = URLRequest(url: url)
+                if let referrer { request.setValue(referrer, forHTTPHeaderField: "Referer") }
+                if let cookies, !cookies.isEmpty {
+                    let cookieHeader = cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")
+                    request.setValue(cookieHeader, forHTTPHeaderField: "Cookie")
+                }
+                session?.downloadTask(with: request).resume()
+            }
+    }
+    
+    func urlSession(
+        _ session: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didWriteData bytesWritten: Int64,
+        totalBytesWritten: Int64,
+        totalBytesExpectedToWrite: Int64
+    ) {
+        guard totalBytesExpectedToWrite > 0 else { return }
+        onProgress?(Double(totalBytesWritten) / Double(totalBytesExpectedToWrite))
+    }
+    
+    // Move file and resume continuation
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         do {
-            var request = URLRequest(url: url)
-              
-            if let referrer {
-                request.setValue(referrer, forHTTPHeaderField: "Referer")
-            }
-
-            if let cookies, !cookies.isEmpty {
-                let cookieHeader = cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")
-                request.setValue(cookieHeader, forHTTPHeaderField: "Cookie")
-            }
-
-            let (tempURL, _) = try await URLSession.shared.download(for: request)
-            //let (tempURL, _) = try await URLSession.shared.downloadTask(with: request)
-//            let ext = url.pathExtension.isEmpty ? "mp4" : url.pathExtension
-            
-            let appSupportURL = FileManager.default.urls(
-                for: .applicationSupportDirectory,
-                in: .userDomainMask
-            ).first!
-            
-            // 2. Create Videos subdirectory if needed
+            let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
             let videosDir = appSupportURL.appendingPathComponent("Videos")
-            try? FileManager.default.createDirectory(
-                at: videosDir,
-                withIntermediateDirectories: true
-            )
-            
-            // 3. Create permanent destination URL
-            var permanentURL = videosDir
-                .appendingPathComponent(UUID().uuidString)
-                .appendingPathExtension("mp4")
+            try? FileManager.default.createDirectory(at: videosDir, withIntermediateDirectories: true)
 
-            try FileManager.default.moveItem(at: tempURL, to: permanentURL)
-            
-            try FileManager.default.setAttributes(
-                [.protectionKey: FileProtectionType.complete],
-                ofItemAtPath: permanentURL.path
-            )
-            
-            // 6. Mark as non-temporary for persistence
+            var permanentURL = videosDir.appendingPathComponent(UUID().uuidString).appendingPathExtension("mp4")
+            try FileManager.default.moveItem(at: location, to: permanentURL)
+            try FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: permanentURL.path)
+
             var resourceValues = URLResourceValues()
             resourceValues.isExcludedFromBackup = true
             try permanentURL.setResourceValues(resourceValues)
-            
-            return permanentURL
-        } catch (let error) {
-            throw error
+
+            continuation?.resume(returning: permanentURL)
+        } catch {
+            continuation?.resume(throwing: error)
+        }
+      continuation = nil
+    }
+    
+    // Error delegate 
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        if let error {
+            continuation?.resume(throwing: error)
+            continuation = nil
         }
     }
 }
@@ -70,6 +80,7 @@ class HLSDownloader: NSObject, ObservableObject, AVAssetDownloadDelegate, VideoD
     private var continuation: CheckedContinuation<URL?, Error>?
     private var session: AVAssetDownloadURLSession?
 
+    private var onProgress: ((Double) -> Void)?
     
     // MARK: - Error Handling
     enum ConversionError: Error {
@@ -80,7 +91,8 @@ class HLSDownloader: NSObject, ObservableObject, AVAssetDownloadDelegate, VideoD
         case directoryCreationFailed
     }
     
-    func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?) async throws -> URL? {
+    func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?, onProgress: ((Double) -> Void)?) async throws -> URL? {
+        self.onProgress = onProgress
         return try await withCheckedThrowingContinuation { continuation in
             self.continuation = continuation
 
@@ -116,8 +128,7 @@ class HLSDownloader: NSObject, ObservableObject, AVAssetDownloadDelegate, VideoD
         let percentComplete = loadedTimeRanges.reduce(0) { total, range in
             total + range.timeRangeValue.duration.seconds
         } / expectedTimeRange.duration.seconds
-        
-        print("Download Progress: \(percentComplete * 100)%")
+        onProgress?(Double(percentComplete))
     }
 
     // MARK: - AVAssetDownloadDelegate

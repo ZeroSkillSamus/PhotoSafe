@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct WebViewWrapper: View {
+    @StateObject private var mediaViewModel = MediaViewModel()
+    
     @Environment(WebViewModel.self) var webViewModel
     @EnvironmentObject private var authViewModel: AuthStorageViewModel
 
@@ -84,22 +86,23 @@ struct WebViewWrapper: View {
             ScrollView {
                 LazyVStack {
                     ForEach(self.webViewModel.sessionHistory, id: \.self) { item in
+                        let downloadProgress = self.mediaViewModel.downloadProgress[item.id]
                         HStack(spacing: 15) {
-                            AsyncImage(url: URL(string: item.url)) { phase in
-                                switch phase {
-                                case .empty:
-                                    ProgressView()
-                                case .success(let image):
-                                    image.resizable()
-                                        .frame(width: 85, height: 85)
-                                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                                case .failure:
-                                    Text("Failure")
-                                @unknown default:
-                                    Text("Failure")
-                                }
+                            if let uiimage = item.thumbnailImage {
+                                Image(uiImage: uiimage)
+                                    .resizable()
+                                    .aspectRatio(1, contentMode: .fill)
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                            } else {
+                                // Image is downloading
+                                //Image(systemName: "xmark")
+                                ProgressView()
+                                    //.resizable()
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
                             }
-
+                            
                             VStack {
                                 Text(item.domain ?? "")
                                     .font(.system(size: 14, weight: .semibold, design: .rounded))
@@ -109,6 +112,43 @@ struct WebViewWrapper: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .foregroundStyle(Color.c1_text)
+                            
+                            Spacer()
+                            
+                            if let downloadProgress {
+                                if downloadProgress >= 1 {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.title2)
+                                        .foregroundColor(.green)
+                                        .padding(10)
+                                } else {
+                                    ZStack {
+                                        // 1. Background Track Circle
+                                        Circle()
+                                            //.frame(width: 50,height: 50)
+                                            .stroke(
+                                                Color.gray.opacity(0.2),
+                                                style: StrokeStyle(lineWidth: 5)
+                                            )
+                                            .frame(width: 28, height: 28)
+                                        
+                                        // 2. Foreground Progress Circle
+                                        Circle()
+                                            //.frame(width: 50,height: 50)
+                                            .trim(from: 0.0, to: downloadProgress)
+                                            .stroke(
+                                                Color.blue,
+                                                style: StrokeStyle(lineWidth: 5, lineCap: .round)
+                                            )
+                                            .frame(width: 28, height: 28)
+                                            // Rotates the line so it starts filling from the top (12 o'clock)
+                                            .rotationEffect(.degrees(-90))
+                                            // Smoothly animates progress transitions
+                                            .animation(.easeOut, value: downloadProgress)
+                                    }
+                                    .padding(10)
+                                }
+                            }
                         }
                         .overlay(alignment: .topTrailing) {
                             item.timeSinceCreated
@@ -120,11 +160,17 @@ struct WebViewWrapper: View {
                 }
             }
         }
-        .padding()
+        .padding([.top, .horizontal])
         .presentationDragIndicator(.visible)
         .background(Color.c1_background)
     }
 
+    func turnIntoPercent(_ progress: Double?) -> String {
+        guard let progress else { return "0%" }
+        let value = Double((progress/1)) * 100
+        return "\(value)%"
+    }
+    
     var body: some View {
         @Bindable var webViewModel = webViewModel
 
@@ -180,21 +226,39 @@ struct WebViewWrapper: View {
         .sheet(item: $webViewModel.pendingImageURL) { item in
             MoveSheet { album in
                 Task {
+                    let mediaId = UUID()
+                    var historyEntry = DownloadMediaItem(
+                        id: mediaId,
+                        url: item.url,
+                        downloadedAt: Date.now,
+                        albumDownloadedTo: album.name,
+                        thumbnail: nil
+                    )
+                    self.webViewModel.appendToHistory(download: historyEntry)
                     switch item.mediaType {
                     case .image:
-                        self.toast = await MediaViewModel().addPhotoFromWebToAlbum(from: item.url, to: album)
-                        guard let toast else { return }
-                        self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
+                        let (toast, entity) = await mediaViewModel.addPhotoFromWebToAlbum(from: item.url, to: album)
+                        self.toast = toast
+                        
+                        // Update thumbnail
+                        historyEntry.thumbnail = entity?.thumbnail
+                        self.webViewModel.updateHistoryEntity(with: historyEntry)
+                        //self.webViewModel.appendToHistory(id: mediaId, urlString: item.url, status: toast.status, album: album, thumbnail: entity?.thumbnail)
                     case .video:
+                        self.showHistorySheet = true
                         let cookies = await self.webViewModel.webView?.configuration.websiteDataStore.httpCookieStore.allCookies()
-                        self.toast = await MediaViewModel().downloadVideoToAlbum(
+                        let (toast, entity) = await mediaViewModel.downloadVideoToAlbum(
+                            id: mediaId,
                             from: item.url,
                             referer: self.webViewModel.currentUrl?.absoluteString,
                             to: album,
                             cookies: cookies
                         )
-                        guard let toast else { return }
-                        self.webViewModel.appendToHistory(urlString: item.url, status: toast.status, album: album)
+                        self.toast = toast
+                        // Update thumbnail
+                        historyEntry.thumbnail = entity?.thumbnail
+                        self.webViewModel.updateHistoryEntity(with: historyEntry)
+                        //self.webViewModel.appendToHistory(id: mediaId, urlString: item.url, status: toast.status, album: album,thumbnail: thumbnail?.thumbnail)
                     }
                 }
             }
