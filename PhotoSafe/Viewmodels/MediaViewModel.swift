@@ -23,14 +23,12 @@ final class MediaViewModel: ObservableObject {
     private let hlsDownloadService: VideoDownloaderProtocol
     
     @Published var medias: [SelectMediaEntity] = []
-    @Published var test_media: [MediaEntity] = []
-    @Published var test: [UIImage] = []
     
     @Published private(set) var photo_count: Int = 0
     @Published private(set) var video_count: Int = 0
     @Published private var display_alert: Bool = false
     @Published private(set) var alert_value: Float = 0.0
-    @Published var export_finished: Bool = false
+    @Published var toast: ToastItem?
     
     // Getter & Setter for display_alert
     var progress_alert: Bool {
@@ -58,50 +56,96 @@ final class MediaViewModel: ObservableObject {
         self.alert_value = 0
     }
     
+    func setToast(message: String, status: Status) {
+        self.toast = ToastItem(message: message, status: status)
+    }
+    
     /// Handles exporting media to the users photo library
     /// Still need to implement proper way to relay progress to user
-    func export_selected_media_to_photo_library() {
-        self.selected_media.forEach { selected in
-            self.export_media_to_library(selected: selected)
+    func exportSelectedMediaToPhotos() async -> (Int, Int) {
+        let total = selected_media.count
+        
+        return await withTaskGroup(of: ToastItem.self) { group in
+            for selected in selected_media {
+                group.addTask {
+                    await self.handleExportingMediaToUserLibrary(selected: selected)
+                }
+            }
+            
+            var succeeded = 0
+            for await result in group {
+                if result.status == .success { succeeded += 1 }
+            }
+            self.toast = ToastItem(message: "Exported \(succeeded) out of \(total)", status: .success)
+            return (succeeded, total)
         }
     }
     
+    func exportSingle(selected: SelectMediaEntity) async {
+        let success = await handleExportingMediaToUserLibrary(selected: selected)
+        self.toast = success
+    }
+    
     ///
-    func export_media_to_library(selected: SelectMediaEntity) {
-        let media_saver = MediaHandler()
-        switch selected.media.type {
-        case MediaType.Photo.rawValue:
-            if let ui_image = selected.media.full_image {
-                media_saver.save_photo_to_user_library(image: ui_image)
+    private func handleExportingMediaToUserLibrary(selected: SelectMediaEntity) async -> ToastItem {
+        return await withCheckedContinuation { continuation in
+            switch selected.type {
+            case MediaType.Photo.rawValue:
+                guard let fullImage = selected.fullImage else {
+                    continuation.resume(returning: ToastItem(message: "Failed to decode image for export", status: .failure))
+                    return
+                }
+                
+                MediaHandler.savePhotoToUserLibrary(image: fullImage) { toast in
+                    continuation.resume(returning: toast)
+                }
+            case MediaType.Video.rawValue:
+                guard let videoPath = selected.videoPath else {
+                    continuation.resume(returning: ToastItem(message: "Failed to locate video path for export", status: .failure))
+                    return
+                }
+                
+                MediaHandler.saveVideoToUserLibrary(at: videoPath) { toast in
+                    continuation.resume(returning: toast)
+                }
+            case MediaType.GIF.rawValue:
+                MediaHandler.saveGifToUserLibrary(data: selected.imageData) { toast in
+                    continuation.resume(returning: toast)
+                }
+            default:
+                continuation.resume(returning: ToastItem(message: "Unknown media type, can not export", status: .failure))
             }
-        case MediaType.Video.rawValue:
-            if let vid_path = selected.media.video_path {
-                media_saver.saveVideoToUserLibrary(at: vid_path)
-            }
-        case MediaType.GIF.rawValue:
-            media_saver.save_gif_to_user_library(data: selected.media.image_data)
-        default:
-            print("Type Not Found!!")
         }
-        self.export_finished = true
     }
     
     /// Gets all selected elements
     /// Removes All selected elements from medias
     /// Proceeds to delete them from the coredata
     /// Adjust count to represent the changes
-    func delete_selected() {
+    func delete_selected() throws {
         // Get list of selected items
-        self.selected_media.forEach { selected in
+        try self.selected_media.forEach { selected in
             do {
-                try self.service.delete(media: selected.media)
+                try self.service.delete(id: selected.id)
                 
                 self.delete_from_medias(selected: selected)
             } catch let error {
-                print("\(error)")
+                throw error
             }
         }
         
+        self.set_counts()
+    }
+    
+    func delete(mediaId: UUID) throws {
+        do {
+            try self.service.delete(id: mediaId)
+            
+            // Delete from medias array
+            self.medias.removeAll(where: {$0.id == mediaId })
+        } catch let error {
+            throw error
+        }
         self.set_counts()
     }
     
@@ -276,12 +320,24 @@ final class MediaViewModel: ObservableObject {
         // Get All Selected Media
         selected_media.forEach { selected in
             do {
-                try self.service.move(media: selected.media, to: album)
+                //let media = self.selected_media.first(matchingCategory: selected.id)
+                // Fetch media entity to do the move
+                try self.service.move(id: selected.id, to: album)
                 self.delete_from_medias(selected: selected)
                 self.set_counts()
             } catch let error {
                 print("Error \(error)")
             }
+        }
+    }
+    
+    func move(to album: AlbumEntity, selectedId: UUID) throws {
+        do {
+            try self.service.move(id: selectedId, to: album)
+            
+            self.medias.removeAll(where: {$0.id == selectedId})
+        } catch let error {
+            throw error
         }
     }
   
@@ -296,12 +352,19 @@ final class MediaViewModel: ObservableObject {
         }
     }
 
-    func favorite_media(for media: MediaEntity, with status: Bool) -> MediaEntity {
+    func toggleFavorite(id: UUID, status: FavoriteStatus) -> MediaEntity? {
         do {
-            let media = try self.service.like_or_unlike(with: status, for: media)
+            var media: MediaEntity? = nil
+            switch status {
+            case .Like:
+                media = try self.service.favorite(for: id)
+            case .Unlike:
+                media = try self.service.unfavorite(for: id)
+            }
+            print(media?.is_favorited)
             return media
         } catch {
-            return media
+            return nil
         }
     }
     
@@ -374,7 +437,7 @@ final class MediaViewModel: ObservableObject {
     ///     Note: Photo_Count will count photos and gifs
     private func set_counts() {
         // Set corresponding counts
-        self.photo_count = self.medias.filter({$0.media.type == MediaType.Photo.rawValue || $0.media.type == MediaType.GIF.rawValue}).count
-        self.video_count = self.medias.filter({$0.media.type == MediaType.Video.rawValue}).count
+        self.photo_count = self.medias.filter({$0.type == MediaType.Photo.rawValue || $0.type == MediaType.GIF.rawValue}).count
+        self.video_count = self.medias.filter({$0.type == MediaType.Video.rawValue}).count
     }
 }

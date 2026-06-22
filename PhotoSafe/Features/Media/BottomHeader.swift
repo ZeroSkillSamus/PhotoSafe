@@ -43,16 +43,20 @@ struct BottomHeader: View {
                 HStack(alignment: .center) {
                     BottomHeaderButton {
                         SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
-                            self.media_VM.export_selected_media_to_photo_library()
-                            withAnimation {
-                                self.select_mode_active = false // Get out of select mode
-                            }
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            Task {
+                                let (sucess, total) = await self.media_VM.exportSelectedMediaToPhotos()
+                                
                                 withAnimation {
-                                    self.media_VM.export_finished = false
+                                    self.select_mode_active = false // Get out of select mode
                                 }
                             }
+                            
+                            
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                                withAnimation {
+//                                    self.media_VM.export_finished = false
+//                                }
+//                            }
                         }
                     }
                     
@@ -86,7 +90,8 @@ struct BottomHeader: View {
                     BottomHeaderButton {
                         SelectBottomButton(label: "Delete", system_name:"trash") {
                             withAnimation {
-                                self.media_VM.delete_selected()
+                                //TODO: - Handle error
+                                try? self.media_VM.delete_selected()
                                 self.num_selected_items = 0
                                 
                                 // Only close select mode if the medias is empty after deleting

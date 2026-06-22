@@ -68,7 +68,7 @@ struct MediaView: View {
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
                     ForEach(self.$media_VM.medias) { $select_media in
-                        if let ui_image = select_media.media.thumbnail_image {
+                        if let ui_image = select_media.thumbnailImage {
                             MediaImageGridView(
                                 is_select_mode_active: self.is_select_mode_active,
                                 ui_image: ui_image,
@@ -102,15 +102,11 @@ struct MediaView: View {
                     selected_media_count: self.selected_media.count,
                     alert_value: self.media_VM.alert_value
                 )
-            } else if self.media_VM.export_finished {
-                CustomAlertView {
-                    Text("Save Finished")
-                        .font(.title3.bold())
-                }
             }
         }
+        .displayToast(self.$media_VM.toast)
         .background{
-            if self.media_VM.progress_alert || self.media_VM.export_finished {
+            if self.media_VM.progress_alert  {
                 Color.c1_background.opacity(0.35).ignoresSafeArea()
             } else {
                 Color.c1_background.ignoresSafeArea(edges: .all)
@@ -120,10 +116,10 @@ struct MediaView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(item: $selectedItem) { item in
             FullCoverSheet(
-                from_where: .Media,
-                media_VM: self.media_VM,
-                select_media: item,
-                list: self.$media_VM.medias
+                screenType: .Media,
+                mediaViewModel: self.media_VM,
+                mediaList: self.$media_VM.medias,
+                selecetedMedia: item
             )
         }
         .onAppear {

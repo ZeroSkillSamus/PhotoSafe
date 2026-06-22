@@ -12,7 +12,7 @@ enum Status: String {
     case failure
 }
 
-struct ToastItem {
+struct ToastItem: Equatable {
     let message: String
     let status: Status
 }

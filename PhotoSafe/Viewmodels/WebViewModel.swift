@@ -19,6 +19,7 @@ struct ImageURLItem: Identifiable {
     let mediaType: WebMediaType
 }
 
+@MainActor
 @Observable
 class WebViewModel {
     private let defaultSearchEngine: String = "https://duckduckgo.com/?q="
@@ -46,6 +47,23 @@ class WebViewModel {
         self.url = url
     }
 
+    func clearAllCookiesAndCache() {
+        // Clear legacy HTTPCookieStorage just in case
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        
+        // Fetch and remove all types of website data (cookies, cache, localStorage, etc.)
+        let dataStore = WKWebsiteDataStore.default()
+        let allTypes = WKWebsiteDataStore.allWebsiteDataTypes()
+        
+        dataStore.fetchDataRecords(ofTypes: allTypes) { records in
+            dataStore.removeData(ofTypes: allTypes, for: records) {
+                print("Successfully cleared all WKWebView cookies and cache.")
+            }
+        }
+        // Clears variables
+        self.clear()
+    }
+    
     func update(isLoading: Bool, error: Error? = nil, isNavigating: Bool? = nil) {
         self.isLoading = isLoading
         self.error = error
@@ -103,7 +121,8 @@ class WebViewModel {
     }
 
     func clear() {
-        webView?.load(URLRequest(url: URL(string: "about:blank")!))
+        //webView?.load(URLRequest(url: URL(string: "about:blank")!))
+        self.webView = nil
         url = nil
         currentUrl = nil
         error = nil
@@ -133,7 +152,8 @@ class WebViewModel {
     }
 
     func update(currentUrl url: URL?) {
-        self.currentUrl = url
+        // If url is nil (cleared state), ignore delegate/KVO updates so currentUrl stays nil
+        self.currentUrl = self.url == nil ? nil : url
         self.updateNavigationState()
     }
 

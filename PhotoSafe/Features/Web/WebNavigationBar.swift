@@ -124,6 +124,13 @@ struct WebNavigationBar: View {
                         Label("Saved this session", systemImage: "folder")
                             .foregroundStyle(Color.c1_accent)
                     }
+                    
+                    Button {
+                        self.webViewModel.clearAllCookiesAndCache()
+                    } label: {
+                        Label("Clear history and cookies", systemImage: "document.on.trash")
+                            .foregroundStyle(Color.c1_accent)
+                    }
 
                 } label: {
                     Image(systemName: "ellipsis")
