@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVKit
+import ffmpegkit
 
 protocol VideoDownloaderProtocol {
     func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?, onProgress: ((Double) -> Void)?) async throws -> URL?
@@ -76,81 +77,66 @@ class MP4Downloader: NSObject, VideoDownloaderProtocol, URLSessionDownloadDelega
     }
 }
 
-class HLSDownloader: NSObject, ObservableObject, AVAssetDownloadDelegate, VideoDownloaderProtocol {
-    private var continuation: CheckedContinuation<URL?, Error>?
-    private var session: AVAssetDownloadURLSession?
+class HLSDownloader: VideoDownloaderProtocol {
 
-    private var onProgress: ((Double) -> Void)?
-    
-    // MARK: - Error Handling
-    enum ConversionError: Error {
-        case exportSessionCreationFailed
-        case exportFailed(Error?)
-        case exportCancelled
-        case invalidAsset
-        case directoryCreationFailed
+    enum HLSError: Error {
+        case failed
     }
-    
+
     func download(from url: URL, referrer: String?, cookies: [HTTPCookie]?, onProgress: ((Double) -> Void)?) async throws -> URL? {
-        self.onProgress = onProgress
+        let fm = FileManager.default
+        let appSupportURL = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let videosDir = appSupportURL.appendingPathComponent("Videos")
+        try? fm.createDirectory(at: videosDir, withIntermediateDirectories: true)
+        let outputURL = videosDir.appendingPathComponent(UUID().uuidString).appendingPathExtension("mp4")
+
+        let headersArg = buildHeadersArg(referrer: referrer, cookies: cookies)
+        let totalMs = await probeDurationMs(urlString: url.absoluteString, headersArg: headersArg)
+
+        let cmd = "\(headersArg)-i \"\(url.absoluteString)\" -map 0:v? -map 0:a? -c copy -movflags faststart \"\(outputURL.path)\""
+
         return try await withCheckedThrowingContinuation { continuation in
-            self.continuation = continuation
-
-            let config = URLSessionConfiguration.background(withIdentifier: UUID().uuidString)
-            self.session = AVAssetDownloadURLSession(
-              configuration: config,
-              assetDownloadDelegate: self,
-              delegateQueue: .main
-            )
-
-            // Add headers to the urlasset
-            var headers: [String: String] = [:]
-            if let referrer { headers["Referer"] = referrer }
-            if let cookies, !cookies.isEmpty {
-                headers["Cookie"] = cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")
-            }
-            print(headers)
-            print(url.absoluteString)
-            let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
-            let task = self.session?.makeAssetDownloadTask(
-              asset: asset,
-              assetTitle: "HLS Video",
-              assetArtworkData: nil,
-              options: nil
-            )
-            task?.resume()
-        }
-    }
-    
-    func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad expectedTimeRange: CMTimeRange) {
-        
-        // Calculate and publish your download progress here
-        let percentComplete = loadedTimeRanges.reduce(0) { total, range in
-            total + range.timeRangeValue.duration.seconds
-        } / expectedTimeRange.duration.seconds
-        onProgress?(Double(percentComplete))
-    }
-
-    // MARK: - AVAssetDownloadDelegate
-        func urlSession(
-            _ session: URLSession,
-            assetDownloadTask: AVAssetDownloadTask,
-            didFinishDownloadingTo location: URL
-        ) {
-            // Apply protection
-            let fm = FileManager.default
-            if let enumerator = fm.enumerator(at: location, includingPropertiesForKeys: nil) {
-                for case let fileURL as URL in enumerator {
-                    try? fm.setAttributes(
-                        [.protectionKey: FileProtectionType.complete],
-                        ofItemAtPath: fileURL.path
-                    )
+            FFmpegKit.executeAsync(cmd, withCompleteCallback: { session in
+                guard let session else { continuation.resume(returning: nil); return }
+                if ReturnCode.isSuccess(session.getReturnCode()) {
+                    try? fm.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: outputURL.path)
+                    var rv = URLResourceValues()
+                    rv.isExcludedFromBackup = true
+                    var out = outputURL
+                    try? out.setResourceValues(rv)
+                    onProgress?(1.0)
+                    continuation.resume(returning: outputURL)
+                } else {
+                    continuation.resume(throwing: HLSError.failed)
                 }
-            }
-            
-            let homeURL = URL(fileURLWithPath: NSHomeDirectory())
-            let absoluteURL = homeURL.appendingPathComponent(location.relativePath)
-            continuation?.resume(returning: absoluteURL)
-            continuation = nil
+            }, withLogCallback: nil, withStatisticsCallback: { stats in
+                guard let stats, let onProgress, let total = totalMs, total > 0 else { return }
+                onProgress(min(Double(stats.getTime()) / Double(total), 0.99))
+            })
         }
+    }
+
+    // Returns "-headers \"Key: val\r\n\" " (with trailing space) or "" if no headers
+    private func buildHeadersArg(referrer: String?, cookies: [HTTPCookie]?) -> String {
+        var lines = ""
+        if let referrer { lines += "Referer: \(referrer)\r\n" }
+        if let cookies, !cookies.isEmpty {
+            lines += "Cookie: \(cookies.map { "\($0.name)=\($0.value)" }.joined(separator: "; "))\r\n"
+        }
+        return lines.isEmpty ? "" : "-headers \"\(lines)\" "
+    }
+
+    private func probeDurationMs(urlString: String, headersArg: String) async -> Int64? {
+        return await withCheckedContinuation { continuation in
+            FFprobeKit.getMediaInformationAsync(urlString) { session in
+                guard let info = session?.getMediaInformation(),
+                      let durationStr = info.getDuration(),
+                      let durationSec = Double(durationStr) else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                continuation.resume(returning: Int64(durationSec * 1000))
+            }
+        }
+    }
 }

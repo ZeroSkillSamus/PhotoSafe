@@ -1,0 +1,9 @@
+# Xcode
+*.xcuserstate
+xcuserdata/
+
+# FFmpegKit XCFrameworks (binary build artifacts — rebuild from source)
+Frameworks/
+
+# macOS
+.DS_Store
