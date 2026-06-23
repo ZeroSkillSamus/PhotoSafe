@@ -39,7 +39,11 @@ struct LazyPagerView: View {
     }
     
     struct AsyncPhotoView: View {
-          let media: MediaEntity
+          //let media: MediaEntity
+        let thumbnail: UIImage?
+        let id: UUID
+        let imageData: Data
+        
           @State private var fullImage: UIImage? = nil
 
           var body: some View {
@@ -48,22 +52,18 @@ struct LazyPagerView: View {
                       Image(uiImage: fullImage)
                           .resizable()
                           .scaledToFit()
-                  } else if let thumbnail = media.thumbnail_image {
+                  } else if let thumbnail {
                       Image(uiImage: thumbnail)
                           .resizable()
                           .scaledToFit()
                   }
               }
-              .onChange(of: media.id) { _, newID in
-                  if let cached = ImageCache.fetch_image(for: newID.uuidString) {
-                      fullImage = cached
-                  } else {
-                      fullImage = nil
-                  }
+              .onChange(of: id) { _, newID in
+                  fullImage = ImageCache.fetch_image(for: newID.uuidString)
               }
-              .task(id: media.id) {
-                  let key = media.id.uuidString
-                  let imageData = media.image_data
+              .task(id: id) {
+                  let key = id.uuidString
+                  //let imageData = media.image_data
                   if let cached = ImageCache.fetch_image(for: key) {
                       fullImage = cached
                       return
@@ -82,7 +82,7 @@ struct LazyPagerView: View {
         let element: SelectMediaEntity
         
         var body: some View {
-            AnimatedImage(data: element.media.image_data, isAnimating: self.$isAnimating)
+            AnimatedImage(data: element.imageData, isAnimating: self.$isAnimating)
                 .resizable()
                 .customLoopCount(0)
                 .scaledToFit()
@@ -133,12 +133,16 @@ struct LazyPagerView: View {
 
     var body: some View {
         LazyPager(data: self.windowedList, page: self.$windowListIndex, direction: self.directionDecoded) { element in
-            switch element.media.type {
+            switch element.type {
             case MediaType.Photo.rawValue:
-                AsyncPhotoView(media: element.media)
+                AsyncPhotoView(
+                    thumbnail: element.thumbnailImage,
+                    id: element.id,
+                    imageData: element.imageData
+                )
             case MediaType.Video.rawValue:
-                if let thumbnail = element.media.thumbnail_image {
-                    if isDisplay, let path = element.media.video_path, let url = URL(string: path) {
+                if let thumbnail = element.thumbnailImage {
+                    if isDisplay, let path = element.videoPath, let url = URL(string: path) {
                         if self.windowedList[self.windowListIndex] == element { // needed to stop video from preloading
                             PlayerView(url: url)
                         }
@@ -168,8 +172,8 @@ struct LazyPagerView: View {
             .frame(maxWidth:.infinity,maxHeight: .infinity)
             .ignoresSafeArea(edges: [.bottom, .top])
             .fullScreenCover(item: self.$videoToDisplay) { video in
-                if let video_path = video.media.video_path,
-                   let url = URL(string: video_path) {
+                if let videoPath = video.videoPath,
+                   let url = URL(string: videoPath) {
                     VideoPlayerView(url: url)
                 }
              }

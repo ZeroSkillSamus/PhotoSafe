@@ -9,12 +9,12 @@ import SwiftUI
 
 struct ImageGridView: View {
     let ui_image: UIImage
-    let media: MediaEntity
+    let media: SelectMediaEntity
     
     var display_if_favorited: Bool = true
     
     var show_background: Bool {
-        media.is_favorited || media.type == MediaType.Video.rawValue
+        media.isFavorited || media.type == MediaType.Video.rawValue
     }
     
     var body: some View {
@@ -34,14 +34,14 @@ struct ImageGridView: View {
                         
                         Spacer()
                         
-                        if media.is_favorited && display_if_favorited {
+                        if media.isFavorited && display_if_favorited {
                             Image(systemName: "heart.fill")
                                 .foregroundStyle(.pink)
                                 .font(.caption)
                         }
                     }
                     .padding(5)
-                    .background(!(media.is_favorited && display_if_favorited) ? .clear : .black.opacity(0.30))
+                    .background(!(media.isFavorited && display_if_favorited) ? .clear : .black.opacity(0.30))
                 }
             }
     }

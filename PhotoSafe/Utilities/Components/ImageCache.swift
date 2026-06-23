@@ -41,10 +41,10 @@ class ImageCache {
     static func preloadImages(medias: [SelectMediaEntity]) {
         DispatchQueue.global(qos: .background).async {
             for media in medias {
-                if media.media.type == MediaType.Photo.rawValue {
-                    if self.image_only_cache.object(forKey: media.media.id.uuidString as NSString) == nil,
-                       let ui_image = media.media.full_image {
-                        self.image_only_cache.setObject(ui_image, forKey: media.media.id.uuidString as NSString, cost: cost(for: ui_image))
+                if media.type == MediaType.Photo.rawValue {
+                    if self.image_only_cache.object(forKey: media.id.uuidString as NSString) == nil,
+                       let ui_image = media.fullImage {
+                        self.image_only_cache.setObject(ui_image, forKey: media.id.uuidString as NSString, cost: cost(for: ui_image))
                     }
                 }
             }

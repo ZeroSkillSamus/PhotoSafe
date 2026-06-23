@@ -17,13 +17,13 @@ struct MediaImageGridView: View {
     @Binding var select_count: Int
 
     var show_background: Bool {
-        media_select.media.is_favorited || media_select.media.type == MediaType.Video.rawValue
+        media_select.isFavorited || media_select.type == MediaType.Video.rawValue
     }
     
     var body: some View {
         ImageGridView(
             ui_image: ui_image,
-            media: self.media_select.media,
+            media: self.media_select,
             display_if_favorited: display_if_favorited
         )
             .overlay(

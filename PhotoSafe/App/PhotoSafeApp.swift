@@ -69,7 +69,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {
         authViewModel.lockApp()
         webViewModel.clear()  // clear alongside lock
-        print("sdakjsdakj")
     }
 }
 

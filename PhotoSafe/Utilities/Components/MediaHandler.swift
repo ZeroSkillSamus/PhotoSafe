@@ -37,13 +37,34 @@ class MediaHandler: NSObject {
         }
     }
 
-    func save_photo_to_user_library(image: UIImage) {
-        UIImageWriteToSavedPhotosAlbum(image, self, #selector(save_completed), nil)
+    static func savePhotoToUserLibrary(image: UIImage, completion: @escaping (ToastItem) -> Void) {
+        PHPhotoLibrary.requestAuthorization { status in
+            guard status == .authorized else {
+                print("Photo library access denied")
+                completion(ToastItem(message: "Need photo library access to export photo", status: .failure))
+                return
+            }
+            
+            PHPhotoLibrary.shared().performChanges({
+                // Request to create the photo asset
+                PHAssetChangeRequest.creationRequestForAsset(from: image)
+                
+            }, completionHandler: { success, error in
+                if success {
+                    print("Successfully saved the photo!")
+                    completion(ToastItem(message: "Image Saved", status: .success))
+                } else {
+                    print("Error saving photo: \(error?.localizedDescription ?? "Unknown error")")
+                    completion(ToastItem(message: "\(error?.localizedDescription ?? "Unknown error")", status: .failure))
+                }
+            })
+        }
     }
 
-    func saveVideoToUserLibrary(at path: String) {
+    static func saveVideoToUserLibrary(at path: String, completion: @escaping (ToastItem) -> Void) {
         guard let urlObject = URL(string: path) else {
             print("Error: Could not parse string as a URL")
+            completion(ToastItem(message: "Error: Could not parse string as a URL", status: .failure))
             return
         }
 
@@ -53,12 +74,14 @@ class MediaHandler: NSObject {
         guard FileManager.default.fileExists(atPath: trueFilePath) else {
             print(urlObject.path)
             print("Error: Video file doesn't exist at path")
+            completion(ToastItem(message: "Error: Video file doesn't exist at path", status: .failure))
             return
         }
 
         PHPhotoLibrary.requestAuthorization { status in
             guard status == .authorized else {
                 print("Photo library access denied")
+                completion(ToastItem(message: "Need photo library access to export video", status: .failure))
                 return
             }
 
@@ -72,8 +95,10 @@ class MediaHandler: NSObject {
                     DispatchQueue.main.async {
                         if success {
                             print("Video saved to Photos library")
+                            completion(ToastItem(message: "Video Saved", status: .success))
                         } else {
                             print("Error saving video: \(error?.localizedDescription ?? "Unknown error")")
+                            completion(ToastItem(message: "\(error?.localizedDescription ?? "Unknown error")", status: .failure))
                             if let error = error as NSError? {
                                 print("Full error details: \(error)")
                             }
@@ -83,25 +108,18 @@ class MediaHandler: NSObject {
         }
     }
 
-    func save_gif_to_user_library(data: Data) {
+    static func saveGifToUserLibrary(data: Data, completion: @escaping (ToastItem) -> Void) {
         PHPhotoLibrary.shared().performChanges({
             let request = PHAssetCreationRequest.forAsset()
             request.addResource(with: .photo, data: data, options: nil)
         }) { (success, error) in
             if let error = error {
                 print(error.localizedDescription)
+                completion(ToastItem(message: error.localizedDescription, status: .failure))
             } else {
                 print("GIF has saved")
+                completion(ToastItem(message: "Gif Saved", status: .success))
             }
         }
     }
-
-    @objc func save_completed(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        if let error = error {
-            print("Error saving Media: \(error.localizedDescription)")
-        } else {
-            print("Media Saved Successfully!")
-        }
-    }
-
 }

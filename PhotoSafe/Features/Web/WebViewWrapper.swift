@@ -263,24 +263,7 @@ struct WebViewWrapper: View {
                 }
             }
         }
-        .overlay(alignment: .bottom) {
-            if let toast {
-                Text(toast.message)
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(toast.status == .failure ? Color.red.opacity(0.75) : Color.c1_accent.opacity(0.75))
-                    .clipShape(Capsule())
-                    .padding(.bottom, 15)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                            withAnimation { self.toast = nil }
-                        }
-                    }
-            }
-        }
+        .displayToast(self.$toast)
         .onChange(of: self.authViewModel.isUnlocked) { oldValue, newValue in
             if !newValue { self.isInputFocused = false }
         }

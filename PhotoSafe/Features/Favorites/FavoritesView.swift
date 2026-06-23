@@ -67,8 +67,8 @@ struct FavoritesView: View {
 
             ScrollView {
                 LazyVGrid(columns: self.gridItemLayout, spacing: 3) {
-                    ForEach(self.$favorite_VM.favorites_list,id:\.self) { $favorite in
-                        if let ui_image = favorite.media.thumbnail_image {
+                    ForEach(self.$favorite_VM.favoritesList,id:\.self) { $favorite in
+                        if let ui_image = favorite.thumbnailImage {
                             MediaImageGridView(
                                 is_select_mode_active: self.select_mode_active,
                                 ui_image: ui_image,
@@ -99,14 +99,14 @@ struct FavoritesView: View {
         }
         .fullScreenCover(item: self.$selected_media) { element in
             FullCoverSheet(
-                from_where: .Favorite,
-                media_VM: MediaViewModel(),
-                select_media: element,
-                list: self.$favorite_VM.favorites_list
+                screenType: .Favorite,
+                mediaViewModel: MediaViewModel(),
+                mediaList: self.$favorite_VM.favoritesList,
+                selecetedMedia: element
             )
         }
         .fullScreenCover(isPresented: self.$slideShowViewModel.displaySlideshow) {
-            VerticalMediaView(list: self.favorite_VM.favorites_list)
+            VerticalMediaView(list: self.favorite_VM.favoritesList)
         }
         .sheet(isPresented: self.$slideShowViewModel.showSettings) {
             OptionsView()

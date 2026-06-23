@@ -75,7 +75,7 @@ struct VerticalMediaView: View {
                 .onReceive(self.timer) { _ in
                     guard self.slideShowViewModel.autoPlayEnabled else { return }
                     let element = self.new_list[self.current_media_index]
-                    if element.media.type == MediaType.Video.rawValue { return }
+                    if element.type == MediaType.Video.rawValue { return }
 
                     withAnimation {
                         self.current_media_index = (self.current_media_index + 1) % self.new_list.count
