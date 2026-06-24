@@ -55,7 +55,7 @@ struct BookmarkShowView: View {
                                 .foregroundStyle(Color.c1_text)
                         }
                         .padding(9)
-                        .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 15))
+                        .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 15),color: Color.c1_accent,isInteractive: true)
                         .scaleEffect(selectedFolder == nil ? 1 : 0.8)
 
                         ForEach(self.folderBookmarkViewModel.folders) { folder in
@@ -68,7 +68,7 @@ struct BookmarkShowView: View {
                                     .foregroundStyle(Color.c1_text)
                             }
                             .padding(9)
-                            .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 15))
+                            .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 15),color: Color.c1_accent,isInteractive: true)
                             .scaleEffect(selectedFolder == folder ? 1 : 0.8)
                         }
                     }
@@ -91,6 +91,8 @@ struct BookmarkShowView: View {
                     .applyLiquidGlassIfSupported(shape: .circle)
                 }
             }
+            .frame(height: 30)
+            .scrollClipDisabled()
 
             Section {
                 if self.bookmarksToShow.isEmpty {
@@ -188,5 +190,6 @@ struct BookmarkShowView: View {
             self.selectedFolder = nil
             self.bookmarksToShow = self.folderBookmarkViewModel.fetchBookmarksNotInFolder()
         }
+        //.ignoresSafeArea(edges: .all)
     }
 }

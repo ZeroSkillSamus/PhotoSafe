@@ -93,7 +93,7 @@ struct BottomTabNavigation: View {
                             .background(Color.c1_background)
                         
                         
-                        FavoritesView(select_mode_active: self.$select_mode_active)
+                        FavoritesView(isSelectModeActive: self.$select_mode_active)
                             .tag(Tab.favorites)
                             .toolbar(.hidden, for: .tabBar)
                             .background(Color.c1_background)

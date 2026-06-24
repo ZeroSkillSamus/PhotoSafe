@@ -16,13 +16,15 @@ struct OptionsView: View {
     @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
     
     let timer_options: [TimeInterval] = [2,3,5,10]
+    var shouldDismiss: Bool = true
+    var title: String = "Customize Scroller Options"
     
     var body: some View {
         ZStack {
-            Color.c1_secondary.ignoresSafeArea()
+            Color.c1_secondary.opacity(0.8).ignoresSafeArea()
             VStack {
                 VStack(spacing: 15){
-                    Text("Options")
+                    Text(title)
                         .font(.title2.bold())
                         .foregroundStyle(Color.c1_text)
                     
@@ -45,14 +47,21 @@ struct OptionsView: View {
                         
                         Spacer()
                         
-                        Picker("SlideShow Direction Options", selection: self.$slideShowViewModel.slideShowDirection) {
-                            ForEach(SlideShowType.allCases, id:\.self) { type in
-                                Text(type.rawValue)
-                                    .foregroundStyle(Color.c1_text)
-                                    .opacity(0.75)
+                        Menu {
+                            ForEach(SlideShowType.allCases, id: \.self) { type in
+                                Button {
+                                    self.slideShowViewModel.slideShowDirection = type
+                                } label: {
+                                    Text(type.rawValue)
+                                }
                             }
+                        } label: {
+                            Text(self.slideShowViewModel.slideShowDirection.rawValue)
+                                .foregroundStyle(Color.c1_text)
                         }
                         .menuIndicator(.hidden)
+//                        .padding(7)
+//                        .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 10))
                     }
 
                     HStack {
@@ -62,31 +71,34 @@ struct OptionsView: View {
                         
                         Spacer()
                         
-                        Picker("TimeInterval", selection: self.$slideShowViewModel.timeInteval) {
-                            ForEach(self.timer_options, id:\.self) { type in
-                                Text("\(String(format: "%.0f", type)) seconds")
-                                    .foregroundStyle(Color.c1_text)
-                                    .opacity(0.75)
+                        Menu {
+                            ForEach(self.timer_options, id: \.self) { type in
+                                Button {
+                                    self.slideShowViewModel.timeInteval = type
+                                } label: {
+                                    Text("\(String(format: "%.0f", type)) seconds")
+                                }
                             }
+                        } label: {
+                            Text("\(String(format: "%.0f", self.slideShowViewModel.timeInteval)) seconds")
+                                .foregroundStyle(Color.c1_text)
                         }
                         .menuIndicator(.hidden)
+//                        .padding(7)
+//                        .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 10))
                     }
-                    .opacity(self.slideShowViewModel.autoPlayEnabled ? 1 : 0)
+                    .disabled(self.slideShowViewModel.autoPlayEnabled ? false : true)
+                    .opacity(self.slideShowViewModel.autoPlayEnabled ? 1 : 0.6)
                 }
                 
-                Spacer()
+                //Spacer()
                 
                 Button {
                     self.dismiss()
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.slideShowViewModel.showSlideShow()
-                    }
-                    
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10).fill(Color.c1_accent)
-                        Text("Set Settings")
+                        Text("Start Slideshow")
                             .font(.system(size: 15,weight: .semibold,design: .rounded))
                             .foregroundStyle(Color.c1_text)
                     }
@@ -94,8 +106,15 @@ struct OptionsView: View {
                 }
                 
             }
-            .padding()
+            .padding(10)
         }
-        .presentationDetents([.medium, .fraction(0.45)])
+        .presentationDetents([.fraction(0.40)])
+        .onDisappear {
+            if !self.shouldDismiss { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.slideShowViewModel.showSlideShow()
+            }
+        }
+        .presentationDragIndicator(.visible)
     }
 }

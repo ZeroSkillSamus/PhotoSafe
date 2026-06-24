@@ -68,13 +68,14 @@ struct MediaView: View {
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
                     ForEach(self.$media_VM.medias) { $select_media in
-                        if let ui_image = select_media.thumbnailImage {
+                        if let thumbnailImage = select_media.thumbnailImage {
                             MediaImageGridView(
-                                is_select_mode_active: self.is_select_mode_active,
-                                ui_image: ui_image,
-                                media_select: $select_media,
-                                selected_media: self.$selectedItem,
-                                select_count: self.$select_count
+                                selectModeActive: self.is_select_mode_active,
+                                thumbnail: thumbnailImage,
+                                screenType: .Media,
+                                media: $select_media,
+                                selectedMedia: self.$selectedItem,
+                                selectCount: self.$select_count
                             )
                         }
                     }
@@ -163,7 +164,7 @@ struct MediaView: View {
             }
         }
         .fullScreenCover(isPresented: self.$slideShowViewModel.displaySlideshow) {
-            VerticalMediaView(list: self.media_VM.medias)
+            AutoScrollerView(orignalList: self.media_VM.medias)
         }
         .orientationLock(.all)
     }

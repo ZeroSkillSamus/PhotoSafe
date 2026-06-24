@@ -89,7 +89,7 @@ struct SecureOverlayContainer: View {
                     .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.25), value: authViewModel.showPrivacyOverlay)
+        //.animation(.easeInOut(duration: 0.25), value: authViewModel.showPrivacyOverlay)
         .animation(.easeInOut(duration: 0.25), value: authViewModel.isUnlocked)
     }
 }

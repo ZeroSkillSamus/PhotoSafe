@@ -32,7 +32,7 @@ struct WebNavigationBar: View {
                             .fontWeight(webViewModel.canGoBack ? .semibold : .regular)
                     }
                     .opacity(!webViewModel.canGoBack ? 0.5 : 1)
-                    .foregroundStyle(Color.c1_accent)
+                    .foregroundStyle(Color.c1_text)
                     .disabled(!webViewModel.canGoBack)
                     
                     Button {
@@ -43,11 +43,11 @@ struct WebNavigationBar: View {
                             .fontWeight(webViewModel.canGoFoward ? .bold : .regular)
                     }
                     .opacity(!webViewModel.canGoFoward ? 0.5 : 1)
-                    .foregroundStyle(Color.c1_accent)
+                    .foregroundStyle(Color.c1_text)
                     .disabled(!webViewModel.canGoFoward)
                 }
                 .padding(10)
-                .applyLiquidGlassIfSupported()
+                .applyLiquidGlassIfSupported(color: Color.c1_accent)
             }
             
             TextField("Enter url here...", text: self.$userInputText)
@@ -57,7 +57,7 @@ struct WebNavigationBar: View {
                 .truncationMode(.middle)
                 .background(Color.white.opacity(0.7))
                 .cornerRadius(8)
-                .foregroundStyle(Color.c1_accent)
+                .foregroundStyle(Color.c1_background)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
                 .onSubmit {
@@ -84,9 +84,10 @@ struct WebNavigationBar: View {
                     Text("X")
                         .font(.system(size: 20, weight: .semibold,design: .rounded))
                         .padding(11)
+                        .foregroundStyle(Color.c1_text)
                 }
-                .applyLiquidGlassIfSupported(shape: .circle)
-                .foregroundStyle(Color.c1_accent)
+                .applyLiquidGlassIfSupported(shape: .circle,color: Color.c1_accent)
+                
             } else {
                 Menu {
                     if webViewModel.currentUrl != nil {
@@ -136,9 +137,9 @@ struct WebNavigationBar: View {
                     Image(systemName: "ellipsis")
                         .font(.system(size: 20, design: .rounded))
                         .padding(10)
-                        .applyLiquidGlassIfSupported()
+                        .applyLiquidGlassIfSupported(color: Color.c1_accent)
                 }
-                .foregroundStyle(Color.c1_accent)
+                .foregroundStyle(Color.c1_text)
             }
             
         }
