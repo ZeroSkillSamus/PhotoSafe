@@ -992,6 +992,7 @@
 				DEVELOPMENT_TEAM = H3X5T2NC86;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use Face ID to unlock PhotoSafe.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Media To Library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to delete images and save images ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1024,6 +1025,7 @@
 				DEVELOPMENT_TEAM = H3X5T2NC86;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use Face ID to unlock PhotoSafe.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save Media To Library";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to delete images and save images ";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

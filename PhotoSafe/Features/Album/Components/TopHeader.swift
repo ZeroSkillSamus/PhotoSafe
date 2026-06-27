@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TopHeader: View {
+    @EnvironmentObject var favoritesViewModel: FavoriteViewModel
     @ObservedObject var album_vm: AlbumViewModel
     @Binding var is_edit_enabled: Bool
     
@@ -53,6 +54,7 @@ struct TopHeader: View {
             Button("Delete", role: .destructive) {
                 withAnimation(.easeInOut) {
                     self.album_vm.deleteAll()
+                    self.favoritesViewModel.setFavorites()
                 }
             }
             Button("Cancel", role: .cancel) { }

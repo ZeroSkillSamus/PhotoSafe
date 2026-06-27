@@ -28,6 +28,10 @@ struct LockView: View {
         return self.isSecure ? secure_handler() : self.numberInput
     }
     
+    var didUserFailToLogin: Bool {
+        self.passwordAttempt > 0
+    }
+    
     var body: some View {
         VStack {
             VStack {
@@ -66,9 +70,10 @@ struct LockView: View {
                         )
                         .opacity(0.75)
                         .foregroundStyle(Color.c1_text)
-                } else {
-                    if passwordAttempt > 0 {
-                        Text("Wrong Password")
+                }
+                else {
+                    if self.didUserFailToLogin {
+                        Text("Incorrect PIN")
                             .font(
                                 .system(
                                     size: 25,
@@ -78,7 +83,7 @@ struct LockView: View {
                             )
                             .foregroundStyle(Color.c1_text)
                         
-                        Text("Please try again and remember your PIN")
+                        Text("Please try again!")
                             .font(
                                 .system(
                                     size: 15,
