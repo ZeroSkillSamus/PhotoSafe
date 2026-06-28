@@ -13,6 +13,8 @@ struct NumPad: View {
     @Binding var passcode: String
     @Binding var isSecure: Bool
     
+    @State private var showFaceIDAlert: Bool = false
+    
     var body: some View {
         LazyVGrid(columns: [GridItem(),GridItem(),GridItem()], spacing: 15) {
             ForEach(1...9,id:\.self) { num in
@@ -28,10 +30,12 @@ struct NumPad: View {
                 .opacity(self.passcode.count == 6 ? 1 : 0)
             } else {
                 Button {
-                    print("soon")
+                    Task {
+                        self.showFaceIDAlert = await authViewmodel.faceIDAuthentification()
+                    }
                 } label: {
                     Image(systemName: "faceid")
-                        .font(.title2)
+                        .font(.title)
                         .foregroundStyle(Color.c1_accent)
                 }
             }
@@ -43,13 +47,18 @@ struct NumPad: View {
                 let _ = self.passcode.popLast()
             } label: {
                 Image(systemName: "delete.left")
-                    .font(.title2)
+                    .font(.title)
                     .foregroundColor(.red)
             }
             .opacity(self.passcode.isEmpty ? 0 : 1)
             //.animation(.easeInOut, value: self.passcode.isEmpty)
         }
         .animation(.easeInOut, value: self.passcode.isEmpty)
+        .alert("Face ID Unavailable", isPresented: $showFaceIDAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Use your PIN to unlock PhotoSafe.")
+        }
     }
     
     struct NumButton: View {

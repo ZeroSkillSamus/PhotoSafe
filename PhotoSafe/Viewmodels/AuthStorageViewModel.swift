@@ -6,7 +6,8 @@
 //
 
 import Foundation
- 
+import LocalAuthentication
+
 @MainActor
 class AuthStorageViewModel: ObservableObject {
     private let authService: AuthStorageService
@@ -44,5 +45,35 @@ class AuthStorageViewModel: ObservableObject {
     
     func lockApp() {
         self.isUnlocked = false
+    }
+    
+/// Initiates Face ID authentication flow
+    func faceIDAuthentification() async -> Bool {
+        let context = LAContext()
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            self.isUnlocked = false
+            return true
+        }
+        
+        let reason = "FaceID Needed To Login"
+        
+        do {
+            let success = try await context.evaluatePolicy(
+                .deviceOwnerAuthenticationWithBiometrics,
+                localizedReason: reason
+            )
+            
+            if success {
+                self.isUnlocked = true
+                return false
+            } else {
+                self.isUnlocked = false
+                return true
+            }
+        } catch {
+            self.isUnlocked = false
+            return false
+        }
     }
 }

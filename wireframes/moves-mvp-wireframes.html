@@ -1,0 +1,1448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moves MVP Wireframes</title>
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #6d6d6d;
+      --line: #cfcfcf;
+      --soft: #f5f5f2;
+      --paper: #ffffff;
+      --accent: #2f6f5e;
+      --accent-2: #c84f36;
+      --blue: #3267a8;
+      --shadow: 0 18px 50px rgba(20, 20, 20, 0.12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #e9e8e3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .side {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 28px 22px;
+      background: #fbfaf6;
+      border-right: 1px solid var(--line);
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      font-weight: 900;
+      background: #fff;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 22px;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+      margin: 24px 0;
+    }
+
+    .nav button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      border-color: var(--ink);
+      background: #fff;
+    }
+
+    .nav small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .notes {
+      display: grid;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .note {
+      padding: 12px;
+      border: 1px dashed #aaa;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .note p,
+    .note li {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .note ul {
+      margin: 0;
+      padding-left: 17px;
+    }
+
+    .canvas {
+      padding: 34px;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      max-width: 1180px;
+      margin: 0 auto 26px;
+    }
+
+    .topbar h2 {
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .topbar p {
+      max-width: 520px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .flow {
+      display: none;
+      grid-template-columns: minmax(280px, 390px) minmax(300px, 1fr);
+      align-items: start;
+      gap: 30px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .flow.active {
+      display: grid;
+    }
+
+    .phone {
+      width: min(100%, 390px);
+      min-height: 780px;
+      margin: 0 auto;
+      padding: 14px;
+      border: 2px solid #202020;
+      border-radius: 34px;
+      background: #111;
+      box-shadow: var(--shadow);
+    }
+
+    .screen {
+      position: relative;
+      min-height: 748px;
+      overflow: hidden;
+      border-radius: 24px;
+      background: var(--paper);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 28px;
+      padding: 0 18px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .appbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 18px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .appbar h3 {
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .icon-row {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 14px 16px 88px;
+    }
+
+    .search {
+      width: 100%;
+      height: 42px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7f7f4;
+      color: var(--muted);
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      margin: 12px 0 14px;
+      overflow: auto;
+      scrollbar-width: none;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .chip.active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .story-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    .story {
+      text-align: center;
+      font-size: 10px;
+      color: var(--muted);
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 5px;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: repeating-linear-gradient(135deg, #fff, #fff 7px, #deded8 7px, #deded8 14px);
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .post {
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .post-head,
+    .event-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px;
+    }
+
+    .mini-avatar {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      background: #e9e8e3;
+      flex: 0 0 auto;
+    }
+
+    .meta {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .meta strong,
+    .event-title {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 13px;
+    }
+
+    .meta span,
+    .event-meta,
+    .tiny {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .photo-block {
+      display: grid;
+      place-items: center;
+      height: 210px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(47, 111, 94, 0.15), rgba(200, 79, 54, 0.12)),
+        repeating-linear-gradient(45deg, #f3f3ef, #f3f3ef 12px, #e1e0da 12px, #e1e0da 24px);
+      color: #555;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .post-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      padding: 10px;
+    }
+
+    .action {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .event-list {
+      display: grid;
+      gap: 11px;
+    }
+
+    .event {
+      overflow: hidden;
+    }
+
+    .map-shell {
+      position: relative;
+      height: 322px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(50, 103, 168, 0.08) 1px, transparent 1px),
+        linear-gradient(rgba(50, 103, 168, 0.08) 1px, transparent 1px),
+        #f1f4ee;
+      background-size: 34px 34px;
+    }
+
+    .google-map {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: transparent;
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .map-pill {
+      padding: 7px 10px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.94);
+      font-size: 11px;
+      font-weight: 900;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .pin {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 2px solid #fff;
+      border-radius: 50% 50% 50% 6px;
+      background: var(--accent-2);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      transform: rotate(-45deg);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+    }
+
+    .pin span {
+      transform: rotate(45deg);
+    }
+
+    .pin.one {
+      left: 45%;
+      top: 42%;
+    }
+
+    .pin.two {
+      left: 64%;
+      top: 54%;
+      background: var(--accent);
+    }
+
+    .pin.three {
+      left: 28%;
+      top: 59%;
+      background: var(--blue);
+    }
+
+    .nearby-card {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .distance {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .date-tile {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 52px;
+      border: 1px solid var(--ink);
+      border-radius: 8px;
+      font-weight: 900;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .date-tile span {
+      display: block;
+      color: var(--accent-2);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .event-body {
+      padding: 0 11px 11px 68px;
+      margin-top: -5px;
+    }
+
+    .attendees {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .faces {
+      display: flex;
+    }
+
+    .face {
+      width: 22px;
+      height: 22px;
+      margin-left: -5px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background: #cfcfcf;
+    }
+
+    .face:first-child {
+      margin-left: 0;
+    }
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      height: 72px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .tab {
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .tab b {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: 13px;
+    }
+
+    .tab.active {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .detail-hero {
+      height: 250px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.2)),
+        repeating-linear-gradient(135deg, #ecebe5, #ecebe5 13px, #d7d6cf 13px, #d7d6cf 26px);
+    }
+
+    .floating-date {
+      position: absolute;
+      top: 214px;
+      right: 18px;
+      background: #fff;
+    }
+
+    .detail-copy {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .detail-copy h3 {
+      font-size: 25px;
+      line-height: 1.1;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .info-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .primary {
+      min-height: 46px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .secondary {
+      min-height: 42px;
+      border: 1px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .field,
+    textarea,
+    select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .upload {
+      display: grid;
+      place-items: center;
+      min-height: 140px;
+      border: 1px dashed #999;
+      border-radius: 8px;
+      background: #f7f7f4;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .profile-cover {
+      height: 132px;
+      background: repeating-linear-gradient(135deg, #e6e5df, #e6e5df 10px, #d4d3cd 10px, #d4d3cd 20px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .profile-head {
+      padding: 0 16px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .profile-avatar {
+      width: 82px;
+      height: 82px;
+      margin-top: -40px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: #f7f7f4;
+      outline: 1px solid var(--line);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      padding: 10px 6px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 16px;
+    }
+
+    .segment {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      margin: 14px 0;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7f7f4;
+    }
+
+    .segment button {
+      min-height: 34px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .segment button.active {
+      background: #fff;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .message {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      flex: 0 0 auto;
+    }
+
+    .spec {
+      display: grid;
+      gap: 16px;
+    }
+
+    .spec-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfaf6;
+    }
+
+    .spec-card h3 {
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .spec-card p,
+    .spec-card li {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .spec-card ul {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .journey {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .step {
+      min-height: 110px;
+      padding: 12px;
+      border: 1px dashed #999;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 12px;
+    }
+
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: relative;
+        height: auto;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .flow,
+      .flow.active {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        display: block;
+      }
+
+      .topbar p {
+        margin-top: 8px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .canvas {
+        padding: 20px 12px;
+      }
+
+      .nav {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar h2 {
+        font-size: 24px;
+      }
+
+      .phone {
+        min-height: auto;
+        padding: 10px;
+        border-radius: 26px;
+      }
+
+      .screen {
+        min-height: 700px;
+        border-radius: 18px;
+      }
+
+      .journey,
+      .split {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="workspace">
+    <aside class="side" aria-label="Wireframe navigation">
+      <div class="brand">
+        <div class="mark">M</div>
+        <div>
+          <h1>moves</h1>
+          <p class="subtitle">Social plans, public events, and friend activity in one MVP.</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="active" data-target="home">Home <small>feed</small></button>
+        <button data-target="discover">Discover <small>events</small></button>
+        <button data-target="nearby">Near Me <small>map</small></button>
+        <button data-target="detail">Event <small>RSVP</small></button>
+        <button data-target="create">Create <small>host</small></button>
+        <button data-target="profile">Profile <small>social</small></button>
+        <button data-target="inbox">Inbox <small>plans</small></button>
+      </nav>
+
+      <section class="notes">
+        <div class="note">
+          <strong>MVP thesis</strong>
+          <p>Moves should answer: what are my friends doing, what is happening nearby, and can I join or host in under a minute?</p>
+        </div>
+        <div class="note">
+          <strong>Core objects</strong>
+          <ul>
+            <li>Post: photo/video/text attached to a move.</li>
+            <li>Move: event with host, date, place, visibility, RSVP.</li>
+            <li>Circle: lightweight group for friends or interest crews.</li>
+          </ul>
+        </div>
+      </section>
+    </aside>
+
+    <section class="canvas">
+      <div class="topbar">
+        <div>
+          <h2 id="flow-title">Home feed</h2>
+          <p id="flow-copy">Friend posts blend with upcoming moves, so the app feels social before it feels like a ticketing tool.</p>
+        </div>
+      </div>
+
+      <section class="flow active" id="home">
+        <div class="phone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>5G 100%</span></div>
+            <header class="appbar">
+              <h3>moves</h3>
+              <div class="icon-row">
+                <button class="icon-button" title="Search">⌕</button>
+                <button class="icon-button" title="Notifications">!</button>
+              </div>
+            </header>
+            <div class="content">
+              <div class="story-row">
+                <div class="story"><div class="avatar"></div>You</div>
+                <div class="story"><div class="avatar"></div>Maya</div>
+                <div class="story"><div class="avatar"></div>Jay</div>
+                <div class="story"><div class="avatar"></div>Sam</div>
+                <div class="story"><div class="avatar"></div>More</div>
+              </div>
+
+              <article class="card post">
+                <div class="post-head">
+                  <div class="mini-avatar"></div>
+                  <div class="meta">
+                    <strong>Maya posted from Rooftop Friday</strong>
+                    <span>12 friends interested · Tonight</span>
+                  </div>
+                </div>
+                <div class="photo-block">event photo / short video</div>
+                <div class="post-actions">
+                  <button class="action">Like</button>
+                  <button class="action">Comment</button>
+                  <button class="action">Join</button>
+                  <button class="action">Share</button>
+                </div>
+              </article>
+
+              <article class="card event">
+                <div class="event-head">
+                  <div class="date-tile"><span>Jun</span>28</div>
+                  <div class="meta">
+                    <strong>Late Night Food Crawl</strong>
+                    <span>Lower East Side · $12 · 8:30 PM</span>
+                  </div>
+                </div>
+                <div class="event-body">
+                  <p class="tiny">Hosted by Jordan · 6 friends going</p>
+                  <div class="attendees">
+                    <div class="faces"><i class="face"></i><i class="face"></i><i class="face"></i></div>
+                    <span>Tap to see the group chat</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <nav class="bottom-nav">
+              <button class="tab active"><b>⌂</b>Home</button>
+              <button class="tab"><b>⌕</b>Find</button>
+              <button class="tab"><b>+</b>Create</button>
+              <button class="tab"><b>◌</b>Inbox</button>
+              <button class="tab"><b>•</b>Me</button>
+            </nav>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-card">
+            <h3>What this screen proves</h3>
+            <ul>
+              <li>Social content and events live in the same feed.</li>
+              <li>Every public event can become a conversation with friends.</li>
+              <li>Joining a move is as lightweight as liking or commenting.</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>V1 feed ranking</h3>
+            <p>Prioritize moves your friends are hosting, attending, or saving, then nearby public events by time. Keep creator posts simple: media, caption, linked move, and comments.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="flow" id="discover">
+        <div class="phone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>5G 100%</span></div>
+            <header class="appbar">
+              <h3>Discover</h3>
+              <button class="icon-button" title="Filters">≡</button>
+            </header>
+            <div class="content">
+              <input class="search" value="Search events, places, hosts" aria-label="Search">
+              <div class="chips">
+                <span class="chip active">Tonight</span>
+                <span class="chip">Music</span>
+                <span class="chip">Food</span>
+                <span class="chip">Free</span>
+                <span class="chip">Friends going</span>
+              </div>
+              <div class="event-list">
+                <article class="card event">
+                  <div class="photo-block" style="height: 136px;">map/photo preview</div>
+                  <div class="event-head">
+                    <div class="date-tile"><span>Jun</span>28</div>
+                    <div class="meta">
+                      <strong>Warehouse DJ Set</strong>
+                      <span>Brooklyn · $25 · 10 PM</span>
+                    </div>
+                  </div>
+                  <div class="event-body">
+                    <p class="tiny">Trending near you · 4 friends interested</p>
+                  </div>
+                </article>
+                <article class="card event">
+                  <div class="event-head">
+                    <div class="date-tile"><span>Jun</span>29</div>
+                    <div class="meta">
+                      <strong>Sunday Market Meetup</strong>
+                      <span>Union Square · Free · 11 AM</span>
+                    </div>
+                  </div>
+                  <div class="event-body">
+                    <p class="tiny">Hosted by Nina · Public move</p>
+                  </div>
+                </article>
+                <article class="card event">
+                  <div class="event-head">
+                    <div class="date-tile"><span>Jul</span>02</div>
+                    <div class="meta">
+                      <strong>Open Court Basketball</strong>
+                      <span>Riverside Park · Free · 6 PM</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+            <nav class="bottom-nav">
+              <button class="tab"><b>⌂</b>Home</button>
+              <button class="tab active"><b>⌕</b>Find</button>
+              <button class="tab"><b>+</b>Create</button>
+              <button class="tab"><b>◌</b>Inbox</button>
+              <button class="tab"><b>•</b>Me</button>
+            </nav>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-card">
+            <h3>Eventbrite-inspired MVP</h3>
+            <ul>
+              <li>Search by event title, host, venue, neighborhood, and category.</li>
+              <li>Filters stay minimal: date, price, category, distance, friends.</li>
+              <li>Event cards show social proof before long descriptions.</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>Discovery loop</h3>
+            <div class="journey">
+              <div class="step"><b>1. Browse</b><p>Tonight and weekend defaults.</p></div>
+              <div class="step"><b>2. Trust</b><p>Friends and host signals.</p></div>
+              <div class="step"><b>3. Save</b><p>Shortlist possible moves.</p></div>
+              <div class="step"><b>4. Join</b><p>RSVP or buy access.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="flow" id="nearby">
+        <div class="phone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>5G 100%</span></div>
+            <header class="appbar">
+              <h3>Near me</h3>
+              <button class="icon-button" title="Use current location">⌖</button>
+            </header>
+            <div class="content">
+              <input class="search" value="Google Maps · events near me" aria-label="Map search">
+              <div class="chips">
+                <span class="chip active">Open now</span>
+                <span class="chip">Tonight</span>
+                <span class="chip">Within 5 mi</span>
+                <span class="chip">Friends going</span>
+              </div>
+              <div class="map-shell" aria-label="Google Maps events near me">
+                <iframe
+                  class="google-map"
+                  title="Google Maps events near me"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  src="https://www.google.com/maps?q=events%20near%20me&output=embed"></iframe>
+                <div class="map-overlay">
+                  <span class="map-pill">12 moves nearby</span>
+                  <span class="map-pill">List</span>
+                </div>
+                <div class="pin one"><span>$</span></div>
+                <div class="pin two"><span>4</span></div>
+                <div class="pin three"><span>✓</span></div>
+              </div>
+              <div class="event-list">
+                <article class="card nearby-card">
+                  <div class="date-tile"><span>Jun</span>28</div>
+                  <div class="meta">
+                    <strong>Rooftop Salsa Night</strong>
+                    <span>0.8 mi · $18 · 7 friends interested</span>
+                  </div>
+                  <span class="distance">8 min</span>
+                </article>
+                <article class="card nearby-card">
+                  <div class="date-tile"><span>Jun</span>28</div>
+                  <div class="meta">
+                    <strong>Gallery After Hours</strong>
+                    <span>1.4 mi · Free · Hosted by Lena</span>
+                  </div>
+                  <span class="distance">14 min</span>
+                </article>
+                <article class="card nearby-card">
+                  <div class="date-tile"><span>Jun</span>29</div>
+                  <div class="meta">
+                    <strong>Pickup Soccer at Pier 40</strong>
+                    <span>2.1 mi · Friends-only move</span>
+                  </div>
+                  <span class="distance">22 min</span>
+                </article>
+              </div>
+            </div>
+            <nav class="bottom-nav">
+              <button class="tab"><b>⌂</b>Home</button>
+              <button class="tab"><b>⌕</b>Find</button>
+              <button class="tab active"><b>⌖</b>Map</button>
+              <button class="tab"><b>+</b>Create</button>
+              <button class="tab"><b>◌</b>Inbox</button>
+            </nav>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-card">
+            <h3>Map discovery</h3>
+            <ul>
+              <li>Use Google Maps for a fast MVP search surface: events near me, venues, neighborhoods, and directions.</li>
+              <li>Overlay Moves-specific pins for RSVP price, friend interest, and hosted-by-friend signals.</li>
+              <li>Keep the event list below the map so users can scan details without losing location context.</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>Near-me data needed</h3>
+            <p>Ask for location permission, geocode event venues, store latitude/longitude on each move, then sort by distance and time. V1 can open full directions in Google Maps after RSVP.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="flow" id="detail">
+        <div class="phone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>5G 100%</span></div>
+            <div class="detail-hero"></div>
+            <div class="date-tile floating-date"><span>Jun</span>28</div>
+            <div class="detail-copy">
+              <div>
+                <p class="tiny">Hosted by Jordan · Public move</p>
+                <h3>Late Night Food Crawl</h3>
+              </div>
+              <div class="pill-row">
+                <span class="chip">Food</span>
+                <span class="chip">21+</span>
+                <span class="chip">$12</span>
+                <span class="chip">6 friends going</span>
+              </div>
+              <div class="info-line"><b>⌚</b><span>Saturday, June 28 · 8:30 PM</span></div>
+              <div class="info-line"><b>⌖</b><span>Starts at Essex Market, New York</span></div>
+              <div class="info-line"><b>◌</b><span>Group chat opens after RSVP</span></div>
+              <p class="tiny">Three stops, shared bites, and a final dessert spot. Bring comfortable shoes and a little chaos.</p>
+              <button class="primary">RSVP to move</button>
+              <button class="secondary">Share with friends</button>
+            </div>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-card">
+            <h3>Detail page priority</h3>
+            <ul>
+              <li>Date, location, price, host, and friend attendance must be visible before the fold.</li>
+              <li>RSVP creates the social unlock: guest list, comments, and chat.</li>
+              <li>Paid ticketing can be deferred to Stripe Checkout or a hosted payment link for MVP.</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>Important states</h3>
+            <p>Public, friends-only, invite-only, sold out, waitlist, canceled, and past event. A social app needs those states as much as a ticketing app does.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="flow" id="create">
+        <div class="phone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>5G 100%</span></div>
+            <header class="appbar">
+              <h3>Create</h3>
+              <button class="secondary" style="min-height: 34px; padding: 0 12px;">Draft</button>
+            </header>
+            <div class="content">
+              <form class="form">
+                <div class="upload">Add cover photo or video</div>
+                <label>Move name
+                  <input class="field" value="Late Night Food Crawl">
+                </label>
+                <div class="split">
+                  <label>Date
+                    <input class="field" value="Jun 28">
+                  </label>
+                  <label>Time
+                    <input class="field" value="8:30 PM">
+                  </label>
+                </div>
+                <label>Location
+                  <input class="field" value="Essex Market">
+                </label>
+                <div class="split">
+                  <label>Visibility
+                    <select><option>Public</option><option>Friends only</option><option>Invite only</option></select>
+                  </label>
+                  <label>Price
+                    <input class="field" value="$12">
+                  </label>
+                </div>
+                <label>Description
+                  <textarea>Three stops, shared bites, final dessert spot.</textarea>
+                </label>
+                <button class="primary" type="button">Publish move</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-card">
+            <h3>Host MVP</h3>
+            <ul>
+              <li>Create event with title, media, date/time, place, price, category, capacity, visibility, and description.</li>
+              <li>Invite friends or circles after publish.</li>
+              <li>Let hosts post updates to attendees without building a full email tool in V1.</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>Keep creation fast</h3>
+            <p>The default should feel like making a social post. Extra Eventbrite-style controls belong behind advanced options once the host has a real need.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="flow" id="profile">
+        <div class="phone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>5G 100%</span></div>
+            <div class="profile-cover"></div>
+            <section class="profile-head">
+              <div class="profile-avatar"></div>
+              <h3>@maya</h3>
+              <p class="tiny">Food popups, dance floors, last-minute weekend plans.</p>
+              <div class="stats">
+                <div class="stat"><strong>18</strong><span class="tiny">moves</span></div>
+                <div class="stat"><strong>642</strong><span class="tiny">friends</span></div>
+                <div class="stat"><strong>41</strong><span class="tiny">hosted</span></div>
+              </div>
+            </section>
+            <div class="content">
+              <div class="segment">
+                <button class="active">Posts</button>
+                <button>Moves</button>
+                <button>Saved</button>
+              </div>
+              <article class="card post">
+                <div class="photo-block" style="height: 176px;">profile media grid</div>
+                <div class="post-head">
+                  <div class="meta">
+                    <strong>Last weekend at Vinyl Night</strong>
+                    <span>Tagged event · 28 likes</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <nav class="bottom-nav">
+              <button class="tab"><b>⌂</b>Home</button>
+              <button class="tab"><b>⌕</b>Find</button>
+              <button class="tab"><b>+</b>Create</button>
+              <button class="tab"><b>◌</b>Inbox</button>
+              <button class="tab active"><b>•</b>Me</button>
+            </nav>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-card">
+            <h3>Profile role</h3>
+            <ul>
+              <li>People need credibility as attendees and hosts.</li>
+              <li>Profiles should show upcoming moves, past hosted events, and social posts.</li>
+              <li>Saved events are private by default; attended and hosted can be visible.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="flow" id="inbox">
+        <div class="phone">
+          <div class="screen">
+            <div class="status"><span>9:41</span><span>5G 100%</span></div>
+            <header class="appbar">
+              <h3>Inbox</h3>
+              <button class="icon-button" title="New message">+</button>
+            </header>
+            <div class="content">
+              <div class="segment">
+                <button class="active">Plans</button>
+                <button>DMs</button>
+                <button>Alerts</button>
+              </div>
+              <div class="message">
+                <div class="dot"></div>
+                <div class="mini-avatar"></div>
+                <div class="meta">
+                  <strong>Late Night Food Crawl</strong>
+                  <span>Jordan: Meet at the front entrance.</span>
+                </div>
+              </div>
+              <div class="message">
+                <div class="mini-avatar"></div>
+                <div class="meta">
+                  <strong>Maya</strong>
+                  <span>Are you going to Warehouse DJ Set?</span>
+                </div>
+              </div>
+              <div class="message">
+                <div class="dot"></div>
+                <div class="mini-avatar"></div>
+                <div class="meta">
+                  <strong>Sunday Market Meetup</strong>
+                  <span>Host posted a new update.</span>
+                </div>
+              </div>
+            </div>
+            <nav class="bottom-nav">
+              <button class="tab"><b>⌂</b>Home</button>
+              <button class="tab"><b>⌕</b>Find</button>
+              <button class="tab"><b>+</b>Create</button>
+              <button class="tab active"><b>◌</b>Inbox</button>
+              <button class="tab"><b>•</b>Me</button>
+            </nav>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-card">
+            <h3>Plans inbox</h3>
+            <ul>
+              <li>Separate event logistics from normal DMs.</li>
+              <li>Every RSVP creates a lightweight thread with attendees and host updates.</li>
+              <li>Alerts cover invite accepted, price changed, time changed, and event canceled.</li>
+            </ul>
+          </div>
+          <div class="spec-card">
+            <h3>MVP notification triggers</h3>
+            <p>Friend invited you, friend RSVP'd, host update, event reminder, comment mention, ticket/RSVP confirmation, and event cancellation.</p>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const flows = {
+      home: {
+        title: "Home feed",
+        copy: "Friend posts blend with upcoming moves, so the app feels social before it feels like a ticketing tool."
+      },
+      discover: {
+        title: "Discover events",
+        copy: "Search and filters borrow from event marketplaces, but ranking is biased toward friends, hosts, and what is happening soon."
+      },
+      nearby: {
+        title: "Events near me",
+        copy: "A map-first view helps users find nearby moves fast, then compare them by distance, time, price, and friend activity."
+      },
+      detail: {
+        title: "Event detail",
+        copy: "The RSVP page should make the decision obvious: who, what, when, where, price, and which friends are involved."
+      },
+      create: {
+        title: "Create a move",
+        copy: "A host flow that starts like a post composer, then adds only the event fields required for a real plan."
+      },
+      profile: {
+        title: "Profile",
+        copy: "Profiles build social trust by showing attended moves, hosted moves, and normal posts in one place."
+      },
+      inbox: {
+        title: "Inbox and plans",
+        copy: "Event chats, updates, and direct messages are grouped so RSVPs turn into coordination instead of dead confirmations."
+      }
+    };
+
+    const buttons = [...document.querySelectorAll(".nav button")];
+    const sections = [...document.querySelectorAll(".flow")];
+    const title = document.querySelector("#flow-title");
+    const copy = document.querySelector("#flow-copy");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.target;
+        buttons.forEach((item) => item.classList.toggle("active", item === button));
+        sections.forEach((section) => section.classList.toggle("active", section.id === target));
+        title.textContent = flows[target].title;
+        copy.textContent = flows[target].copy;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  </script>
+</body>
+</html>
