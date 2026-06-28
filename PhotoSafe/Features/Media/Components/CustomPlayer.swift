@@ -66,7 +66,6 @@ struct NewCustomProgressBar: UIViewRepresentable {
                 parent.player_controller.player?.pause()
                 //let sec = Double(slider.value * Float(parent.player.currentItem?.duration.seconds ?? 0))
                 let sec = Double(slider.value * Float(parent.player_controller.player?.currentItem?.duration.seconds ?? 0))
-                //print("Hi")
                 parent.player_controller.player?.seek(to: CMTime(seconds:sec,preferredTimescale: 800))
             } else {
                 let sec = Double(slider.value * Float(parent.player_controller.player?.currentItem?.duration.seconds ?? 0))

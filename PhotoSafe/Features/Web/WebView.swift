@@ -21,10 +21,12 @@ struct WebView: UIViewRepresentable {
         )
         config.userContentController.addUserScript(disableCallout)
 
-        config.websiteDataStore = .default()
+        config.websiteDataStore = webViewModel.enablePrivateBrowsing
+            ? .nonPersistent()
+            : .default()
         config.allowsInlineMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = .audio
-
+        
         // Disable geolocation
         let blockGeolocationScript = WKUserScript(
             source: """
@@ -182,12 +184,6 @@ struct WebView: UIViewRepresentable {
                         }
                     }
 
-                    // Debug: always log what was captured so we can trace
-                    window.webkit.messageHandlers.debugVideoURLs.postMessage({
-                        found: !!video,
-                        captured: window.__capturedVideoURLs || []
-                    });
-
                     if (!video) return;
                     var src = resolveVideoSrc(video, path);
                     if (!src) return;
@@ -204,7 +200,6 @@ struct WebView: UIViewRepresentable {
         )
         config.userContentController.addUserScript(longPressScript)
         config.userContentController.add(context.coordinator, name: "imageLongPress")
-        config.userContentController.add(context.coordinator, name: "debugVideoURLs")
 
         let view = WKWebView(frame: .zero, configuration: config)
 
@@ -227,7 +222,6 @@ struct WebView: UIViewRepresentable {
 
     static func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
         uiView.configuration.userContentController.removeScriptMessageHandler(forName: "imageLongPress")
-        uiView.configuration.userContentController.removeScriptMessageHandler(forName: "debugVideoURLs")
         uiView.removeObserver(coordinator, forKeyPath: "estimatedProgress")
         uiView.removeObserver(coordinator, forKeyPath: "URL")
     }
@@ -251,10 +245,6 @@ struct WebView: UIViewRepresentable {
         }
 
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            if message.name == "debugVideoURLs" {
-                print("🎬 Captured video URLs:", message.body)
-                return
-            }
             guard message.name == "imageLongPress",
                   let body = message.body as? [String: Any],
                   let src = body["src"] as? String,
@@ -262,7 +252,6 @@ struct WebView: UIViewRepresentable {
                   let scheme = url.scheme?.lowercased(),
                   scheme == "https" || scheme == "http" else { return }
             let mediaType = (body["type"] as? String) == "video" ? WebMediaType.video : WebMediaType.image
-            print("Longpressed", mediaType)
             parent.webViewModel.pendingImageURL = ImageURLItem(url: src, mediaType: mediaType)
         }
 

@@ -22,8 +22,6 @@ struct ImageURLItem: Identifiable {
 @MainActor
 @Observable
 class WebViewModel {
-    private let defaultSearchEngine: String = "https://duckduckgo.com/?q="
-
     var pendingImageURL: ImageURLItem? = nil
     private(set) var sessionHistory: [DownloadMediaItem] = []
 
@@ -40,7 +38,22 @@ class WebViewModel {
     var canGoFoward: Bool = false
 
     var isNavigating: Bool = false
+    
+    private let userDefaults: UserDefaults
 
+    init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
+    }
+    
+    var enablePrivateBrowsing: Bool {
+        userDefaults.bool(forKey: StorageKeys.enablePrivateBrowser)
+    }
+    
+    private var defaultSearchEngine: SearchEngine {
+        let raw = userDefaults.string(forKey: StorageKeys.defaultSearchEngine)
+        return SearchEngine(rawValue: raw ?? "") ?? .duckduckgo
+    }
+    
     func update(url: URL?) {
         self.error = nil
         self.currentUrl = nil
@@ -56,9 +69,7 @@ class WebViewModel {
         let allTypes = WKWebsiteDataStore.allWebsiteDataTypes()
         
         dataStore.fetchDataRecords(ofTypes: allTypes) { records in
-            dataStore.removeData(ofTypes: allTypes, for: records) {
-                print("Successfully cleared all WKWebView cookies and cache.")
-            }
+            dataStore.removeData(ofTypes: allTypes, for: records) {}
         }
         // Clears variables
         self.clear()
@@ -121,7 +132,10 @@ class WebViewModel {
     }
 
     func clear() {
-        //webView?.load(URLRequest(url: URL(string: "about:blank")!))
+        if let blankURL = URL(string: "about:blank") {
+            webView?.load(URLRequest(url: blankURL))
+        }
+        
         self.webView = nil
         url = nil
         currentUrl = nil
@@ -138,7 +152,7 @@ class WebViewModel {
 
         if !isUrl(urlString: newUrl) {
             guard let encodedQuery = newUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
-            newUrl = defaultSearchEngine + encodedQuery
+            newUrl = defaultSearchEngine.searchBaseURL + encodedQuery
         } else if !newUrl.hasPrefix("https://") {
             newUrl = "https://" + newUrl
         } else if newUrl.hasPrefix("http://") {

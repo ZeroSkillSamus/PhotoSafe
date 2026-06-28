@@ -18,7 +18,6 @@ extension URL {
             let cgImage = try imageGenerator.copyCGImage(at: CMTime.zero, actualTime: nil)
             return UIImage(cgImage: cgImage).jpegData(compressionQuality: 1)
         } catch {
-            print("Error generating thumbnail: \(error.localizedDescription)")
             return nil
         }
     }
@@ -45,9 +44,8 @@ extension URL {
 //              guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return nil }
 //
 //              return UIImage(cgImage: cgImage).jpegData(compressionQuality: 0.5)
-//          } catch {
-//              print("Thumbnail error:", error)
-//              return nil
-//          }
+	//          } catch {
+	//              return nil
+	//          }
 //      }
 }

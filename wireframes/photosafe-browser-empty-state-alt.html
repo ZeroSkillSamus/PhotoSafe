@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhotoSafe Browser Empty State Alt</title>
+  <style>
+    :root {
+      --text: #e3e8f0;
+      --muted: rgba(227, 232, 240, 0.64);
+      --background: #080b0e;
+      --primary: #a5b6ce;
+      --secondary: #3e3867;
+      --accent: #896db0;
+      --panel: rgba(62, 56, 103, 0.72);
+      --panel-soft: rgba(62, 56, 103, 0.34);
+      --border: rgba(227, 232, 240, 0.12);
+      --green: #68d391;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #15181d;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    button {
+      border: 0;
+      color: inherit;
+      font: inherit;
+    }
+
+    .phone {
+      width: min(390px, 100vw);
+      height: min(844px, 100vh);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 34px;
+      background: var(--background);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+    }
+
+    .app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--background);
+    }
+
+    .status {
+      height: 44px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0 28px 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .nav {
+      min-height: 58px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      background: var(--secondary);
+    }
+
+    .address {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      padding: 0 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.74);
+      color: rgba(8, 11, 14, 0.92);
+      font-size: 14px;
+      font-weight: 720;
+    }
+
+    .menu {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(137, 109, 176, 0.42);
+      border: 1px solid var(--border);
+      font-weight: 850;
+    }
+
+    .content {
+      flex: 1;
+      overflow: auto;
+      padding: 18px 16px 96px;
+    }
+
+    .hero {
+      display: grid;
+      gap: 16px;
+      padding: 22px 18px 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--panel);
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 17px;
+      background: rgba(8, 11, 14, 0.27);
+    }
+
+    .icon svg {
+      width: 34px;
+      height: 34px;
+      fill: none;
+      stroke: var(--text);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.9;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--primary);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(8, 11, 14, 0.22);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--muted);
+    }
+
+    .dot.on {
+      background: var(--green);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .action {
+      min-height: 46px;
+      border-radius: 13px;
+      background: rgba(8, 11, 14, 0.24);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      font-weight: 820;
+    }
+
+    .action.primary {
+      background: var(--accent);
+    }
+
+    .section-title {
+      margin: 22px 0 9px 3px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 820;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 12px;
+      align-items: center;
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--panel-soft);
+    }
+
+    .number {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(137, 109, 176, 0.72);
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 820;
+    }
+
+    .card-copy {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .mini-settings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mini-setting {
+      min-height: 64px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(62, 56, 103, 0.42);
+    }
+
+    .mini-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .mini-value {
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .tabbar {
+      height: 82px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: start;
+      padding: 10px 10px 0;
+      background: var(--secondary);
+      border-top: 1px solid rgba(227, 232, 240, 0.08);
+    }
+
+    .tab {
+      display: grid;
+      gap: 4px;
+      place-items: center;
+      color: rgba(227, 232, 240, 0.72);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .tab-icon {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      font-size: 15px;
+    }
+
+    .tab.active {
+      color: var(--text);
+    }
+
+    .tab.active .tab-icon {
+      background: rgba(137, 109, 176, 0.52);
+    }
+
+    @media (max-width: 360px) {
+      .content {
+        padding-inline: 12px;
+      }
+
+      .hero {
+        padding-inline: 14px;
+      }
+
+      .mini-settings {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone" aria-label="PhotoSafe alternate browser empty state mock">
+    <section class="app">
+      <div class="status">
+        <span>9:41</span>
+        <span>5G 100%</span>
+      </div>
+
+      <nav class="nav" aria-label="Browser controls">
+        <div class="address">⌕ Search or enter website</div>
+        <button class="menu" aria-label="Browser menu">•••</button>
+      </nav>
+
+      <div class="content">
+        <section class="hero">
+          <div class="hero-top">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <path d="M24 5l15 6v11c0 10-6.4 17.6-15 21-8.6-3.4-15-11-15-21V11l15-6z"></path>
+                <path d="M18 24h12"></path>
+                <path d="M24 18v12"></path>
+              </svg>
+            </div>
+            <div>
+              <h1>Ready to Browse</h1>
+              <p class="subtitle">Standard mode is active. Long-press images or videos on a page to save them into an album.</p>
+            </div>
+          </div>
+
+          <div class="mode-row" aria-label="Current browser settings">
+            <span class="pill"><span class="dot on"></span>DuckDuckGo</span>
+            <span class="pill"><span class="dot"></span>Private Off</span>
+            <span class="pill"><span class="dot"></span>Clear on Background Off</span>
+          </div>
+
+          <div class="actions">
+            <button class="action primary">Start Browsing</button>
+            <button class="action">Settings</button>
+          </div>
+        </section>
+
+        <h2 class="section-title">Save Media</h2>
+        <section class="cards" aria-label="Save media instructions">
+          <article class="card">
+            <div class="number">1</div>
+            <div>
+              <div class="card-title">Open a media page</div>
+              <p class="card-copy">Use the search bar above, then browse inside PhotoSafe.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="number">2</div>
+            <div>
+              <div class="card-title">Press and hold</div>
+              <p class="card-copy">Hold an image or video until the album picker appears.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="number">3</div>
+            <div>
+              <div class="card-title">Pick an album</div>
+              <p class="card-copy">Downloads appear in Saved This Session while they finish.</p>
+            </div>
+          </article>
+        </section>
+
+        <h2 class="section-title">Browser Settings</h2>
+        <section class="mini-settings">
+          <div class="mini-setting">
+            <div class="mini-label">Mode</div>
+            <div class="mini-value">Standard</div>
+          </div>
+          <div class="mini-setting">
+            <div class="mini-label">History</div>
+            <div class="mini-value">Session Only</div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="tabbar" aria-label="Main tabs">
+        <div class="tab">
+          <div class="tab-icon">▦</div>
+          Albums
+        </div>
+        <div class="tab">
+          <div class="tab-icon">♡</div>
+          Favorites
+        </div>
+        <div class="tab active">
+          <div class="tab-icon">⌕</div>
+          Browser
+        </div>
+        <div class="tab">
+          <div class="tab-icon">⚙</div>
+          Settings
+        </div>
+        <div class="tab">
+          <div class="tab-icon">＋</div>
+          Add
+        </div>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>

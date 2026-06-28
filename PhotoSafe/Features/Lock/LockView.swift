@@ -145,6 +145,7 @@ struct LockView: View {
             Spacer()
         }
         .padding(.horizontal)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.c1_background)
         .onChange(of: self.numberInput) { _, new in
             if !self.authViewModel.isPinSet {

@@ -53,7 +53,6 @@ struct AutoScrollerView: View {
 
                         Button {
                             self.showOptionsSheet.toggle()
-//                            print("TODO")
                         } label: {
                             Image(systemName: "ellipsis")
                                 .foregroundStyle(Color.c1_text)

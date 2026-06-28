@@ -43,7 +43,6 @@ struct MediaImageGridView: View {
     }
     
     private func onTapSelect() {
-        print("asdsa")
         if self.selectModeActive {
             switch media.select {
             case .blank:

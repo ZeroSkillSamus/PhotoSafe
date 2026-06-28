@@ -146,7 +146,6 @@ struct FavoritesView: View {
 i = 0
 total = 45
 while i < total {
-    print(i,total)
     i = i + 1
 }
  

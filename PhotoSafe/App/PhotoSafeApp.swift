@@ -24,10 +24,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     var secureWindow: UIWindow?
     
+    override init() {
+        AppDefaults.register()
+        super.init()
+    }
+    
     // Hold a reference to the view model so both windows can read it
     private let authViewModel = AuthStorageViewModel()
     private let webViewModel = WebViewModel()
     private let slideShowViewModel = SlideShowViewModel()
+    private let appSettingsViewModel = AppSettingsViewModel()
+    private let folderBookmarkViewModel = FolderBookmarkViewModel()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
@@ -35,7 +42,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // 1. App Window
         let mainWindow = UIWindow(windowScene: windowScene)
         mainWindow.rootViewController = UIHostingController(
-            rootView: BottomTabNavigation().environmentObject(authViewModel).environmentObject(slideShowViewModel).environment(webViewModel)
+            rootView: BottomTabNavigation()
+                .environmentObject(authViewModel)
+                .environmentObject(slideShowViewModel)
+                .environment(webViewModel)
+                .environmentObject(appSettingsViewModel)
+                .environment(folderBookmarkViewModel)
         )
         self.window = mainWindow
         mainWindow.makeKeyAndVisible()
@@ -47,7 +59,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         topWindow.authViewModel = authViewModel
 
         let secureVC = UIHostingController(
-            rootView: SecureOverlayContainer().environmentObject(authViewModel)
+            rootView: SecureOverlayContainer()
+                .environmentObject(authViewModel)
+                .environmentObject(appSettingsViewModel)
         )
         secureVC.view.backgroundColor = .clear
         topWindow.rootViewController = secureVC
@@ -61,14 +75,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        if authViewModel.isUnlocked {
+        if authViewModel.isUnlocked && self.appSettingsViewModel.enablePrivacyScreen {
             authViewModel.showPrivacyOverlay = true
         }
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         authViewModel.lockApp()
-        webViewModel.clear()  // clear alongside lock
+        // Settings handler for clearing browser data if enabled
+        if appSettingsViewModel.enableAutoClearingBrowserData {
+            webViewModel.clearAllCookiesAndCache()
+        } else {
+            webViewModel.clear()
+        }
+        
     }
 }
 
@@ -80,7 +100,7 @@ struct SecureOverlayContainer: View {
             // Lower priority (bottom)
             if !authViewModel.isUnlocked {
                 LockView()
-                    .transition(.move(edge: .bottom))
+                    .transition(.opacity)
             }
             
             // Higher priority (top)
@@ -89,8 +109,7 @@ struct SecureOverlayContainer: View {
                     .transition(.opacity)
             }
         }
-        //.animation(.easeInOut(duration: 0.25), value: authViewModel.showPrivacyOverlay)
-        .animation(.easeInOut(duration: 0.25), value: authViewModel.isUnlocked)
+        .animation(.easeInOut, value: authViewModel.isUnlocked)
     }
 }
 
@@ -117,5 +136,8 @@ struct AppPrivacyOverlay: View {
         }
         .frame(maxWidth: .infinity,maxHeight: .infinity)
         .background(Color.c1_background)
+        .onAppear {
+            hideKeyboard()
+        }
     }
 }

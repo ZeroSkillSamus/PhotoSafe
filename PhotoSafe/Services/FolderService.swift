@@ -46,9 +46,12 @@ final class FolderService: FolderServiceProtocol {
     }
     
     func deleteAll() throws {
-        let deleteRequest = FolderEntity.deleteRequest()
-        do { try self.context.execute(deleteRequest) }
-        catch (let error) { throw error }
+        let folders = self.fetchAllFolders()
+        for folder in folders {
+            self.context.delete(folder)
+        }
+        
+        try self.context.save()
     }
     
     func delete(folder: FolderEntity) throws {

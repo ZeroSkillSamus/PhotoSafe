@@ -24,6 +24,7 @@ protocol MediaServiceProtocol {
     func fetchFavorites() -> [MediaEntity]
     func favorite(for id: UUID) throws -> MediaEntity
     func unfavorite(for id: UUID) throws -> MediaEntity
+    func calculateAllStorageUsed() throws -> MediaStorageSummary?
     //func fetchById(id: UUID) throws -> MediaEntity?
 }
 
@@ -136,5 +137,40 @@ final class MediaService: MediaServiceProtocol {
         let request = MediaEntity.fetchRequest()
         request.predicate = NSPredicate(format: "is_favorited == YES")
         return (try? context.fetch(request)) ?? []
+    }
+    
+    func calculateAllStorageUsed() throws -> MediaStorageSummary? {
+        let request = MediaEntity.fetchRequest()
+        do {
+            let mediaItems = try self.context.fetch(request)
+            let fileManager = FileManager.default
+            
+            var imageBytes: Int64 = 0
+            var thumbnailBytes: Int64 = 0
+            var videoBytes: Int64 = 0
+            
+            for media in mediaItems {
+                imageBytes += Int64(media.image_data.count)
+                thumbnailBytes += Int64(media.thumbnail.count)
+                if let videoPath = media.video_path,
+                   let url = URL(string: videoPath) {
+                    let path = url.isFileURL ? url.path : videoPath
+
+                    if let attributes = try? fileManager.attributesOfItem(atPath: path),
+                       let fileSize = attributes[.size] as? NSNumber {
+                        videoBytes += fileSize.int64Value
+                    }
+                }
+            }
+            
+            return MediaStorageSummary(
+                mediaCount: mediaItems.count,
+                imageBytes: imageBytes,
+                thumbnailBytes: thumbnailBytes,
+                videoBytes: videoBytes
+            )
+        } catch (let error) {
+            throw error
+        }
     }
 }

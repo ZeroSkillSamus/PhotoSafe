@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhotoSafe Confirm PIN Wireframe</title>
+  <style>
+    :root {
+      --text: #e3e8f0;
+      --muted: rgba(227, 232, 240, 0.66);
+      --background: #080b0e;
+      --primary: #a5b6ce;
+      --secondary: #3e3867;
+      --accent: #896db0;
+      --surface: rgba(62, 56, 103, 0.58);
+      --danger: #f36b7b;
+      --danger-bg: rgba(243, 107, 123, 0.14);
+      --divider: rgba(227, 232, 240, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #15181d;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    .phone {
+      width: min(390px, 100vw);
+      height: min(844px, 100vh);
+      overflow: hidden;
+      position: relative;
+      background: var(--background);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 34px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+    }
+
+    .app {
+      min-height: 100%;
+      background: var(--background);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .status {
+      height: 44px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      padding: 0 28px 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .header {
+      height: 44px;
+      display: grid;
+      grid-template-columns: 70px 1fr 70px;
+      align-items: center;
+      padding: 0 16px;
+      background: var(--secondary);
+    }
+
+    .header h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .content {
+      flex: 1;
+      padding: 18px 16px 110px;
+    }
+
+    .section-title {
+      margin: 0 0 9px 3px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .group {
+      overflow: hidden;
+      border-radius: 15px;
+      border: 1px solid var(--divider);
+      background: rgba(62, 56, 103, 0.24);
+    }
+
+    .row {
+      min-height: 64px;
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      background: var(--surface);
+    }
+
+    .icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      font-size: 17px;
+    }
+
+    .label {
+      min-width: 0;
+    }
+
+    .title {
+      margin-bottom: 3px;
+      font-size: 16px;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .danger-value {
+      color: var(--danger);
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .scrim {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: end;
+      background: rgba(0, 0, 0, 0.46);
+    }
+
+    .sheet {
+      width: 100%;
+      padding: 10px 18px 24px;
+      border-radius: 24px 24px 0 0;
+      background: #0a0d11;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.45);
+    }
+
+    .grabber {
+      width: 44px;
+      height: 5px;
+      margin: 0 auto 18px;
+      border-radius: 999px;
+      background: rgba(227, 232, 240, 0.28);
+    }
+
+    .sheet-header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .shield {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 10px;
+      border-radius: 15px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      font-size: 22px;
+    }
+
+    .sheet-title {
+      margin: 0 0 6px;
+      font-size: 22px;
+      font-weight: 820;
+    }
+
+    .sheet-subtitle {
+      max-width: 300px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .pin-dots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 18px 0 10px;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      border: 2px solid rgba(227, 232, 240, 0.5);
+    }
+
+    .dot.filled {
+      border-color: var(--text);
+      background: var(--text);
+    }
+
+    .error {
+      height: 18px;
+      margin-bottom: 10px;
+      color: var(--danger);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .key {
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: rgba(62, 56, 103, 0.72);
+      border: 1px solid rgba(227, 232, 240, 0.08);
+      font-size: 24px;
+      font-weight: 760;
+    }
+
+    .key.secondary {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .button {
+      min-height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .button.cancel {
+      background: rgba(62, 56, 103, 0.72);
+      color: var(--text);
+    }
+
+    .button.destructive {
+      background: var(--danger);
+      color: #20070b;
+    }
+  </style>
+</head>
+<body>
+  <main class="phone" aria-label="PhotoSafe Confirm PIN wireframe">
+    <div class="app">
+      <div class="status">
+        <span>9:41</span>
+        <span>5G 100%</span>
+      </div>
+
+      <header class="header">
+        <span></span>
+        <h1>Settings</h1>
+        <span></span>
+      </header>
+
+      <section class="content">
+        <h2 class="section-title">Danger Zone</h2>
+        <div class="group">
+          <div class="row">
+            <div class="icon">!</div>
+            <div class="label">
+              <div class="title">Delete All Media</div>
+              <div class="subtitle">Remove every saved photo, video, and album from PhotoSafe</div>
+            </div>
+            <div class="danger-value">Delete</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="scrim">
+      <section class="sheet" aria-label="Confirm PIN sheet">
+        <div class="grabber"></div>
+
+        <div class="sheet-header">
+          <div class="shield">!</div>
+          <h2 class="sheet-title">Confirm PIN</h2>
+          <p class="sheet-subtitle">
+            Enter your PIN to permanently delete all albums and media from PhotoSafe.
+          </p>
+        </div>
+
+        <div class="pin-dots" aria-label="PIN entry">
+          <span class="dot filled"></span>
+          <span class="dot filled"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+
+        <div class="error">Wrong PIN. Try again.</div>
+
+        <div class="keypad" aria-label="Number pad">
+          <div class="key">1</div>
+          <div class="key">2</div>
+          <div class="key">3</div>
+          <div class="key">4</div>
+          <div class="key">5</div>
+          <div class="key">6</div>
+          <div class="key">7</div>
+          <div class="key">8</div>
+          <div class="key">9</div>
+          <div class="key secondary">Cancel</div>
+          <div class="key">0</div>
+          <div class="key secondary">Delete</div>
+        </div>
+
+        <div class="actions">
+          <div class="button cancel">Cancel</div>
+          <div class="button destructive">Delete All</div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
