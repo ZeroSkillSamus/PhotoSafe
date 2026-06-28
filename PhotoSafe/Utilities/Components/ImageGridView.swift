@@ -8,23 +8,28 @@
 import SwiftUI
 
 struct ImageGridView: View {
-    let ui_image: UIImage
+    let thumbnail: UIImage
     let media: SelectMediaEntity
     
-    var display_if_favorited: Bool = true
+    var screenType: ScreenType
+    //var display_if_favorited: Bool = true
     
-    var show_background: Bool {
+    var showBackground: Bool {
         media.isFavorited || media.type == MediaType.Video.rawValue
     }
     
+    var isFavoritesAndScreenTypeMedia: Bool {
+        media.isFavorited && screenType == .Media
+    }
+    
     var body: some View {
-        Image(uiImage: ui_image)
+        Image(uiImage: thumbnail)
             .resizable()
             .aspectRatio(1, contentMode: .fill)
             .scaleEffect(1.1)
             .clipShape(RoundedRectangle(cornerRadius: 5))
             .overlay(alignment: .topLeading) {
-                if show_background {
+                if showBackground {
                     HStack {
                         if media.type == MediaType.Video.rawValue {
                             Image(systemName: "video.fill")
@@ -34,14 +39,14 @@ struct ImageGridView: View {
                         
                         Spacer()
                         
-                        if media.isFavorited && display_if_favorited {
+                        if self.isFavoritesAndScreenTypeMedia {
                             Image(systemName: "heart.fill")
                                 .foregroundStyle(.pink)
                                 .font(.caption)
                         }
                     }
                     .padding(5)
-                    .background(!(media.isFavorited && display_if_favorited) ? .clear : .black.opacity(0.30))
+                    .background(!(isFavoritesAndScreenTypeMedia) ? .clear : .black.opacity(0.30))
                 }
             }
     }

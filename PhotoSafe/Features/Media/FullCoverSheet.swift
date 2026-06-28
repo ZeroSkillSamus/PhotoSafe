@@ -26,7 +26,7 @@ struct FullCoverSheet: View {
     @EnvironmentObject private var favoriteViewModel: FavoriteViewModel
     @EnvironmentObject private var slideShowViewModel: SlideShowViewModel
     
-    // MARK: - Constants130597
+    // MARK: - Constants
     private let windowSize = 9
     
     @State private var currentMediaId: UUID?
@@ -34,7 +34,6 @@ struct FullCoverSheet: View {
     @State private var userTapped: Bool = false
     
     // Sheets to toggle
-    //@State private var showAutoScrollerSheet: Bool = false
     @State private var displayMoveSheet: Bool = false
     
     // Variables needed for list
@@ -65,6 +64,7 @@ struct FullCoverSheet: View {
         return self.mediaList.first(where: { $0.id == currentMediaId })?.isFavorited ?? false
     }
     
+    // MARK: - Body 
     var body: some View {
         ZStack {
             LazyPagerView(
@@ -144,6 +144,8 @@ struct FullCoverSheet: View {
         }
     }
     
+    // MARK: - Header Views
+    
     private func bottomHeader() -> some View {
         HStack {
             if self.screenType == .Media {
@@ -179,7 +181,7 @@ struct FullCoverSheet: View {
             Button {
                 self.slideShowViewModel.showSettings = true
             } label: {
-                Image(systemName: "play")
+                Image(systemName: "play.fill")
                     .font(.system(size: 17, design: .rounded))
                     .foregroundStyle(Color.c1_text)
                     .padding(10)

@@ -22,6 +22,7 @@ struct LazyPagerView: View {
     @Binding var windowListIndex: Int
     @Binding var backgroundOpacity: CGFloat
     @Binding var userTapped: Bool
+    var handleOnVideoEnd: (() -> Void)?
     
     var directionDecoded: Direction {
         switch direction {
@@ -144,7 +145,7 @@ struct LazyPagerView: View {
                 if let thumbnail = element.thumbnailImage {
                     if isDisplay, let path = element.videoPath, let url = URL(string: path) {
                         if self.windowedList[self.windowListIndex] == element { // needed to stop video from preloading
-                            PlayerView(url: url)
+                            PlayerView(url: url,handleOnVideoEnd: self.handleOnVideoEnd) 
                         }
                     } else {
                         image_view(thumbnail)

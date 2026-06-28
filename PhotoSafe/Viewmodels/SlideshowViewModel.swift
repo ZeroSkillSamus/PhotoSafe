@@ -12,7 +12,7 @@ class SlideShowViewModel: ObservableObject {
     // Settings for setting auto play
     @Published var showSettings: Bool = false
     @Published var autoPlayEnabled: Bool = false
-    @Published var slideShowDirection: SlideShowType = .horizontal
+    @Published var slideShowDirection: SlideShowType = .vertical
     @Published var timeInteval: TimeInterval = 2
     @Published var isShuffleEnabled: Bool = false
     

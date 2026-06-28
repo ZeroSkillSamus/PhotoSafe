@@ -34,6 +34,7 @@ struct PlayerView: View {
     @State private var is_video_playing: Bool = true
 
     let url: URL
+    var handleOnVideoEnd: (() -> Void)?
     
     func add_time_observer() {
         self.controller.player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 800), queue: .main, using: { time in
@@ -71,11 +72,21 @@ struct PlayerView: View {
                 .onAppear {
                     self.add_time_observer()
                     self.controller.player?.play()
+                    
+                    // Add oberser for if player finished 
                 }
                 .onDisappear {
                     self.controller.player?.pause()
                 }
-
+                .onReceive(NotificationCenter.default.publisher(
+                    for: .AVPlayerItemDidPlayToEndTime,
+                    object: controller.player?.currentItem
+                )) { _ in
+                    if let handleOnVideoEnd {
+                        handleOnVideoEnd()
+                    }
+                }
+            
             Color.clear
                 .contentShape(Rectangle())
                 .onTapGesture {

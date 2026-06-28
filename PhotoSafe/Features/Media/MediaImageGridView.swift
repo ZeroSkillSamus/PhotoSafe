@@ -8,50 +8,16 @@
 import SwiftUI
 
 struct MediaImageGridView: View {
-    var is_select_mode_active: Bool
-    var ui_image: UIImage
-    var display_if_favorited: Bool = true // Used to display if_favorited should be displayed
+    var selectModeActive: Bool
+    var thumbnail: UIImage
+    var screenType: ScreenType
     
-    @Binding var media_select: SelectMediaEntity
-    @Binding var selected_media: SelectMediaEntity? // Used for opening sheet when not in select mode
-    @Binding var select_count: Int
-
-    var show_background: Bool {
-        media_select.isFavorited || media_select.type == MediaType.Video.rawValue
-    }
-    
-    var body: some View {
-        ImageGridView(
-            ui_image: ui_image,
-            media: self.media_select,
-            display_if_favorited: display_if_favorited
-        )
-            .overlay(
-                RoundedRectangle(cornerRadius: 5)
-                    .stroke(determine_color(media: media_select), lineWidth: 2)
-            )
-            .onTapGesture { select_handler() }
-    }
-    
-    private func select_handler() {
-        if self.is_select_mode_active {
-            switch media_select.select {
-            case .blank:
-                media_select.select = .checked
-                self.select_count = select_count + 1
-            case .checked:
-                media_select.select = .blank
-                self.select_count = select_count - 1
-            }
-        } else {
-            self.selected_media = media_select
-        }
-    }
-    
-    /// Determines the color of the selected item
-    /// Green -> Checked
-    private func determine_color(media: SelectMediaEntity) -> Color {
-        if self.is_select_mode_active {
+    @Binding var media: SelectMediaEntity           // Used to display the thumbnail
+    @Binding var selectedMedia: SelectMediaEntity?  // Used for opening sheet when not in select mode
+    @Binding var selectCount: Int
+ 
+    var determineColor: Color {
+        if self.selectModeActive {
             switch media.select {
             case .blank:
                 return .clear
@@ -60,6 +26,35 @@ struct MediaImageGridView: View {
             }
         } else {
             return .clear
+        }
+    }
+    
+    var body: some View {
+        ImageGridView(
+            thumbnail: thumbnail,
+            media: self.media,
+            screenType: screenType
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(determineColor, lineWidth: 2)
+        )
+        .onTapGesture { onTapSelect() }
+    }
+    
+    private func onTapSelect() {
+        print("asdsa")
+        if self.selectModeActive {
+            switch media.select {
+            case .blank:
+                media.select = .checked
+                self.selectCount += 1
+            case .checked:
+                media.select = .blank
+                self.selectCount += 1
+            }
+        } else {
+            self.selectedMedia = media
         }
     }
 }

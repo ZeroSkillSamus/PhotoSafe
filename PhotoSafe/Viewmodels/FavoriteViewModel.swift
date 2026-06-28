@@ -16,7 +16,7 @@ final class FavoriteViewModel: ObservableObject {
         self.service = service
     }
     
-    func unselect_all() {
+    func unSelectAll() {
         self.favoritesList = self.favoritesList.map { element in
             if element.select == .checked {
                 var new_element = element
@@ -27,23 +27,19 @@ final class FavoriteViewModel: ObservableObject {
         }
     }
     
+    func unFavoriteSelected() {
+        do {
+            defer { self.setFavorites() }
+            let selectedList = self.favoritesList.filter({$0.select == .checked })
+            for media in selectedList {
+                _ = try self.service.unfavorite(for: media.id)
+            }
+        } catch (let error) {
+            print(error.localizedDescription)
+        }
+    }
+    
     func setFavorites() {
         self.favoritesList = self.service.fetchFavorites().map({ SelectMediaEntity(media: $0) })
     }
-    
-//    func add_or_delete_from_favorites(for new_media: MediaEntity) {
-//        let select_media = SelectMediaEntity(media: new_media)
-//        if new_media.is_favorited { self.add_to_favorites(for: select_media) }
-//        else { self.delete_favorited(media: new_media) }
-//    }
-    
-//    private func add_to_favorites(for new_media: SelectMediaEntity) {
-//        self.favoritesList.append(new_media)
-//    }
-//    
-//    private func delete_favorited(media: MediaEntity) {
-//        if let index = self.favoritesList.firstIndex(where: {$0.id == media.id}) {
-//            self.favoritesList.remove(at: index)
-//        }
-//    }
 }
