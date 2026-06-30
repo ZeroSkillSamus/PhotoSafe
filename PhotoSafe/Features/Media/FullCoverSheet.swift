@@ -13,6 +13,8 @@ import LazyPager
 enum ScreenType {
     case Favorite
     case Media
+    case Auth
+    case DeleteAll
 }
 
 enum FavoriteStatus: String {
@@ -221,7 +223,6 @@ struct FullCoverSheet: View {
                     adjustWindowSizeForMediaButtons(currentListIndex: currentListIndex)
                 } catch (let error) {
                     self.mediaViewModel.setToast(message: error.localizedDescription, status: .failure)
-                    print("Failed to delete: \(error.localizedDescription))")
                 }
             }
         }
@@ -247,7 +248,6 @@ struct FullCoverSheet: View {
                     adjustWindowSizeForMediaButtons(currentListIndex: currentListIndex)
                 } catch {
                     self.mediaViewModel.setToast(message: "Failed to move media to \(album.name)", status: .failure)
-                    print("Failed to delete: \(error.localizedDescription))")
                 }
                 
             }

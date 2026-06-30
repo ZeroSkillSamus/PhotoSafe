@@ -109,7 +109,6 @@ struct BottomHeader: View {
         }
         .onChange(of: self.selected_media) {
             Task {
-                print("asdjlhasdhjasdhjkasdhjkasdhjk")
                 await self.media_VM.add_imported_photos(to:album, from:self.selected_media)
                 self.selected_media.removeAll()
             }

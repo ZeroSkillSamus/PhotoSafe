@@ -81,7 +81,6 @@ struct BookmarkShowView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     Button {
-                        print("Create folder")
                     } label: {
                         Image(systemName: "plus")
                             .font(.system(size: 18, design: .rounded))
@@ -108,6 +107,7 @@ struct BookmarkShowView: View {
                         Button {
                             self.webViewModel.update(url: bookmark.url)
                             self.webViewModel.webView?.load(URLRequest(url: bookmark.url))
+                            
                             self.isInputFocused = false
                             self.isPresented = false
                         } label: {
@@ -142,6 +142,8 @@ struct BookmarkShowView: View {
                     .scrollContentBackground(.hidden)
                     .background(Color.c1_background)
                     .listStyle(.plain)
+                    // Monitor scroll state transitions
+                    .scrollDismissesKeyboard(.immediately)
                 }
             } header: {
                 HStack {
@@ -173,7 +175,6 @@ struct BookmarkShowView: View {
                     }
 
                     Button(role: .cancel) {
-                        print("Cancelled")
                     } label: {
                         Text("Cancel")
                     }
@@ -191,5 +192,16 @@ struct BookmarkShowView: View {
             self.bookmarksToShow = self.folderBookmarkViewModel.fetchBookmarksNotInFolder()
         }
         //.ignoresSafeArea(edges: .all)
+    }
+}
+
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
+        )
     }
 }

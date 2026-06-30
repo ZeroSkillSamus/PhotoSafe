@@ -34,9 +34,7 @@ final class FavoriteViewModel: ObservableObject {
             for media in selectedList {
                 _ = try self.service.unfavorite(for: media.id)
             }
-        } catch (let error) {
-            print(error.localizedDescription)
-        }
+        } catch {}
     }
     
     func setFavorites() {

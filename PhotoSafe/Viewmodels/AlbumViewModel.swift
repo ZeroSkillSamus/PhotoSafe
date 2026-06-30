@@ -55,16 +55,13 @@ final class AlbumViewModel: ObservableObject {
             )
             self.set_albums()
             
-        } catch let error {
-            print(error)
-        }
+        } catch {}
         
         
     }
 
-    func deleteAll() {
-        try? self.service.deleteAll() //Attempt to delete all albums
-        
+    func deleteAll() throws {
+        try self.service.deleteAll() //Attempt to delete all albums
         self.set_albums()
     }
 }

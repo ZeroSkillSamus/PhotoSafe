@@ -21,6 +21,7 @@ final class MediaViewModel: ObservableObject {
     
     private let mp4DownloadService: VideoDownloaderProtocol
     private let hlsDownloadService: VideoDownloaderProtocol
+    private let userDefaults: UserDefaults
     
     @Published var medias: [SelectMediaEntity] = []
     
@@ -29,6 +30,10 @@ final class MediaViewModel: ObservableObject {
     @Published private var display_alert: Bool = false
     @Published private(set) var alert_value: Float = 0.0
     @Published var toast: ToastItem?
+    
+    private var deleteOriginalMediaAfterImport: Bool {
+        userDefaults.bool(forKey: StorageKeys.deleteOriginalMediaAfterImport)
+    }
     
     // Getter & Setter for display_alert
     var progress_alert: Bool {
@@ -41,11 +46,20 @@ final class MediaViewModel: ObservableObject {
     }
     
     private let service: MediaServiceProtocol
+    private let mediaSavingService: MediaHandler
     
-    init(media_service: MediaServiceProtocol = MediaService(), mp4Downloader: VideoDownloaderProtocol = MP4Downloader(), hlsDownlaodService: VideoDownloaderProtocol = HLSDownloader()) {
+    init(
+        media_service: MediaServiceProtocol = MediaService(),
+        mp4Downloader: VideoDownloaderProtocol = MP4Downloader(),
+        hlsDownlaodService: VideoDownloaderProtocol = HLSDownloader(),
+        userDefaults: UserDefaults = .standard
+    ) {
+        self.userDefaults = userDefaults
+        
         self.service = media_service
         self.mp4DownloadService = mp4Downloader
         self.hlsDownloadService = hlsDownlaodService
+        self.mediaSavingService = MediaHandler()
     }
     
     var selected_media: [SelectMediaEntity] {
@@ -96,7 +110,7 @@ final class MediaViewModel: ObservableObject {
                     return
                 }
                 
-                MediaHandler.savePhotoToUserLibrary(image: fullImage) { toast in
+                mediaSavingService.savePhotoToUserLibrary(image: fullImage) { toast in
                     continuation.resume(returning: toast)
                 }
             case MediaType.Video.rawValue:
@@ -105,11 +119,11 @@ final class MediaViewModel: ObservableObject {
                     return
                 }
                 
-                MediaHandler.saveVideoToUserLibrary(at: videoPath) { toast in
+                mediaSavingService.saveVideoToUserLibrary(at: videoPath) { toast in
                     continuation.resume(returning: toast)
                 }
             case MediaType.GIF.rawValue:
-                MediaHandler.saveGifToUserLibrary(data: selected.imageData) { toast in
+                mediaSavingService.saveGifToUserLibrary(data: selected.imageData) { toast in
                     continuation.resume(returning: toast)
                 }
             default:
@@ -189,7 +203,6 @@ final class MediaViewModel: ObservableObject {
                 let entity = self.add_media(to: album, type: .Video, image_data: imageData, thumbnail: thumbnail, video_path: location.absoluteString)
                 return (ToastItem(message: "Successfully Downloaded HLS Video", status: .success), entity)
             } catch (let error) {
-                print("Failed to download hls video", error)
                 return (ToastItem(message: error.localizedDescription, status: .failure), nil)
             }
         case .mp4:
@@ -203,7 +216,6 @@ final class MediaViewModel: ObservableObject {
                 guard let permUrl else {
                     return (ToastItem(message: "Failed to download", status: .failure), nil)
                 }
-                print(permUrl)
                 if let image_data = permUrl.generateVideoThumbnail() {
                     if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
                        let entity = self.add_media(
@@ -221,7 +233,6 @@ final class MediaViewModel: ObservableObject {
                     return (ToastItem(message: "Failed to download mp4 video", status: .failure), nil)
                 }
             } catch (let error) {
-                print("Failed to download mp4 video", error)
                 return (ToastItem(message: error.localizedDescription, status: .failure), nil)
             }
         case .unknown:
@@ -240,7 +251,6 @@ final class MediaViewModel: ObservableObject {
             // Validate HTTP response status
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
-                print("Server error")
                 return (ToastItem(message: "Server error!", status: .failure), nil)
             }
             
@@ -254,23 +264,23 @@ final class MediaViewModel: ObservableObject {
                 return (ToastItem(message: "Saved", status: .success), entity)
             }
             
-            print("Failed to load image data: \(url.absoluteString)")
             return (ToastItem(message: "Failed to load image data", status: .failure), nil)
             //
         } catch {
-            print("Failed to load image data: \(error.localizedDescription)")
             return (ToastItem(message: "Failed to load image data", status: .failure), nil)
         }
     }
     
     func add_imported_photos(to album: AlbumEntity, from photos_list: [PhotosPickerItem]) async {
         self.reset_alert_value()
+        let canDeleteOrignals = await canDeleteOriginals()
+        let shouldDeleteOriginals = deleteOriginalMediaAfterImport && canDeleteOrignals
         self.progress_alert = true
         var asset_to_delete: [PHAsset] = []
         
         for item in photos_list {
             // Handle adding to photos list which will be batched delete from user library
-            if let identifier = item.itemIdentifier, let asset = MediaHandler.fetchAsset(with: identifier) {
+            if shouldDeleteOriginals, let identifier = item.itemIdentifier, let asset = mediaSavingService.fetchAsset(with: identifier) {
                 asset_to_delete.append(asset)
             }
             
@@ -279,7 +289,7 @@ final class MediaViewModel: ObservableObject {
                 if let video_url = try await item.loadTransferable(type: VideoFileTranferable.self)?.url {
                     if let image_data = video_url.generateVideoThumbnail() {
                         if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
-                            self.add_media(
+                            let _ = self.add_media(
                                 to: album,
                                 type: MediaType.Video,
                                 image_data: image_data,
@@ -294,7 +304,7 @@ final class MediaViewModel: ObservableObject {
                     let isGIF = supported_types.contains(UTType.gif)
                     let type = isGIF ? MediaType.GIF : MediaType.Photo
                     if let thumbnail = UIImage(data: image_data)?.thumbnail(), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5)  {
-                        self.add_media(
+                        let _ = self.add_media(
                             to: album,
                             type: type,
                             image_data: image_data,
@@ -302,13 +312,9 @@ final class MediaViewModel: ObservableObject {
                         )
                     }
                 }
-            } catch(let error) {
-                print("Video load failed: \(error)")
-            }
+            } catch {}
         }
-        
-        // Batch delete
-        MediaHandler.deleteAssets(asset_to_delete)
+        if shouldDeleteOriginals {  mediaSavingService.deleteAssets(asset_to_delete) } // Batch delete
         
         // Done Looping, Time to Clear Out SelectedMedia
         self.progress_alert = false
@@ -325,9 +331,7 @@ final class MediaViewModel: ObservableObject {
                 try self.service.move(id: selected.id, to: album)
                 self.delete_from_medias(selected: selected)
                 self.set_counts()
-            } catch let error {
-                print("Error \(error)")
-            }
+            } catch {}
         }
     }
     
@@ -361,10 +365,29 @@ final class MediaViewModel: ObservableObject {
             case .Unlike:
                 media = try self.service.unfavorite(for: id)
             }
-            print(media?.is_favorited)
+            
             return media
         } catch {
             return nil
+        }
+    }
+    
+    private func canDeleteOriginals() async -> Bool {
+        let currentStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+
+        switch currentStatus {
+        case .authorized:
+            return true
+
+        case .notDetermined:
+            let newStatus = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
+            return newStatus == .authorized
+
+        case .limited, .denied, .restricted:
+            return false
+
+        @unknown default:
+            return false
         }
     }
     

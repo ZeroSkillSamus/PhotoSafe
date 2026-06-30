@@ -13,7 +13,8 @@ struct TopHeader: View {
     @Binding var is_edit_enabled: Bool
     
     @State private var display_sheet: Bool = false
-    @State private var display_delete_alert: Bool = false
+    //TODO: - Feature for v2 
+    @State private var displayRecentlyDeletedSheet: Bool = false
     
     var body: some View {
         UniversalHeader(header: {
@@ -23,7 +24,7 @@ struct TopHeader: View {
             //             Display Alert Confirming With User
             //             If they Want Albums to be removed
             Button {
-                self.display_delete_alert = true
+                self.displayRecentlyDeletedSheet = true
             } label: {
                 Image(systemName:"trash")
                     .font(.system(size: 14,design: .rounded))
@@ -49,18 +50,6 @@ struct TopHeader: View {
             }
             .padding(7)
             .applyLiquidGlassIfSupported(color: Color.c1_accent, isInteractive: true)
-        }
-        .alert("Delete All Albums", isPresented: $display_delete_alert) {
-            Button("Delete", role: .destructive) {
-                withAnimation(.easeInOut) {
-                    self.album_vm.deleteAll()
-                    self.favoritesViewModel.setFavorites()
-                }
-            }
-            Button("Cancel", role: .cancel) { }
-        } message: {
-            Text("By pressing Delete you will lose all albums and media within that album. This cannot be undone.")
-                .multilineTextAlignment(.center)
         }
     }
 }

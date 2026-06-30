@@ -126,8 +126,6 @@ struct CreateAlbumSheet: View {
                             if let thumbnail_img = UIImage(data: loaded), let thumbnail_data = thumbnail_img.jpegData(compressionQuality: 0.5) {
                                 avatar_data = thumbnail_data 
                             }
-                        } else {
-                            print("Failed")
                         }
                     }
                 }

@@ -18,7 +18,7 @@ struct BottomTabNavigation: View {
     @StateObject private var album_VM: AlbumViewModel = AlbumViewModel()
     @StateObject private var favorite_VM: FavoriteViewModel = FavoriteViewModel()
     
-    @State private var current_tab: Tab = .albums // Current Tab
+    @State private var current_tab: Tab = .settings // Current Tab
     @State private var path = NavigationPath()  // For NavigationStack
     @State private var display_sheet: Bool = false
     @State private var toggle_plus_mode: Bool = false

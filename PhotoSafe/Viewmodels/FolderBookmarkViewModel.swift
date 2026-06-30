@@ -37,8 +37,7 @@ class FolderBookmarkViewModel {
             self.folders.append(folderEntity)
             
             return ToastItem(message: "Created Folder!", status: .success)
-        } catch (let error) {
-            print("Failed To create folder!", error.localizedDescription)
+        } catch {
             return ToastItem(message: "Failed to create folder", status: .failure)
         }
     }
@@ -47,8 +46,7 @@ class FolderBookmarkViewModel {
         do {	
             try self.folderService.deleteAll()
             return ToastItem(message: "Deleted all Folders!", status: .success)
-        } catch (let error) {
-            print("Failed To delete all folders", error.localizedDescription)
+        } catch {
             return ToastItem(message: "Failed to delete all folders", status: .failure)
         }
     }
@@ -66,8 +64,7 @@ class FolderBookmarkViewModel {
         do {
             _ = try self.bookmarkService.saveBookmark(folder: folder, url: url, favicon: favicon, title: title)
             return ToastItem(message: "Saved to bookmarks", status: .success)
-        } catch (let error) {
-            print("Failed To Add Bookmark!", error.localizedDescription)
+        } catch {
             return ToastItem(message: "Failed to add bookmark", status: .failure)
         }
     }
@@ -79,8 +76,7 @@ class FolderBookmarkViewModel {
             try self.bookmarkService.deleteBatchOfBookmarks(list: bookmarks)
            
             return ToastItem(message: "Deleted all bookmarks not in folders", status: .success)
-        } catch (let error) {
-            print("Failed to delete bookmarks", error.localizedDescription)
+        } catch {
             return ToastItem(message: "Failed to delete bookmarks", status: .failure)
         }
     }
@@ -90,8 +86,7 @@ class FolderBookmarkViewModel {
             try self.bookmarkService.delete(bookmark: bookmark)
             // Delete from array
             return ToastItem(message: "Deleted bookmark", status: .success)
-        } catch (let error) {
-            print("Failed to delete bookmarks", error.localizedDescription)
+        } catch {
             return ToastItem(message: "Failed to delete bookmark", status: .failure)
         }
     }

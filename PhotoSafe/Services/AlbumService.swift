@@ -74,7 +74,10 @@ final class AlbumService: AlbumServiceProtocol {
     }
     
     func deleteAll() throws {
-        let deleteRequest = AlbumEntity.deleteRequest()
-        try self.context.execute(deleteRequest)
+        let albums = self.fetchAlbums()
+        for album in albums {
+            self.context.delete(album)
+        }
+        try context.save()
     }
 }

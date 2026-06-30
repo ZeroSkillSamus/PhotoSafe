@@ -14,6 +14,7 @@ struct NumPad: View {
     @Binding var isSecure: Bool
     
     @State private var showFaceIDAlert: Bool = false
+    var screenType: ScreenType = .Auth
     
     var body: some View {
         LazyVGrid(columns: [GridItem(),GridItem(),GridItem()], spacing: 15) {
@@ -21,24 +22,28 @@ struct NumPad: View {
                 NumButton(num: String(num), passcode: self.$passcode)
             }
             
-            if !authViewmodel.isPinSet{
-                Button {
-                    authViewmodel.createPin(pin: self.passcode)
-                } label: {
-                    Text("Set Pin")
-                }
-                .opacity(self.passcode.count == 6 ? 1 : 0)
-            } else {
-                Button {
-                    Task {
-                        self.showFaceIDAlert = await authViewmodel.faceIDAuthentification()
+            Group {
+                if !authViewmodel.isPinSet {
+                    Button {
+                        authViewmodel.createPin(pin: self.passcode)
+                    } label: {
+                        Text("Set Pin")
                     }
-                } label: {
-                    Image(systemName: "faceid")
-                        .font(.title)
-                        .foregroundStyle(Color.c1_accent)
+                    .opacity(self.passcode.count == 6 ? 1 : 0)
+                } else {
+                    Button {
+                        Task {
+                            self.showFaceIDAlert = await authViewmodel.faceIDAuthentification()
+                        }
+                    } label: {
+                        Image(systemName: "faceid")
+                            .font(.title)
+                            .foregroundStyle(Color.c1_accent)
+                    }
                 }
             }
+            .opacity(self.screenType == .Auth ? 1 : 0)
+            .allowsHitTesting(screenType == .Auth)
             
             NumButton(num: "0", passcode: self.$passcode)
             

@@ -13,7 +13,8 @@ struct WebViewWrapper: View {
     @Environment(WebViewModel.self) var webViewModel
     @EnvironmentObject private var authViewModel: AuthStorageViewModel
 
-    @State private var folderBookmarkViewModel = FolderBookmarkViewModel()
+    @Environment(FolderBookmarkViewModel.self) var folderBookmarkViewModel
+    
     @State private var isPresented: Bool = false
     @State private var toast: ToastItem? = nil
     @State private var showHistorySheet: Bool = false

@@ -15,6 +15,14 @@ class AuthStorageViewModel: ObservableObject {
     @Published private(set) var isPinSet: Bool
     @Published private(set) var isUnlocked: Bool = false
     @Published var showPrivacyOverlay: Bool = true
+
+    enum ChangePinResult {
+        case success
+        case currentPinIncorrect
+        case invalidNewPin
+        case pinMismatch
+        case failed
+    }
     
     init(authService: AuthStorageService = AuthStorageService.shared) {
         self.authService = authService
@@ -27,19 +35,42 @@ class AuthStorageViewModel: ObservableObject {
             try self.authService.savePin(pin)
             self.isPinSet = true
             self.isUnlocked = true
-        } catch {
-            print(error)
-        }
+        } catch {}
     }
     
     func verifyPin(for pin: String) -> Bool {
+        self.isUnlocked = isPinVerified(for: pin)
+        return self.isUnlocked
+    }
+
+    func isPinVerified(for pin: String) -> Bool {
         do {
-            self.isUnlocked = try self.authService.verifyPin(pin)
-            return isUnlocked
-        } catch (let error) {
-            print(error)
-            self.isUnlocked = false
+            return try self.authService.verifyPin(pin)
+        } catch {
             return false
+        }
+    }
+    
+    func changePin(currentPin: String, newPin: String, confirmPin: String) -> ChangePinResult {
+        guard currentPin.count == 6, newPin.count == 6, confirmPin.count == 6 else {
+            return .invalidNewPin
+        }
+
+        guard newPin == confirmPin else {
+            return .pinMismatch
+        }
+
+        do {
+            guard try self.authService.verifyPin(currentPin) else {
+                return .currentPinIncorrect
+            }
+
+            try self.authService.savePin(newPin)
+            self.isPinSet = true
+            self.isUnlocked = true
+            return .success
+        } catch {
+            return .failed
         }
     }
     

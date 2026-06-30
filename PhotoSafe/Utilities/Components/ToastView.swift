@@ -52,7 +52,6 @@ struct ToastModifer: ViewModifier {
                 toastItem: toastItem
             )
             .onAppear {
-                print("dsakjh")
                 showToast()
             }
         }

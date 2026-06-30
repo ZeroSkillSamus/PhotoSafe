@@ -10,6 +10,11 @@
 		020A8D6E2D976D6C00FFCABE /* MediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D6D2D976D6C00FFCABE /* MediaView.swift */; };
 		020A8D8C2D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */; };
 		020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */; };
+		020ED85F2FF1D0C9000E7373 /* ChangePinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020ED85E2FF1D0C3000E7373 /* ChangePinView.swift */; };
+		020ED8612FF3153E000E7373 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020ED8602FF31537000E7373 /* SettingsRowView.swift */; };
+		020ED8632FF321FF000E7373 /* AppSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020ED8622FF321FA000E7373 /* AppSettingsViewModel.swift */; };
+		020ED8652FF32223000E7373 /* ExportDestinationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020ED8642FF3221E000E7373 /* ExportDestinationView.swift */; };
+		020ED8672FF332FA000E7373 /* ConfirmPinSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020ED8662FF332F4000E7373 /* ConfirmPinSheet.swift */; };
 		0215FDB92D933EA800E2B546 /* PhotoSafeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */; };
 		0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0215FDBA2D933EA800E2B546 /* AlbumView.swift */; };
 		0215FDBD2D933EAB00E2B546 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0215FDBC2D933EAB00E2B546 /* Assets.xcassets */; };
@@ -146,6 +151,11 @@
 		020A8D6D2D976D6C00FFCABE /* MediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaView.swift; sourceTree = "<group>"; };
 		020A8D882D99FBA600FFCABE /* AlbumEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AlbumEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		020A8D8A2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaEntity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		020ED85E2FF1D0C3000E7373 /* ChangePinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePinView.swift; sourceTree = "<group>"; };
+		020ED8602FF31537000E7373 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
+		020ED8622FF321FA000E7373 /* AppSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsViewModel.swift; sourceTree = "<group>"; };
+		020ED8642FF3221E000E7373 /* ExportDestinationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportDestinationView.swift; sourceTree = "<group>"; };
+		020ED8662FF332F4000E7373 /* ConfirmPinSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPinSheet.swift; sourceTree = "<group>"; };
 		0215FDB52D933EA800E2B546 /* PhotoSafe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoSafe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0215FDB82D933EA800E2B546 /* PhotoSafeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSafeApp.swift; sourceTree = "<group>"; };
 		0215FDBA2D933EA800E2B546 /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
@@ -344,6 +354,7 @@
 		0215FDE22D934B4E00E2B546 /* Viewmodels */ = {
 			isa = PBXGroup;
 			children = (
+				020ED8622FF321FA000E7373 /* AppSettingsViewModel.swift */,
 				02B1E5882FE393510033919A /* MediaViewModel.swift */,
 				02B1E57E2FE1D8250033919A /* WebViewModel.swift */,
 				02A98DF02FE09142008E23B2 /* FolderBookmarkViewModel.swift */,
@@ -567,6 +578,10 @@
 		02D801392DA5A66B002AE361 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				020ED8662FF332F4000E7373 /* ConfirmPinSheet.swift */,
+				020ED8642FF3221E000E7373 /* ExportDestinationView.swift */,
+				020ED8602FF31537000E7373 /* SettingsRowView.swift */,
+				020ED85E2FF1D0C3000E7373 /* ChangePinView.swift */,
 				02D8013A2DA5A679002AE361 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -763,6 +778,7 @@
 				02A98DED2FE086E6008E23B2 /* UIImage+Thumbnail.swift in Sources */,
 				02D8013E2DA5A6A0002AE361 /* WebView.swift in Sources */,
 				0248E9582D9B56D700272924 /* MediaImageGridView.swift in Sources */,
+				020ED8632FF321FF000E7373 /* AppSettingsViewModel.swift in Sources */,
 				0215FDBB2D933EA800E2B546 /* AlbumView.swift in Sources */,
 				02A98DEF2FE087EC008E23B2 /* BookmarkService.swift in Sources */,
 				020A8D8E2D99FBA600FFCABE /* MediaEntity+CoreDataProperties.swift in Sources */,
@@ -792,6 +808,7 @@
 				0248E95E2D9B5BD700272924 /* TopHeader.swift in Sources */,
 				0279DCB92FEB20E20081BEE8 /* View+Toast.swift in Sources */,
 				02A98DD72FD62A31008E23B2 /* OrientationLockModifier.swift in Sources */,
+				020ED85F2FF1D0C9000E7373 /* ChangePinView.swift in Sources */,
 				02A98DDB2FDB3A63008E23B2 /* LazyPagerView.swift in Sources */,
 				02B1E5832FE1D8C70033919A /* Data+IsGif.swift in Sources */,
 				0248E9632D9B5CDC00272924 /* NumPad.swift in Sources */,
@@ -814,15 +831,18 @@
 				0248E9512D9B4C7300272924 /* FullCoverSheet.swift in Sources */,
 				02D801332DA56D66002AE361 /* MoveSheet.swift in Sources */,
 				02B1E57F2FE1D8250033919A /* WebViewModel.swift in Sources */,
+				020ED8612FF3153E000E7373 /* SettingsRowView.swift in Sources */,
 				02A98DE92FE0816E008E23B2 /* BookmarkEntity+CoreDataProperties.swift in Sources */,
 				02D801362DA5733A002AE361 /* SelectMediaEntity.swift in Sources */,
 				02D801452DA5BA85002AE361 /* PlusMode.swift in Sources */,
+				020ED8672FF332FA000E7373 /* ConfirmPinSheet.swift in Sources */,
 				02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */,
 				028C6F3D2DA72AB000BB8BB9 /* AlbumEditView.swift in Sources */,
 				02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */,
 				02A98DD02FD627D9008E23B2 /* AuthStorageViewModel.swift in Sources */,
 				02B1E5972FE47B7C0033919A /* VideoDownloaderProtocol.swift in Sources */,
 				0215FDE72D963E6D00E2B546 /* Container.xcdatamodeld in Sources */,
+				020ED8652FF32223000E7373 /* ExportDestinationView.swift in Sources */,
 				02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */,
 				028EF8212DB3F91A00361AFD /* ImageCache.swift in Sources */,
 			);
@@ -1000,6 +1020,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1033,6 +1054,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

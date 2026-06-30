@@ -11,6 +11,7 @@ struct WebNavigationBar: View {
     var webViewModel: WebViewModel
     var folderBookmarkViewModel: FolderBookmarkViewModel
     @Binding var isPresented: Bool
+    //@Binding var isInOverlayMode: Bool
     
     @State private var userInputText: String = ""
     @State private var userSubmitedText: String = ""
@@ -76,7 +77,7 @@ struct WebNavigationBar: View {
 
             Spacer()
 
-            if isFocused {
+            if self.isPresented {
                 Button {
                     self.isFocused = false
                     self.isPresented = false
