@@ -10,164 +10,246 @@ import PhotosUI
 import AudioToolbox
 
 struct AlbumEditView: View {
-    @StateObject private var edit_sheet_VM: EditSheetViewModel = EditSheetViewModel()
+    @StateObject private var editSheetViewModel: EditSheetViewModel = EditSheetViewModel()
     
-    @EnvironmentObject private var album_VM: AlbumViewModel
+    @EnvironmentObject private var albumViewModel: AlbumViewModel
+    @EnvironmentObject private var favoritesViewModel: FavoriteViewModel
+    
     @Environment(\.dismiss) var dismiss
     
     var album: AlbumEntity
+    @Binding var editModeActive: Bool
+    
     @State private var avatar: PhotosPickerItem?
     @State private var showingPhotosPicker: Bool = false
-    @State private var error: Bool = false
+    
+    @State private var toast: ToastItem?
    
+    @State private var showDeleteAlert: Bool = false
     var body: some View {
         VStack {
             // Header
             HStack {
+                Button {
+                    self.dismiss()
+                } label: {
+                    Text("Cancel")
+                        .foregroundStyle(Color.c1_text)
+                        .font(.system(size: 19,weight: .semibold, design: .rounded))
+                        .opacity(0.75)
+                }
                 Spacer()
                 
                 Button {
-                    // Save changes
-                    if self.album.password != self.edit_sheet_VM.initial_password {
-                        self.album_VM.change_password(for: self.album, with: self.edit_sheet_VM.initial_password)
+                    let trimmed = self.editSheetViewModel.album_name.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if trimmed.isEmpty {
+                        self.toast = ToastItem(message: "Name can not be empty", status: .failure)
+                        return
                     }
                     
-                    if !self.edit_sheet_VM.did_album_name_change(from: self.album) {
-                        self.album_VM.change_name(for: self.album, with: self.edit_sheet_VM.album_name)
+                    // Save changes
+                    if self.album.password != self.editSheetViewModel.initial_password {
+                        self.albumViewModel.change_password(for: self.album, with: self.editSheetViewModel.initial_password)
+                    }
+                    
+                    if !self.editSheetViewModel.did_album_name_change(from: self.album) {
+                        self.albumViewModel.change_name(for: self.album, with: trimmed)
                     }
                     
                     self.dismiss()
-                    
-                    
+                    self.editModeActive = false
                 } label: {
                     Text("Done")
                         .foregroundStyle(Color.c1_text)
-                        .font(.footnote.bold())
+                        .font(.system(size: 17,design: .rounded))
+                        .padding(.horizontal,12)
+                        .padding(.vertical,8)
                 }
-                .padding(6)
-                .applyLiquidGlassIfSupported(color: Color.c1_accent)
+                .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 10),color: Color.c1_accent, isInteractive: true)
+                .disabled(!self.editSheetViewModel.hasChanges(from: album))
+                .opacity(self.editSheetViewModel.hasChanges(from: album) ? 1 : 0.3)
             }
             .overlay {
                 Text("Edit Album")
-                    .font(.title2.bold())
+                    .font(.system(size: 26,weight: .bold,design: .rounded))
                     .foregroundStyle(Color.c1_text)
             }
             .padding()
-            .frame(height: 50)
+            //.frame(height: 50)
             
-            
-            Menu {
-                Button {
-                    self.album_VM.change_upload_status(for: album, with: .Last)
-                } label: {
-                    Text("Set to Last Image")
-                }
-                Button {
-                    self.album_VM.change_upload_status(for: album, with: .First)
-                } label: {
-                    Text("Set to First Image")
-                }
-                
-                Button {
-                    self.showingPhotosPicker.toggle()
-                } label: {
-                    Text("Choose From Own Library")
-                }
-            } label: {
-                AlbumImageDisplay(album: album, corner_radius: 6)
-                    .overlay(alignment: .bottom) {
-                        Text("Tap To Edit")
-                            .frame(maxWidth: .infinity)
-                            .background(.black.opacity(0.5))
-                            .foregroundStyle(Color.c1_text)
+            VStack(spacing: 8) {
+                Menu {
+                    Button {
+                        self.albumViewModel.change_upload_status(for: album, with: .Last)
+                    } label: {
+                        Text("Set to Last Image")
                     }
-                    .frame(width: 130,height: 130)
-                
-            }
-            .photosPicker(isPresented: $showingPhotosPicker, selection: $avatar, matching: .images)
-            
-            // Change Name
-            HStack {
-                Text("Name")
-                    .frame(maxWidth: .infinity,alignment: .leading)
-                    .font(.title3)
-                    .foregroundStyle(Color.c1_text)
-                
-                TextField(self.edit_sheet_VM.album_name, text: self.$edit_sheet_VM.album_name)
-                    .opacity(0.5)
-                    .multilineTextAlignment(.trailing)
-                    .autocorrectionDisabled()
-                    .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
-                    .foregroundStyle(Color.c1_text)
-                    .background(Color.c1_background)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-                    .onChange(of: self.edit_sheet_VM.album_name) {
-                        self.edit_sheet_VM.remove_last_from_album_name()
+                    Button {
+                        self.albumViewModel.change_upload_status(for: album, with: .First)
+                    } label: {
+                        Text("Set to First Image")
                     }
-                
-            }
-            .padding()
-            
-            //Password Toggler
-            VStack {
-                Toggle(isOn: self.$edit_sheet_VM.is_locked) {
-                    Text("Password")
-                        .font(.title3)
-                        .foregroundStyle(Color.c1_text)
-                }
-                .padding()
-                
-                if self.edit_sheet_VM.is_locked {
-                    HStack {
-                        Text("Initial Password")
-                            .frame(maxWidth: .infinity,alignment: .leading)
-                            .font(.title3)
-                            .foregroundStyle(Color.c1_text)
-
-                        TextField("Enter Password", text: self.$edit_sheet_VM.initial_password, onEditingChanged: { editing_changed in
-                            if editing_changed {
-                                self.edit_sheet_VM.has_user_started_typing_initial = false
-                            }
-                        })
-                            .opacity(0.75)
-                            .textInputAutocapitalization(.never)
-                            .multilineTextAlignment(.trailing)
-                            .autocorrectionDisabled()
-                            .padding(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
-                            .foregroundStyle(Color.c1_text)
-                            .background(Color.c1_background)
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                            .onChange(of: self.edit_sheet_VM.initial_password) { old, new in
-                                self.edit_sheet_VM.reset_initial(with: new)
-                            }
+                    
+                    Button {
+                        self.showingPhotosPicker.toggle()
+                    } label: {
+                        Text("Choose From Own Library")
+                    }
+                } label: {
+                    AlbumImageDisplay(album: album, corner_radius: 12)
+                        .overlay(alignment: .bottom) {
+                            Text("Tap To Edit")
+                                .frame(maxWidth: .infinity)
+                                .background(.black.opacity(0.5))
+                                .foregroundStyle(Color.c1_text)
                         }
-                    .padding()
+                        .frame(width: 150,height: 150)
                     
                 }
+                .photosPicker(isPresented: $showingPhotosPicker, selection: $avatar, matching: .images)
+                
+                Text("Choose first, last, or a photo from your library")
+                    .font(.system(size: 16,weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.c1_text)
+                    .opacity(0.75)
             }
-            Spacer()
+            .padding(.bottom,25)
             
-        }
-        .background(Color.c1_background)
-        .onChange(of: self.edit_sheet_VM.is_locked) {
-            self.edit_sheet_VM.reset_password()
-        }
-        .alert("Passwords Do Not Match!", isPresented: self.$error) {
-            Button {} label: { Text("Ok") }
-        }
-        .onChange(of: self.avatar) {
-            Task {
-                if let image_data = try? await self.avatar?.loadTransferable(type: Data.self) {
-                    self.album_VM.change_image(for: album, with: image_data)
-                    self.album_VM.change_upload_status(for: album, with: .Upload)
-                    self.avatar = nil
-                } else {
-                    self.album_VM.change_upload_status(for: album, with: .None)
+            VStack {
+                // Change Name
+                HStack {
+                    Text("Name")
+                        .frame(maxWidth: .infinity,alignment: .leading)
+                        .font(.system(size: 18,weight: .semibold,design: .rounded))
+                        .foregroundStyle(Color.c1_text)
+                    
+                    TextField(self.editSheetViewModel.album_name, text: self.$editSheetViewModel.album_name)
+                        .font(.system(size: 15, design: .rounded))
+                        .textFieldStyle(.plain)
+                        .padding(8)
+                        .foregroundStyle(Color.c1_text) // White typed text
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.c1_primary).opacity(0.5) // 3. Applies the custom color
+                        )
+                        .padding(2)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.sentences)
+                }
+                .padding(5)
+                Divider()
+                //Password Toggler
+                VStack {
+                    Toggle(isOn: self.$editSheetViewModel.is_locked) {
+                        Text("Lock Album")
+                            .font(.system(size: 18,weight: .semibold,design: .rounded))
+                            .foregroundStyle(Color.c1_text)
+                    }
+                    .padding(5)
+                    
+                    if self.editSheetViewModel.is_locked {
+                        Divider()
+                        
+                        HStack {
+                            Text("Password")
+                                .frame(maxWidth: .infinity,alignment: .leading)
+                                .font(.system(size: 18,weight: .semibold,design: .rounded))
+                                .foregroundStyle(Color.c1_text)
+                           
+                            TextField("Enter Password", text: self.$editSheetViewModel.initial_password, onEditingChanged: { editing_changed in
+                                if editing_changed {
+                                    self.editSheetViewModel.has_user_started_typing_initial = false
+                                }
+                            })
+                                .font(.system(size: 15, design: .rounded))
+                                .textFieldStyle(.plain)
+                                .padding(8)
+                                .foregroundStyle(Color.c1_text) // White typed text
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.c1_primary).opacity(0.5) // 3. Applies the custom color
+                                )
+                                .padding(2)
+                                .autocorrectionDisabled()
+                                .onChange(of: self.editSheetViewModel.initial_password) { old, new in
+                                    self.editSheetViewModel.reset_initial(with: new)
+                                }
+                            }
+                        .padding(5)
+                        
+                    }
                 }
             }
+            .padding()
+            .background(RoundedRectangle(cornerRadius: 15).fill(Color.c1_primary).opacity(0.5))
+            .padding(.horizontal)
+            
+            Spacer()
+            
+            Button {
+                // show delete alert
+                self.showDeleteAlert = true
+            } label: {
+                Text("Delete Album")
+                    .font(.system(size: 18,weight: .semibold,design: .rounded))
+                    .foregroundStyle(Color.c1_text)
+                    .padding(.horizontal,10)
+                    .padding(.vertical,8)
+            }
+            .applyLiquidGlassIfSupported(shape: .rect(cornerRadius: 13), color: .red.opacity(0.75), isInteractive: true)
         }
+        .alert("Delete \(album.name) album?", isPresented: self.$showDeleteAlert) {
+            Button(role: .destructive) {
+                do {
+                    try self.albumViewModel.delete(album: album)
+                    self.favoritesViewModel.setFavorites()
+                    self.toast = ToastItem(message: "Successfully Deleted", status: .success)
+                    self.dismiss()
+                    self.editModeActive = false 
+                } catch {
+                    self.toast = ToastItem(message: "Failed to delete \(album.name)", status: .failure)
+                }
+            } label: {
+                Text("Delete")
+            }
+
+            Button(role: .cancel) {
+            } label: {
+                Text("Cancel")
+            }
+        } message: {
+            Text("This will permanently delete the album and its saved media.")
+        }
+        .background(Color.c1_background)
+        .onChange(of: self.editSheetViewModel.is_locked) {
+            self.editSheetViewModel.reset_password()
+        }
+        .onChange(of: self.avatar, { old, new in
+            guard let new else { return }
+            Task {
+                do {
+                    guard let imageData = try await new.loadTransferable(type: Data.self) else {
+                        await MainActor.run {
+                            toast = ToastItem(message: "Failed to update cover for album", status: .failure)
+                            self.avatar = nil
+                        }
+                        return
+                    }
+                    
+                    await MainActor.run {
+                        editSheetViewModel.selectedCoverData = imageData
+                        editSheetViewModel.selectedCoverStatus = .Upload
+                        self.avatar = nil
+                    }
+                } catch {
+                    toast = ToastItem(message: "Failed to update cover for album", status: .failure)
+                    self.avatar = nil
+                }
+            }
+        })
         .onAppear {
-            self.edit_sheet_VM.set_variables(from: self.album)
+            self.editSheetViewModel.set_variables(from: self.album)
         }
+        .displayToast(self.$toast)
     }
 }

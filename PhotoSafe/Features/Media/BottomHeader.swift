@@ -9,6 +9,8 @@ import SwiftUI
 import PhotosUI
 
 struct BottomHeader: View {
+    @EnvironmentObject private var albumViewModel: AlbumViewModel
+    
     @State private var is_select_all: Bool = false
     @State private var is_move_sheet_active: Bool = false
  
@@ -44,19 +46,12 @@ struct BottomHeader: View {
                     BottomHeaderButton {
                         SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
                             Task {
-                                let (sucess, total) = await self.media_VM.exportSelectedMediaToPhotos()
+                                let (_, _) = await self.media_VM.exportSelectedMediaToPhotos()
                                 
                                 withAnimation {
                                     self.select_mode_active = false // Get out of select mode
                                 }
                             }
-                            
-                            
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                                withAnimation {
-//                                    self.media_VM.export_finished = false
-//                                }
-//                            }
                         }
                     }
                     
@@ -108,9 +103,13 @@ struct BottomHeader: View {
             }
         }
         .onChange(of: self.selected_media) {
+            if selected_media.isEmpty { return }
             Task {
                 await self.media_VM.add_imported_photos(to:album, from:self.selected_media)
-                self.selected_media.removeAll()
+                await MainActor.run {
+                    self.selected_media.removeAll()
+                    self.albumViewModel.set_albums()
+                }
             }
         }
         .sheet(isPresented: self.$is_move_sheet_active) {

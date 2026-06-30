@@ -169,7 +169,7 @@ struct LockView: View {
                 return nil
             }
         }
-        .orientationLock(.portrait)
+        //.orientationLock(.portrait)
         .onAppear {
             self.numberInput = ""
         }

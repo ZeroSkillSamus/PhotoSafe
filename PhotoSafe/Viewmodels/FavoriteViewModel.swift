@@ -27,14 +27,16 @@ final class FavoriteViewModel: ObservableObject {
         }
     }
     
-    func unFavoriteSelected() {
+    func unFavoriteSelected() throws {
         do {
             defer { self.setFavorites() }
             let selectedList = self.favoritesList.filter({$0.select == .checked })
             for media in selectedList {
                 _ = try self.service.unfavorite(for: media.id)
             }
-        } catch {}
+        } catch (let error){
+            throw error
+        }
     }
     
     func setFavorites() {
