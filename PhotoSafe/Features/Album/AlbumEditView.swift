@@ -48,7 +48,9 @@ struct AlbumEditView: View {
                     }
                     
                     // Save changes
-                    if self.album.password != self.editSheetViewModel.initial_password {
+                    if !self.editSheetViewModel.is_locked {
+                        self.albumViewModel.change_password(for: self.album, with: "")
+                    } else if !self.editSheetViewModel.initial_password.isEmpty {
                         self.albumViewModel.change_password(for: self.album, with: self.editSheetViewModel.initial_password)
                     }
                     
@@ -176,6 +178,13 @@ struct AlbumEditView: View {
                                 }
                             }
                         .padding(5)
+
+                        Text("PhotoSafe cannot recover album passwords in this version. If you forget this password, the album will stay locked.")
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .foregroundStyle(Color.c1_text.opacity(0.7))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 5)
+                            .padding(.bottom, 5)
                         
                     }
                 }

@@ -41,10 +41,10 @@ final class EditSheetViewModel: ObservableObject {
         }
     }
     
+    //TODO: - Fix with new hash password implementation
     func set_variables(from album: AlbumEntity) {
         self.album_name = album.name
         self.is_locked = album.is_locked
-        self.initial_password = album.password
         self.selectedCoverData = nil
         self.selectedCoverStatus = nil
         
@@ -53,7 +53,7 @@ final class EditSheetViewModel: ObservableObject {
     func hasChanges(from album: AlbumEntity) -> Bool {
         album_name != album.name ||
         album.is_locked != is_locked ||
-        initial_password != album.password ||
+        !initial_password.isEmpty ||
         selectedCoverData != nil ||
         selectedCoverStatus != nil
     }
