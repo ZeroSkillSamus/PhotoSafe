@@ -15,6 +15,9 @@ final class EditSheetViewModel: ObservableObject {
  
     @Published var has_user_started_typing_initial: Bool = false
  
+    @Published var selectedCoverData: Data?
+    @Published var selectedCoverStatus: ImageDisplayType?
+    
     func did_album_name_change(from album: AlbumEntity) -> Bool {
         self.album_name == album.name
     }
@@ -42,5 +45,16 @@ final class EditSheetViewModel: ObservableObject {
         self.album_name = album.name
         self.is_locked = album.is_locked
         self.initial_password = album.password
+        self.selectedCoverData = nil
+        self.selectedCoverStatus = nil
+        
+    }
+    
+    func hasChanges(from album: AlbumEntity) -> Bool {
+        album_name != album.name ||
+        album.is_locked != is_locked ||
+        initial_password != album.password ||
+        selectedCoverData != nil ||
+        selectedCoverStatus != nil
     }
 }

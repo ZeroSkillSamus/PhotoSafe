@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct PlusMode: View {
+    @EnvironmentObject private var albumViewModel: AlbumViewModel
     @StateObject private var media_VM: MediaViewModel = MediaViewModel()
     
     @State private var selected_media: [PhotosPickerItem] = []
@@ -75,8 +76,10 @@ struct PlusMode: View {
                 Task {
                     await self.media_VM.add_imported_photos(to: album, from: self.selected_media)
                     
-                    // Done Looping, Time to Clear Out SelectedMedia
-                    self.selected_media.removeAll()
+                    await MainActor.run {
+                        self.selected_media.removeAll()
+                        self.albumViewModel.set_albums()
+                    }
                 }
             }
         }
@@ -98,13 +101,12 @@ struct PlusMode: View {
             }
         }
         .onChange(of: self.selected_media) {
-            if !selected_media.isEmpty {
-                self.toggle_plus_mode.toggle()
-                
-                // Delay the move sheet mode toggle by 0.5 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.show_move_sheet.toggle()
-                }
+            guard !selected_media.isEmpty else { return }
+            self.toggle_plus_mode.toggle()
+            
+            // Delay the move sheet mode toggle by 0.5 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.show_move_sheet.toggle()
             }
         }
     }

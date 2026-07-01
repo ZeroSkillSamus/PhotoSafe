@@ -50,7 +50,7 @@ struct MediaImageGridView: View {
                 self.selectCount += 1
             case .checked:
                 media.select = .blank
-                self.selectCount += 1
+                self.selectCount -= 1
             }
         } else {
             self.selectedMedia = media

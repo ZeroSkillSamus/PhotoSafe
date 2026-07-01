@@ -14,14 +14,14 @@ struct AlbumImageDisplay: View {
     @ViewBuilder
     func display_image_view(with ui_image: UIImage? = nil) -> some View {
         if let ui_image, !self.album.is_locked {
-            Image(uiImage: ui_image).resizable()
+            Image(uiImage: ui_image).resizable().clipShape(RoundedRectangle(cornerRadius: corner_radius))
         } else if self.album.is_locked {
             ZStack {
                 RoundedRectangle(cornerRadius: corner_radius).fill(Color.c1_primary)
                 Image(systemName: "lock.fill").font(.title.bold()).foregroundStyle(Color.c1_accent)
             }
         } else {
-            Image("NoImageFound").resizable()
+            Image("NoImageFound").resizable().clipShape(RoundedRectangle(cornerRadius: corner_radius))
         }
                 
     }

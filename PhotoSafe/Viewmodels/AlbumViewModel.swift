@@ -41,9 +41,13 @@ final class AlbumViewModel: ObservableObject {
         self.albums = service.fetchAlbums()
     }
     
-    func delete(album: AlbumEntity) {
-        try? self.service.delete(album: album)
-        self.set_albums()
+    func delete(album: AlbumEntity) throws {
+        do {
+            try self.service.delete(album: album)
+            self.set_albums()
+        } catch (let error) {
+            throw error
+        } 
     }
 
     func create_album(name: String, thumbnail: Data?, password: String) {

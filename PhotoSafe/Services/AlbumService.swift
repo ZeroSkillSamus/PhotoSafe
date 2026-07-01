@@ -32,6 +32,8 @@ final class AlbumService: AlbumServiceProtocol {
         if new != .Upload {
             album.thumbnail = nil
         }
+        print(album.thumbnail)
+        print(album.image_upload_status)
         try self.context.save()
     }
     

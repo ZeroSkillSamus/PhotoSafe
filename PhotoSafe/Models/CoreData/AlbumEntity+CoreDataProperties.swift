@@ -78,6 +78,11 @@ extension AlbumEntity {
         return nil
     }
 
+    var mediaCount: Int {
+        guard let list = media?.allObjects as? [MediaEntity] else { return 0 }
+        return list.count
+    }
+    
     @NSManaged public var thumbnail: Data?
     @NSManaged public var name: String
     @NSManaged public var password: String

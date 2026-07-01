@@ -99,18 +99,15 @@ struct SettingsView: View {
     
     //MARK: - Body
     
+    var headerSubtitle: Text {
+        return Text("Security, browser, and export defaults")
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
-            UniversalHeader(header: {
-                Text("Settings")
-                    .default_header()
-            }) {
-                EmptyView()
-            } trailing_button: {
-                EmptyView()
-            }
-            
             ScrollView(showsIndicators: false) {
+                NewHeaderView(title: "Settings", trailingButtons: { EmptyView() }, subtitle: self.headerSubtitle)
+                
                 VStack(spacing: 15) {
                     //MARK: -  Security Section
                     SettingsSectionView(
@@ -151,8 +148,8 @@ struct SettingsView: View {
                     }
                 }
                 .padding(.top)
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
         }
         .displayToast(self.$toast)
         .sheet(isPresented: self.$exportDestinationSheet) {
