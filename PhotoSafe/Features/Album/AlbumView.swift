@@ -63,7 +63,8 @@ struct AlbumView: View {
                     .textContentType(.password)
                 
                 Button("OK", role: .cancel) {
-                    if album.password == password {
+                    // Use new hash
+                    if PasswordHasher.verify(password, for: album) {
                         if self.is_edit_enabled {
                             self.album_selected_to_edit = album
                         } else {
@@ -81,10 +82,14 @@ struct AlbumView: View {
         return Text("^[\(count) private collection](inflect: true)")
     }
     
+    var title: String {
+        self.is_edit_enabled ? "Edit Mode" : "Albums"
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             NewHeaderView(
-                title: "Albums",
+                title: title,
                 trailingButtons: {
                     Button {
                         withAnimation {

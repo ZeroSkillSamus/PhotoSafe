@@ -67,9 +67,11 @@ struct AlbumVDisplay: View {
                 .buttonStyle(.plain)
                 .alert("Enter Password", isPresented: $showPasswordAlert) {
                     TextField("Password", text: $password)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
 
                     Button("Continue") {
-                        if password == album.password {
+                        if PasswordHasher.verify(password, for: album) {
                             password = ""
                             showDeleteAlert = true
                         } else {

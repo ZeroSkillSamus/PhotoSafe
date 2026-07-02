@@ -4,7 +4,8 @@
         <attribute name="date_added" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="display_image_status" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="password" optional="YES" attributeType="String"/>
+        <attribute name="passwordHash" optional="YES" attributeType="Binary"/>
+        <attribute name="passwordSalt" optional="YES" attributeType="Binary"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary"/>
         <relationship name="media" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="MediaEntity" inverseName="album" inverseEntity="MediaEntity"/>
         <uniquenessConstraints>

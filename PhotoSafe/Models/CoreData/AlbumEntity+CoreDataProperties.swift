@@ -45,7 +45,7 @@ extension AlbumEntity {
     }
     
     var is_locked: Bool {
-        return password.isEmpty ? false : true
+        return passwordHash != nil && passwordSalt != nil
     }
 
     var sorted_list: [MediaEntity]? {
@@ -85,7 +85,8 @@ extension AlbumEntity {
     
     @NSManaged public var thumbnail: Data?
     @NSManaged public var name: String
-    @NSManaged public var password: String
+    @NSManaged public var passwordHash: Data?
+    @NSManaged public var passwordSalt: Data?
     @NSManaged public var date_added: Date
     @NSManaged public var media: NSSet?
     @NSManaged private var display_image_status: Int16
