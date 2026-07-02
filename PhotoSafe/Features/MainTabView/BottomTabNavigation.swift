@@ -24,6 +24,7 @@ struct BottomTabNavigation: View {
     @State private var toggle_plus_mode: Bool = false
     
     @State private var select_mode_active: Bool = false
+    @State private var toast: ToastItem?
     
     @ViewBuilder
     private func TabButton(tab:Tab, image: String) -> some View {

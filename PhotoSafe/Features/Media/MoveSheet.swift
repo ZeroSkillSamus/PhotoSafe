@@ -54,8 +54,6 @@ struct MoveSheet: View {
     
     var body: some View {
         ZStack {
-            //Color.c1_secondary.ignoresSafeArea()
-            
             VStack {
                 HStack {
                     Text("Move Selected")
@@ -86,47 +84,23 @@ struct MoveSheet: View {
                         }
                     }
                 }
-                
             }
         }
-        .alert("Create Album", isPresented: self.$toggle_alert) {
-            VStack(spacing: 5) {
-                TextField("Name", text: self.$album_name)
-                    .foregroundStyle(Color.c1_text)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.words)
-                
-                TextField("Password", text: self.$album_password)
-                    .foregroundStyle(Color.c1_text)
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-            }
-            
-            Button("OK", action: {
-                // Create Album
-                self.album_VM.create_album(
-                    name: self.album_name,
-                    thumbnail: nil,
-                    password: self.album_password
-                )
-                
-                // Fetch Newly Created Album
-                if let album = self.album_VM.albums.first(where: {$0.name == album_name}) {
-                    self.move_action(album)
-                    self.dismiss()
+        .fullScreenCover(isPresented: self.$toggle_alert, content: {
+            CreateAlbumSheet(isPlusModeActive: .constant(true), header: "Create Album & Move To", moveAction: { createdAlbumName in
+                self.album_name = createdAlbumName
+                guard let createdAlbum = self.album_VM.albums.first(where: {$0.name == self.album_name}) else {
+                    return
                 }
+                self.move_action(createdAlbum)
+                self.dismiss()
             })
-            .disabled(self.album_name.isEmpty)
-            
-            Button("Cancel",action: {})
-        } message: {
-            Text("Action Will Create & Move Selected Media To New Album!")
-        }
+        })
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         // Handles making the sheet height dynamic based on album_count + 2
         //.presentationBackground(.ultraThinMaterial)
-        .presentationDetents([.height(CGFloat(self.album_VM.albums.count + 2) * 80)])
+        .presentationDetents([.height(CGFloat(self.album_VM.albums.count + 3) * 85)])
         .presentationDragIndicator(.visible)
-        .presentationBackground(Color.c1_secondary.opacity(0.7)) 
+        .presentationBackground(Color.c1_secondary.opacity(0.7))
     }
 }

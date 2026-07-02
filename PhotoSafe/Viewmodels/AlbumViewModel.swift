@@ -50,7 +50,7 @@ final class AlbumViewModel: ObservableObject {
         } 
     }
 
-    func create_album(name: String, thumbnail: Data?, password: String) {
+    func create_album(name: String, thumbnail: Data?, password: String) throws {
         do {
             try service.saveAlbum(
                 name: name,
@@ -59,7 +59,9 @@ final class AlbumViewModel: ObservableObject {
             )
             self.set_albums()
             
-        } catch {}
+        } catch (let error) {
+            throw error
+        }
         
         
     }

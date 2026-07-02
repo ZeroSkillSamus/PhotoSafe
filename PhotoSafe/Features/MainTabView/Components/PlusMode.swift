@@ -54,8 +54,9 @@ struct PlusMode: View {
                             .frame(width: 50)
                     }
                 }
-                .sheet(isPresented: self.$create_album_sheet) {
-                    CreateAlbumSheet(toggle_plus_mode: self.$toggle_plus_mode)
+                .fullScreenCover(isPresented: self.$create_album_sheet) {
+                    //CreateAlbumSheet(toggle_plus_mode: self.$toggle_plus_mode)
+                    CreateAlbumSheet(isPlusModeActive: self.$toggle_plus_mode)
                 }
             }
             
@@ -71,8 +72,10 @@ struct PlusMode: View {
                 )
             }
         }
-        .sheet(isPresented: self.$show_move_sheet) {
-            MoveSheet() { album in
+        .sheet(isPresented: self.$show_move_sheet, onDismiss: {
+            self.selected_media = []
+        }, content: {
+            MoveSheet { album in
                 Task {
                     await self.media_VM.add_imported_photos(to: album, from: self.selected_media)
                     
@@ -82,7 +85,19 @@ struct PlusMode: View {
                     }
                 }
             }
-        }
+        })
+//        .sheet(isPresented: self.$show_move_sheet) {
+//            MoveSheet(selectedMedia: self.$selected_media) { album in
+//                Task {
+//                    await self.media_VM.add_imported_photos(to: album, from: self.selected_media)
+//                    
+//                    await MainActor.run {
+//                        self.selected_media.removeAll()
+//                        self.albumViewModel.set_albums()
+//                    }
+//                }
+//            }
+//        }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
         //.background(Color(red: 28/255, green: 28/255, blue: 30/255).opacity(0.75))
         .background(Color.c1_background.opacity(0.75))
