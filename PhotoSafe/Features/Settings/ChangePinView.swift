@@ -30,122 +30,104 @@ struct ChangePinView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            UniversalHeader(header: {
-                Text("Change PIN")
-                    .default_header()
-            }) {
-                Button {
-                    self.dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+        ScrollView {
+            VStack(spacing: 22) {
+                VStack(spacing: 12) {
+                    Image(systemName: "key.shield.fill")
+                        .font(.system(size: 44, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.c1_primary)
+                        .frame(width: 84, height: 84)
+                        .background(
+                            Circle()
+                                .fill(Color.c1_secondary.opacity(0.75))
+                        )
+
+                    Text("Update your vault PIN")
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.c1_text)
+
+                    Text("Use a 6-digit PIN you can remember. Your existing PIN is required before PhotoSafe saves the new one.")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.c1_text.opacity(0.7))
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(3)
                 }
-                .padding(7)
-                .applyLiquidGlassIfSupported(shape: .circle, color: Color.c1_accent, isInteractive: true)
-            } trailing_button: {
-                EmptyView()
-            }
+                .padding(.top, 22)
 
-            ScrollView {
-                VStack(spacing: 22) {
-                    VStack(spacing: 12) {
-                        Image(systemName: "key.shield.fill")
-                            .font(.system(size: 44, weight: .semibold, design: .rounded))
-                            .foregroundStyle(Color.c1_primary)
-                            .frame(width: 84, height: 84)
-                            .background(
-                                Circle()
-                                    .fill(Color.c1_secondary.opacity(0.75))
-                            )
-
-                        Text("Update your vault PIN")
-                            .font(.system(size: 24, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.c1_text)
-
-                        Text("Use a 6-digit PIN you can remember. Your existing PIN is required before PhotoSafe saves the new one.")
-                            .font(.system(size: 14, weight: .semibold, design: .rounded))
-                            .foregroundStyle(Color.c1_text.opacity(0.7))
-                            .multilineTextAlignment(.center)
-                            .lineSpacing(3)
-                    }
-                    .padding(.top, 22)
-
-                    VStack(spacing: 14) {
-                        PinEntryField(
-                            title: "Current PIN",
-                            subtitle: "Confirm it is really you",
-                            text: self.$currentPin,
-                            field: .currentPin,
-                            focusedField: self.$focusedField
-                        )
-
-                        Divider()
-                            .background(Color.c1_text.opacity(0.25))
-
-                        PinEntryField(
-                            title: "New PIN",
-                            subtitle: "Must be 6 digits",
-                            text: self.$newPin,
-                            //trailingText: self.pinProgress,
-                            field: .newPin,
-                            focusedField: self.$focusedField
-                        )
-
-                        PinEntryField(
-                            title: "Confirm New PIN",
-                            subtitle: "Re-enter the new PIN",
-                            text: self.$confirmPin,
-                            field: .confirmPin,
-                            focusedField: self.$focusedField
-                        )
-                    }
-                    .padding(14)
-                    .background(
-                        RoundedRectangle(cornerRadius: 18)
-                            .fill(Color.c1_secondary.opacity(0.75))
+                VStack(spacing: 14) {
+                    PinEntryField(
+                        title: "Current PIN",
+                        subtitle: "Confirm it is really you",
+                        text: self.$currentPin,
+                        field: .currentPin,
+                        focusedField: self.$focusedField
                     )
 
-                    HStack(alignment: .top, spacing: 10) {
-                        Image(systemName: self.hasError ? "exclamationmark.triangle.fill" : "checkmark.shield.fill")
-                            .font(.system(size: 15, weight: .semibold, design: .rounded))
-                            .foregroundStyle(self.hasError ? .red : Color.c1_primary)
+                    Divider()
+                        .background(Color.c1_text.opacity(0.25))
 
-                        Text(self.message)
-                            .font(.system(size: 13, weight: .semibold, design: .rounded))
-                            .foregroundStyle(Color.c1_text.opacity(0.78))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(13)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill((self.hasError ? Color.red : Color.c1_secondary).opacity(0.24))
+                    PinEntryField(
+                        title: "New PIN",
+                        subtitle: "Must be 6 digits",
+                        text: self.$newPin,
+                        //trailingText: self.pinProgress,
+                        field: .newPin,
+                        focusedField: self.$focusedField
                     )
 
-                    Button {
-                        self.changePin()
-                    } label: {
-                        Text("Save New PIN")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.c1_text)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 52)
-                            .background(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .fill(Color.c1_accent)
-                            )
-                    }
-                    .disabled(!self.canSubmit)
-                    .opacity(self.canSubmit ? 1 : 0.45)
+                    PinEntryField(
+                        title: "Confirm New PIN",
+                        subtitle: "Re-enter the new PIN",
+                        text: self.$confirmPin,
+                        field: .confirmPin,
+                        focusedField: self.$focusedField
+                    )
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 28)
+                .padding(14)
+                .background(
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color.c1_secondary.opacity(0.75))
+                )
+
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: self.hasError ? "exclamationmark.triangle.fill" : "checkmark.shield.fill")
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(self.hasError ? .red : Color.c1_primary)
+
+                    Text(self.message)
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.c1_text.opacity(0.78))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(13)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill((self.hasError ? Color.red : Color.c1_secondary).opacity(0.24))
+                )
+
+                Button {
+                    self.changePin()
+                } label: {
+                    Text("Save New PIN")
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .foregroundStyle(Color.c1_text)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 52)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(Color.c1_accent)
+                        )
+                }
+                .disabled(!self.canSubmit)
+                .opacity(self.canSubmit ? 1 : 0.45)
             }
+            .padding(.horizontal)
+            .padding(.bottom, 28)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.c1_background)
-        .navigationBarBackButtonHidden(true)
+        .navigationTitle("Change PIN")
+        .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(trigger: self.pinChangeAttempts) { oldValue, newValue in
             newValue > oldValue ? .impact(weight: .heavy, intensity: 1.0) : nil
         }

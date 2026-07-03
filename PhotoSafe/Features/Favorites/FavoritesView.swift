@@ -51,8 +51,10 @@ struct FavoritesView: View {
     @State private var selectedMedia: SelectMediaEntity?
     @State private var mediaSelectedCount: Int = 0
     @State private var toast: ToastItem?
+    @State private var disableScrollView: Bool = false
     
     @Binding var isSelectModeActive: Bool
+    
     
     func leadingButton() -> some View {
         Button {
@@ -113,89 +115,186 @@ struct FavoritesView: View {
         self.isSelectModeActive ? "Select Media" : "Favorites"
     }
     
+    private var stickyHeader: some View {
+        Text("Favorites")
+            .font(.system(size: 20, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.c1_text)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
+            .background(Color.c1_secondary)
+    }
+    
     var body: some View {
-        VStack(spacing: 0) {
-            NewHeaderView(
-                title: self.title,
-                trailingButtons: {
-                    leadingButton()
-                    
-                    trailingButton()
-                },
-                subtitle: subtitle
-            )
-            
-            if favoritesViewModel.favoritesList.isEmpty {
-                VStack(spacing: 20) {
-                    Image(systemName: "heart.fill")
-                        .font(.system(size: 54, weight: .semibold))
-                        .foregroundStyle(Color.c1_accent)
+        StickyHeaderWrapper(
+            shouldDisableScrollView: self.favoritesViewModel.favoritesList.isEmpty,
+            scrollContent: {
+                NewHeaderView(
+                    title: self.title,
+                    trailingButtons: {
+                        leadingButton()
+                        
+                        trailingButton()
+                    },
+                    subtitle: subtitle
+                )
+                
+                if favoritesViewModel.favoritesList.isEmpty {
+                    VStack(spacing: 20) {
+                        Image(systemName: "heart.fill")
+                            .font(.system(size: 54, weight: .semibold))
+                            .foregroundStyle(Color.c1_accent)
 
-                    VStack(spacing: 10) {
-                        Text("Tap the heart on photos or videos you want to find faster.")
-                            .font(.system(size: 17, weight: .semibold, design: .rounded))
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(Color.c1_text.opacity(0.85))
+                        VStack(spacing: 10) {
+                            Text("Tap the heart on photos or videos you want to find faster.")
+                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(Color.c1_text.opacity(0.85))
 
-                        Text("Your favorites will appear here for quick access.")
-                            .font(.system(size: 15, weight: .medium, design: .rounded))
-                            .multilineTextAlignment(.center)
-                            .foregroundStyle(Color.c1_text.opacity(0.65))
+                            Text("Your favorites will appear here for quick access.")
+                                .font(.system(size: 15, weight: .medium, design: .rounded))
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(Color.c1_text.opacity(0.65))
+                        }
+                        .padding(.horizontal, 14)
                     }
-                    .padding(.horizontal, 14)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(10)
-                .transition(.opacity.combined(with: .scale(scale: 0.98)))
-            } else {
-                ScrollView {
-                    LazyVGrid(columns: self.gridItemLayout, spacing: 5) {
-                        ForEach(self.$favoritesViewModel.favoritesList,id:\.self) { $favorite in
-                            if let thumbnailImage = favorite.thumbnailImage {
-                                MediaImageGridView(
-                                    selectModeActive: self.isSelectModeActive,
-                                    thumbnail: thumbnailImage,
-                                    screenType: .Favorite,
-                                    media: $favorite,
-                                    selectedMedia: self.$selectedMedia,
-                                    selectCount: self.$mediaSelectedCount
-                                )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(10)
+                    .transition(.opacity.combined(with: .scale(scale: 0.98)))
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: self.gridItemLayout, spacing: 5) {
+                            ForEach(self.$favoritesViewModel.favoritesList,id:\.self) { $favorite in
+                                if let thumbnailImage = favorite.thumbnailImage {
+                                    MediaImageGridView(
+                                        selectModeActive: self.isSelectModeActive,
+                                        thumbnail: thumbnailImage,
+                                        screenType: .Favorite,
+                                        media: $favorite,
+                                        selectedMedia: self.$selectedMedia,
+                                        selectCount: self.$mediaSelectedCount
+                                    )
+                                }
                             }
                         }
+                        .padding(.top, 18)
+                        .padding(.horizontal)
                     }
-                    .padding(.top, 18)
-                    .padding(.horizontal)
+                    .transition(.opacity.combined(with: .scale(scale: 0.98)))
                 }
-                .transition(.opacity.combined(with: .scale(scale: 0.98)))
-            }
-            if self.isSelectModeActive {
-                Button {
-                    do {
-                        try self.favoritesViewModel.unFavoriteSelected()
-                        self.mediaSelectedCount = 0
+                if self.isSelectModeActive {
+                    Button {
+                        do {
+                            try self.favoritesViewModel.unFavoriteSelected()
+                            self.mediaSelectedCount = 0
+                            
+                            withAnimation(.easeInOut) { self.isSelectModeActive = false }
+                            toast = ToastItem(message: "Removed from Favorites", status: .success)
+                        } catch {
+                            toast = ToastItem(message: "Failed to remove from favorites", status: .failure)
+                        }
                         
-                        withAnimation(.easeInOut) { self.isSelectModeActive = false }
-                        toast = ToastItem(message: "Removed from Favorites", status: .success)
-                    } catch {
-                        toast = ToastItem(message: "Failed to remove from favorites", status: .failure)
+                    } label: {
+                        Text("Unfavorite")
+                            .foregroundStyle(Color.c1_text)
+                            .font(.system(size: 18,design: .rounded))
+                            .padding(.horizontal,15)
+                            .padding(.vertical,10)
+                            .applyLiquidGlassIfSupported(
+                                shape: .rect(cornerRadius: 12),
+                                color: Color.c1_accent,
+                                isInteractive: true
+                            )
                     }
-                    
-                } label: {
-                    Text("Unfavorite")
-                        .foregroundStyle(Color.c1_text)
-                        .font(.system(size: 18,design: .rounded))
-                        .padding(.horizontal,15)
-                        .padding(.vertical,10)
-                        .applyLiquidGlassIfSupported(
-                            shape: .rect(cornerRadius: 12),
-                            color: Color.c1_accent,
-                            isInteractive: true
-                        )
+                    .opacity(self.mediaSelectedCount > 0 ? 1 : 0.3)
+                    .disabled(self.mediaSelectedCount == 0)
                 }
-                .opacity(self.mediaSelectedCount > 0 ? 1 : 0.3)
-                .disabled(self.mediaSelectedCount == 0)
-            }
-        }
+            }, stickyHeader: {
+                self.stickyHeader
+            })
+//        VStack(spacing: 0) {
+//            NewHeaderView(
+//                title: self.title,
+//                trailingButtons: {
+//                    leadingButton()
+//                    
+//                    trailingButton()
+//                },
+//                subtitle: subtitle
+//            )
+//            
+//            if favoritesViewModel.favoritesList.isEmpty {
+//                VStack(spacing: 20) {
+//                    Image(systemName: "heart.fill")
+//                        .font(.system(size: 54, weight: .semibold))
+//                        .foregroundStyle(Color.c1_accent)
+//
+//                    VStack(spacing: 10) {
+//                        Text("Tap the heart on photos or videos you want to find faster.")
+//                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+//                            .multilineTextAlignment(.center)
+//                            .foregroundStyle(Color.c1_text.opacity(0.85))
+//
+//                        Text("Your favorites will appear here for quick access.")
+//                            .font(.system(size: 15, weight: .medium, design: .rounded))
+//                            .multilineTextAlignment(.center)
+//                            .foregroundStyle(Color.c1_text.opacity(0.65))
+//                    }
+//                    .padding(.horizontal, 14)
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .padding(10)
+//                .transition(.opacity.combined(with: .scale(scale: 0.98)))
+//            } else {
+//                ScrollView {
+//                    LazyVGrid(columns: self.gridItemLayout, spacing: 5) {
+//                        ForEach(self.$favoritesViewModel.favoritesList,id:\.self) { $favorite in
+//                            if let thumbnailImage = favorite.thumbnailImage {
+//                                MediaImageGridView(
+//                                    selectModeActive: self.isSelectModeActive,
+//                                    thumbnail: thumbnailImage,
+//                                    screenType: .Favorite,
+//                                    media: $favorite,
+//                                    selectedMedia: self.$selectedMedia,
+//                                    selectCount: self.$mediaSelectedCount
+//                                )
+//                            }
+//                        }
+//                    }
+//                    .padding(.top, 18)
+//                    .padding(.horizontal)
+//                }
+//                .transition(.opacity.combined(with: .scale(scale: 0.98)))
+//            }
+//            if self.isSelectModeActive {
+//                Button {
+//                    do {
+//                        try self.favoritesViewModel.unFavoriteSelected()
+//                        self.mediaSelectedCount = 0
+//                        
+//                        withAnimation(.easeInOut) { self.isSelectModeActive = false }
+//                        toast = ToastItem(message: "Removed from Favorites", status: .success)
+//                    } catch {
+//                        toast = ToastItem(message: "Failed to remove from favorites", status: .failure)
+//                    }
+//                    
+//                } label: {
+//                    Text("Unfavorite")
+//                        .foregroundStyle(Color.c1_text)
+//                        .font(.system(size: 18,design: .rounded))
+//                        .padding(.horizontal,15)
+//                        .padding(.vertical,10)
+//                        .applyLiquidGlassIfSupported(
+//                            shape: .rect(cornerRadius: 12),
+//                            color: Color.c1_accent,
+//                            isInteractive: true
+//                        )
+//                }
+//                .opacity(self.mediaSelectedCount > 0 ? 1 : 0.3)
+//                .disabled(self.mediaSelectedCount == 0)
+//            }
+//        }
         .fullScreenCover(item: self.$selectedMedia) { element in
             FullCoverSheet(
                 screenType: .Favorite,
@@ -214,5 +313,11 @@ struct FavoritesView: View {
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         .background(Color.c1_background)
         .displayToast(self.$toast)
+//        .onAppear {
+//            self.disableScrollView = self.favoritesViewModel.favoritesList.isEmpty
+//        }
+//        .onChange(of: self.favoritesViewModel.favoritesList) { old, new in
+//            self.disableScrollView = new.isEmpty
+//        }
     }
 }

@@ -7,3 +7,7 @@ Frameworks/
 
 # macOS
 .DS_Store
+
+# Local UI wireframe explorations
+wireframes/autoscroller-options-modern-directions.html
+wireframes/autoscroller-options-sheet-wireframe.html

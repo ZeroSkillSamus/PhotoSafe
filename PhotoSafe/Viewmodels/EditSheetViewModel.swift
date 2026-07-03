@@ -41,7 +41,6 @@ final class EditSheetViewModel: ObservableObject {
         }
     }
     
-    //TODO: - Fix with new hash password implementation
     func set_variables(from album: AlbumEntity) {
         self.album_name = album.name
         self.is_locked = album.is_locked

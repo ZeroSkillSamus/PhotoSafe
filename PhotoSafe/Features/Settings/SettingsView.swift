@@ -94,6 +94,10 @@ struct SettingsView: View {
     @State private var showConfirmationSheet: Bool = false
     @State private var showDeleteAllConfirmation: Bool = false
     @State private var showDeleteBookmarksAlert: Bool = false
+    @State private var showClearBrowserCookiesAlert: Bool = false
+    
+    
+    @State private var showStickyHeader: Bool = false
     
     @State private var toast: ToastItem?
     
@@ -104,7 +108,7 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .top) {
             ScrollView(showsIndicators: false) {
                 NewHeaderView(title: "Settings", trailingButtons: { EmptyView() }, subtitle: self.headerSubtitle)
                 
@@ -150,6 +154,19 @@ struct SettingsView: View {
                 .padding(.top)
                 .padding(.horizontal)
             }
+            .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                geometry.contentOffset.y
+            } action: { _, offset in
+                withAnimation(.easeInOut(duration: 0.18)) {
+                    self.showStickyHeader = offset > 30
+                }
+            }
+            
+            if self.showStickyHeader {
+                self.stickyHeader
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .zIndex(1)
+            }
         }
         .displayToast(self.$toast)
         .sheet(isPresented: self.$exportDestinationSheet) {
@@ -174,9 +191,33 @@ struct SettingsView: View {
         } message: {
             Text("This permanently removes all saved bookmarks and bookmark folders. This cannot be undone.")
         }
+        .confirmationDialog(
+            "Clear all saved browser data?",
+            isPresented: $showClearBrowserCookiesAlert,
+            titleVisibility: .visible
+        ) {
+            Button("Clear Cookies and Cache", role: .destructive) {
+                webViewModel.clearAllCookiesAndCache()
+            }
+            
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This will sign you out of websites and remove cached browser data.")
+        }
         .onChange(of: appSettings.enablePrivateBrowser) { _, _ in
             webViewModel.clearAllCookiesAndCache()
         }
+    }
+    
+    private var stickyHeader: some View {
+        Text("Settings")
+            .font(.system(size: 20, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.c1_text)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
+            .background(Color.c1_secondary)
     }
     
     // MARK: - Settings Buttons Views
@@ -210,7 +251,8 @@ struct SettingsView: View {
     
     @ViewBuilder var browserButtons: some View {
         Button {
-            webViewModel.clearAllCookiesAndCache()
+//            webViewModel.clearAllCookiesAndCache()
+            self.showClearBrowserCookiesAlert = true
         } label: {
             SettingsRowView(
                 icon: "network.slash",
@@ -362,5 +404,13 @@ struct SettingsView: View {
                 overlay: { EmptyView() }
             )
         }
+    }
+}
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }

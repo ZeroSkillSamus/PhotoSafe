@@ -147,7 +147,7 @@ struct WebNavigationBar: View {
         .frame(height: 30)
         .padding(.horizontal)
         .padding(.vertical, 10)
-        .background(Color.c1_secondary)
+        .background(Color.c1_background)
         .onAppear {
             self.userInputText = self.webViewModel.currentUrl?.absoluteString ?? ""
         }

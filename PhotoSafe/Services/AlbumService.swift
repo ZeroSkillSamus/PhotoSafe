@@ -36,7 +36,7 @@ final class AlbumService: AlbumServiceProtocol {
     }
     
     func change_password(for album: AlbumEntity, with password: String) throws {
-        setAlbumPassword(for: album, password)
+        try setAlbumPassword(for: album, password)
         try context.save()
     }
     
@@ -63,7 +63,7 @@ final class AlbumService: AlbumServiceProtocol {
         let albumEntity = AlbumEntity(context: context)
         albumEntity.name = name
         albumEntity.thumbnail = thumbnail
-        setAlbumPassword(for: albumEntity, password)
+        try setAlbumPassword(for: albumEntity, password)
         if thumbnail != nil {
             albumEntity.image_upload_status = .Upload
         } else {
@@ -80,13 +80,13 @@ final class AlbumService: AlbumServiceProtocol {
         try context.save()
     }
     
-    private func setAlbumPassword(for albumEntity: AlbumEntity, _ password: String) {
-        // Need to hash user password and store the hash and salt in coredata 
+    private func setAlbumPassword(for albumEntity: AlbumEntity, _ password: String) throws {
+        // Need to hash user password and store the hash and salt in coredata
         if password.isEmpty {
             albumEntity.passwordHash = nil
             albumEntity.passwordSalt = nil
         } else {
-            let (salt, hashPassword) = PasswordHasher.hash(password)
+            let (salt, hashPassword) = try PasswordHasher.hash(password)
             albumEntity.passwordHash = hashPassword
             albumEntity.passwordSalt = salt
         }

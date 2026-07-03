@@ -132,10 +132,10 @@ struct CreateAlbumSheet: View {
                             Image(systemName: "lock.fill")
                                 .font(.system(size: 50, weight: .semibold))
 
-                            Text("Album is locked when password is specefied")
+                            Text("Album is locked when password is specified")
                                 .font(.system(size: 17, weight: .semibold, design: .rounded))
                             
-                            Text("A lock image will be shown when locked")
+                            Text("This album will use a lock cover")
                                 .font(.system(size: 13, weight: .medium, design: .rounded))
                                 .opacity(0.7)
                         }
@@ -198,7 +198,7 @@ struct CreateAlbumSheet: View {
                     .frame(maxWidth: .infinity)
                     .padding(5)
                     .padding(.horizontal,6)
-                    .padding(.bottom,40)
+                    .padding(.bottom,60)
                     
                 }
             }
@@ -215,22 +215,26 @@ struct CreateAlbumSheet: View {
                     Image(systemName: "xmark")
                         .font(.system(size: 20,weight: .semibold))
                         .foregroundStyle(Color.c1_text)
-                        .padding(10)
+                        .padding(5)
                         .applyLiquidGlassIfSupported(shape: .circle, color: Color.c1_accent)
                 }
                 Spacer()
             }
+            .padding(.horizontal)
             .overlay(alignment: .center) {
                 Text(header)
                     .font(.system(size: 24,weight: .bold,design: .rounded))
                     .foregroundStyle(Color.c1_text)
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal)
+            
             
             VStack {
-                Color.clear
-                    .frame(height: 320)
+                if self.focusedField == nil {
+                    Color.clear
+                        .frame(height: 320)
+                }
+                
                 
                 VStack(spacing: 14) {
                     CreateAlbumSection(
@@ -350,7 +354,10 @@ struct CreateAlbumSheet: View {
                             }
                         }
                     )
-                    .opacity(!albumPassword.isEmpty ? 1 : 0)
+                    .opacity(albumPassword.isEmpty ? 0 : 1)
+                    .disabled(albumPassword.isEmpty)
+                    .accessibilityHidden(albumPassword.isEmpty)
+                    
                     
                     
                     Spacer()
@@ -368,11 +375,12 @@ struct CreateAlbumSheet: View {
                             self.dismiss() // Close Sheet
                             
                             if let moveAction {
-                                moveAction(self.albumName)
+                                moveAction(trimmedName)
                             }
-//                            withAnimation {
-//                                self.isPlusModeActive.toggle()
-//                            }
+                            
+                            withAnimation {
+                                self.isPlusModeActive.toggle()
+                            }
                         } catch (let error) {
                             self.toast = ToastItem(message: error.localizedDescription, status: .failure)
                         }
