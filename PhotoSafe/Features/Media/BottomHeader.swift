@@ -112,10 +112,10 @@ struct BottomHeader: View {
                 }
             }
         }
-        .sheet(isPresented: self.$is_move_sheet_active) {
+        .sheet(isPresented: self.$is_move_sheet_active, onDismiss: { self.selected_media = [] }) {
             MoveSheet(
                 //media_VM: self.media_VM,
-                curr_album_name: self.album.name
+                curr_album_name: self.album.name,
             ) { album in
                 self.num_selected_items = 0
                 withAnimation {
