@@ -18,7 +18,7 @@ struct BottomTabNavigation: View {
     @StateObject private var album_VM: AlbumViewModel = AlbumViewModel()
     @StateObject private var favorite_VM: FavoriteViewModel = FavoriteViewModel()
     
-    @State private var current_tab: Tab = .albums // Current Tab
+    @State private var current_tab: Tab = .favorites // Current Tab
     @State private var path = NavigationPath()  // For NavigationStack
     @State private var display_sheet: Bool = false
     @State private var toggle_plus_mode: Bool = false
@@ -72,6 +72,10 @@ struct BottomTabNavigation: View {
         )
     }
     
+    private var shouldShowFavoriteSelectionBar: Bool {
+        self.current_tab == .favorites && self.select_mode_active
+    }
+    
     var body: some View {
         // // Prevents keyboard pushing tab bar up
         NavigationStack(path: self.$path) {
@@ -98,15 +102,26 @@ struct BottomTabNavigation: View {
                             .tag(Tab.favorites)
                             .toolbar(.hidden, for: .tabBar)
                             .background(Color.c1_background)
+                            .ignoresSafeArea(edges: select_mode_active ? .bottom : [])
                     }
                     
                     //Custom Tab Bar
                     VStack(spacing:0) {
-                        CustomNavHeader()
-                            .background(Color.c1_secondary)
-                            .opacity(self.toggle_plus_mode || self.select_mode_active ? 0 : 1)
+                        ZStack {
+                            CustomNavHeader()
+                                .background(Color.c1_secondary)
+                                .opacity(self.toggle_plus_mode || self.shouldShowFavoriteSelectionBar ? 0 : 1)
+                                .allowsHitTesting(!self.toggle_plus_mode && !self.shouldShowFavoriteSelectionBar)
+                            
+                            SelectModeBottomHeader(isSelectModeActive: self.$select_mode_active)
+                                .opacity(self.shouldShowFavoriteSelectionBar ? 1 : 0)
+                                .allowsHitTesting(self.shouldShowFavoriteSelectionBar)
+                        }
+                        .frame(height: 55)
                     }
                     .background(Color.c1_background)
+                    .animation(.easeOut(duration: 0.25), value: toggle_plus_mode)
+                    .animation(.easeOut(duration: 0.25), value: select_mode_active)
                 }
             }
             .ignoresSafeArea(.keyboard)

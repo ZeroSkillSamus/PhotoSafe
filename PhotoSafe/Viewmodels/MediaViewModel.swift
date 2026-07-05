@@ -21,6 +21,7 @@ final class MediaViewModel: ObservableObject {
     
     private let mp4DownloadService: VideoDownloaderProtocol
     private let hlsDownloadService: VideoDownloaderProtocol
+    private let mediaExportService: MediaExportServiceProtocol
     private let userDefaults: UserDefaults
     
     @Published var medias: [SelectMediaEntity] = []
@@ -52,6 +53,7 @@ final class MediaViewModel: ObservableObject {
         media_service: MediaServiceProtocol = MediaService(),
         mp4Downloader: VideoDownloaderProtocol = MP4Downloader(),
         hlsDownlaodService: VideoDownloaderProtocol = HLSDownloader(),
+        mediaExportService: MediaExportServiceProtocol = MediaExportService(),
         userDefaults: UserDefaults = .standard
     ) {
         self.userDefaults = userDefaults
@@ -59,7 +61,9 @@ final class MediaViewModel: ObservableObject {
         self.service = media_service
         self.mp4DownloadService = mp4Downloader
         self.hlsDownloadService = hlsDownlaodService
+        self.mediaExportService = mediaExportService
         self.mediaSavingService = MediaHandler()
+       
     }
     
     var selected_media: [SelectMediaEntity] {
@@ -76,60 +80,13 @@ final class MediaViewModel: ObservableObject {
     
     /// Handles exporting media to the users photo library
     /// Still need to implement proper way to relay progress to user
-    func exportSelectedMediaToPhotos() async -> (Int, Int) {
-        let total = selected_media.count
-        
-        return await withTaskGroup(of: ToastItem.self) { group in
-            for selected in selected_media {
-                group.addTask {
-                    await self.handleExportingMediaToUserLibrary(selected: selected)
-                }
-            }
-            
-            var succeeded = 0
-            for await result in group {
-                if result.status == .success { succeeded += 1 }
-            }
-            self.toast = ToastItem(message: "Exported \(succeeded) out of \(total)", status: .success)
-            return (succeeded, total)
-        }
+    func exportSelectedMediaToPhotos() async {
+        let (succeeded, total) = await self.mediaExportService.exportMany(selected_media)
+        self.toast = ToastItem(message: "Exported \(succeeded) out of \(total)", status: .success)
     }
     
     func exportSingle(selected: SelectMediaEntity) async {
-        let success = await handleExportingMediaToUserLibrary(selected: selected)
-        self.toast = success
-    }
-    
-    ///
-    private func handleExportingMediaToUserLibrary(selected: SelectMediaEntity) async -> ToastItem {
-        return await withCheckedContinuation { continuation in
-            switch selected.type {
-            case MediaType.Photo.rawValue:
-                guard let fullImage = selected.fullImage else {
-                    continuation.resume(returning: ToastItem(message: "Failed to decode image for export", status: .failure))
-                    return
-                }
-                
-                mediaSavingService.savePhotoToUserLibrary(image: fullImage) { toast in
-                    continuation.resume(returning: toast)
-                }
-            case MediaType.Video.rawValue:
-                guard let videoPath = selected.videoPath else {
-                    continuation.resume(returning: ToastItem(message: "Failed to locate video path for export", status: .failure))
-                    return
-                }
-                
-                mediaSavingService.saveVideoToUserLibrary(at: videoPath) { toast in
-                    continuation.resume(returning: toast)
-                }
-            case MediaType.GIF.rawValue:
-                mediaSavingService.saveGifToUserLibrary(data: selected.imageData) { toast in
-                    continuation.resume(returning: toast)
-                }
-            default:
-                continuation.resume(returning: ToastItem(message: "Unknown media type, can not export", status: .failure))
-            }
-        }
+        self.toast = await self.mediaExportService.exportSingle(selected: selected)
     }
     
     /// Gets all selected elements
