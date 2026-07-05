@@ -11,7 +11,7 @@ import Foundation
 class SlideShowViewModel: ObservableObject {
     // Settings for setting auto play
     @Published var showSettings: Bool = false
-    @Published var autoPlayEnabled: Bool = false
+    @Published var autoPlayEnabled: Bool = true
     @Published var slideShowDirection: SlideShowType = .vertical
     @Published var timeInteval: TimeInterval = 2
     @Published var isShuffleEnabled: Bool = false

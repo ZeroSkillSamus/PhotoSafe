@@ -11,7 +11,11 @@ struct AlbumView: View {
     @State private var display_alert: Bool = false
     @State private var is_edit_enabled: Bool = false
     @State private var toast: ToastItem?
+    @State private var disableScrollView: Bool = false
+    
     @Binding var path: NavigationPath
+    
+    @State private var showStickyHeader: Bool = false
     
     private struct AlbumVerticalDisplay: View {
         @State private var display_alert: Bool = false
@@ -64,12 +68,16 @@ struct AlbumView: View {
                 
                 Button("OK", role: .cancel) {
                     // Use new hash
-                    if PasswordHasher.verify(password, for: album) {
-                        if self.is_edit_enabled {
-                            self.album_selected_to_edit = album
-                        } else {
-                            path.append(album)
+                    do {
+                        if try PasswordHasher.verify(password, for: album) {
+                            if self.is_edit_enabled {
+                                self.album_selected_to_edit = album
+                            } else {
+                                path.append(album)
+                            }
                         }
+                    } catch (let error) {
+                        self.toast = ToastItem(message: error.localizedDescription, status: .failure)
                     }
                 }
             }
@@ -86,8 +94,21 @@ struct AlbumView: View {
         self.is_edit_enabled ? "Edit Mode" : "Albums"
     }
     
+    private var stickyHeader: some View {
+        Text("Albums")
+            .font(.system(size: 20, weight: .bold, design: .rounded))
+            .foregroundStyle(Color.c1_text)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
+            .background(Color.c1_secondary)
+    }
+    
     var body: some View {
-        VStack(spacing: 0) {
+        StickyHeaderWrapper(
+            shouldDisableScrollView: self.album_VM.albums.isEmpty
+        ) {
             NewHeaderView(
                 title: title,
                 trailingButtons: {
@@ -153,9 +174,42 @@ struct AlbumView: View {
                 }
                 .transition(.opacity.combined(with: .scale(scale: 0.98)))
             }
+            
+        } stickyHeader: {
+            self.stickyHeader
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .animation(.easeInOut, value: self.album_VM.albums.isEmpty)
         .displayToast(self.$toast)
+    }
+}
+
+struct StickyHeaderWrapper<Content: View, StickyHeader: View>: View {
+    @State private var showStickyHeader: Bool = false
+    
+    var shouldDisableScrollView: Bool
+    @ViewBuilder var scrollContent: Content
+    @ViewBuilder var stickyHeader: StickyHeader
+    
+    var body: some View {
+        ZStack(alignment: .top) {
+            ScrollView {
+                scrollContent
+            }
+            .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                geometry.contentOffset.y
+            } action: { _, offset in
+                withAnimation(.easeInOut(duration: 0.18)) {
+                    self.showStickyHeader = offset > 30
+                }
+            }
+            
+            if self.showStickyHeader {
+                self.stickyHeader
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .zIndex(1)
+            }
+        }
+        .scrollDisabled(shouldDisableScrollView)
     }
 }

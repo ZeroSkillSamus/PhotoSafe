@@ -73,7 +73,7 @@ struct PlusMode: View {
             }
         }
         .sheet(isPresented: self.$show_move_sheet, onDismiss: {
-            self.selected_media = []
+            //self.selected_media = []
         }, content: {
             MoveSheet { album in
                 Task {
@@ -122,6 +122,12 @@ struct PlusMode: View {
             // Delay the move sheet mode toggle by 0.5 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.show_move_sheet.toggle()
+            }
+        }
+        .onChange(of: self.media_VM.progress_alert) { oldValue, newValue in
+            if oldValue && !newValue {
+                print("went from true to false")
+                self.selected_media = []
             }
         }
     }

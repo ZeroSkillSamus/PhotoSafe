@@ -78,11 +78,9 @@ struct NumPad: View {
                     .font(.system(size: 22,weight: .semibold,design: .rounded))
                     .foregroundColor(Color.c1_text)
                     .frame(width: 70, height: 70) // Fixed size
-//                    .background(Color.c1_secondary)
-//
-//                    .clipShape(Circle())
+                    .background(Circle().fill(Color.c1_secondary))
             }
-            .applyLiquidGlassIfSupported(shape: .circle, color: Color.c1_secondary, isInteractive: true)
+            .contentShape(Circle())
         }
     }
 }

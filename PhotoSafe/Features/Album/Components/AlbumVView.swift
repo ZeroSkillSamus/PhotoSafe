@@ -71,13 +71,18 @@ struct AlbumVDisplay: View {
                         .textInputAutocapitalization(.never)
 
                     Button("Continue") {
-                        if PasswordHasher.verify(password, for: album) {
-                            password = ""
-                            showDeleteAlert = true
-                        } else {
-                            password = ""
-                            toast = ToastItem(message: "Incorrect password", status: .failure)
+                        do {
+                            if try PasswordHasher.verify(password, for: album) {
+                                password = ""
+                                showDeleteAlert = true
+                            } else {
+                                password = ""
+                                toast = ToastItem(message: "Incorrect password", status: .failure)
+                            }
+                        } catch (let error) {
+                            toast = ToastItem(message: error.localizedDescription, status: .failure)
                         }
+                        
                     }
 
                     Button("Cancel", role: .cancel) {
