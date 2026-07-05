@@ -8,12 +8,24 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 final class FavoriteViewModel: ObservableObject {
     @Published var favoritesList: [SelectMediaEntity] = []
     private let service: MediaServiceProtocol
+    private let mediaExportService: MediaExportServiceProtocol
     
-    init(service: MediaServiceProtocol = MediaService()) {
+    @Published var toast: ToastItem?
+    
+    init(
+        service: MediaServiceProtocol = MediaService(),
+        mediaExportService: MediaExportServiceProtocol = MediaExportService()
+    ) {
         self.service = service
+        self.mediaExportService = mediaExportService
+    }
+    
+    var selectedMedia: [SelectMediaEntity] {
+        self.favoritesList.filter({$0.select == .checked })
     }
     
     func unSelectAll() {
@@ -41,5 +53,11 @@ final class FavoriteViewModel: ObservableObject {
     
     func setFavorites() {
         self.favoritesList = self.service.fetchFavorites().map({ SelectMediaEntity(media: $0) })
+    }
+    
+    func exportSelectedMediaToPhotos() async {
+        let selectedMedia = favoritesList.filter({$0.select == .checked })
+        let (succeeded, total) =  await self.mediaExportService.exportMany(selectedMedia)
+        self.toast = ToastItem(message: "Exported \(succeeded) out of \(total)", status: .success)
     }
 }

@@ -46,7 +46,7 @@ struct BottomHeader: View {
                     BottomHeaderButton {
                         SelectBottomButton(label: "Export", system_name:"square.and.arrow.up") {
                             Task {
-                                let (_, _) = await self.media_VM.exportSelectedMediaToPhotos()
+                                await self.media_VM.exportSelectedMediaToPhotos()
                                 
                                 withAnimation {
                                     self.select_mode_active = false // Get out of select mode

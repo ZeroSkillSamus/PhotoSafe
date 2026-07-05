@@ -95,14 +95,42 @@ struct AlbumView: View {
     }
     
     private var stickyHeader: some View {
-        Text("Albums")
-            .font(.system(size: 20, weight: .bold, design: .rounded))
-            .foregroundStyle(Color.c1_text)
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 12)
-            .background(Color.c1_secondary)
+        HStack {
+            // Recenlty Delete Shower
+            Button {
+                print("Show recently deleted")
+            } label: {
+                Image(systemName: "trash")
+                    .font(.system(size: 17,design: .rounded))
+                    .padding(7)
+            }
+            .applyLiquidGlassIfSupported(shape: .circle, color: Color.c1_accent)
+            
+            Spacer()
+            
+            Button {
+                withAnimation {
+                    self.is_edit_enabled.toggle()
+                }
+            } label: {
+                Text(self.is_edit_enabled ? "Cancel" : "Edit")
+                    .foregroundStyle(Color.c1_text)
+                    .font(.system(size: 17,design: .rounded))
+                    .padding(.horizontal,12)
+                    .padding(.vertical,8)
+            }
+            .applyLiquidGlassIfSupported(color: Color.c1_accent,isInteractive: true)
+        }
+        .overlay(alignment: .center, content: {
+            Text(self.is_edit_enabled ? "Edit Mode" : "Albums")
+                .font(.system(size: 22, weight: .bold, design: .rounded))
+        })
+        .foregroundStyle(Color.c1_text)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
+        .background(Color.c1_secondary)
     }
     
     var body: some View {
