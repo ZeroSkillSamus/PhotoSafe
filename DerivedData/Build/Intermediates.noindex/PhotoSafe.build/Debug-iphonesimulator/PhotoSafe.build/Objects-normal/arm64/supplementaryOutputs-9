@@ -1,0 +1,58 @@
+{
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Album/Components/TopHeader.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/TopHeader.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/TopHeader.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/TopHeader.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/TopHeader.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/TopHeader.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Models/CoreData/Bookmarks/FolderEntity+CoreDataProperties.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/FolderEntity+CoreDataProperties.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/FolderEntity+CoreDataProperties.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/FolderEntity+CoreDataProperties.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/FolderEntity+CoreDataProperties.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/FolderEntity+CoreDataProperties.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Services/AuthStorageService.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/AuthStorageService.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/AuthStorageService.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/AuthStorageService.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/AuthStorageService.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/AuthStorageService.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Services/KeychainWrapperService.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/KeychainWrapperService.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/KeychainWrapperService.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/KeychainWrapperService.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/KeychainWrapperService.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/KeychainWrapperService.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Services/MediaExportService.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaExportService.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaExportService.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaExportService.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaExportService.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaExportService.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Services/MediaFileVaultService.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaFileVaultService.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaFileVaultService.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaFileVaultService.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaFileVaultService.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/MediaFileVaultService.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Utilities/Components/ImageGridView.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/ImageGridView.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/ImageGridView.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/ImageGridView.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/ImageGridView.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/ImageGridView.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Utilities/Extensions/View+Toast.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/View+Toast.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/View+Toast.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/View+Toast.dia",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/View+Toast.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/PhotoSafe.build/Debug-iphonesimulator/PhotoSafe.build/Objects-normal/arm64/View+Toast.swiftdeps"
+  }
+}

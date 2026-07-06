@@ -1,0 +1,6 @@
+dependencies: \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/Darwin.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDFileAttributeHelper.m \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/SDWebImage.build/Debug-iphoneos/SDWebImage.build/DerivedSources/resource_bundle_accessor.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDFileAttributeHelper.h

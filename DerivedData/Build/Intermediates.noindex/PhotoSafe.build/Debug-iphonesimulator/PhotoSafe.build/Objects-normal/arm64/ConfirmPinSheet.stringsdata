@@ -1,0 +1,32 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Settings/ConfirmPinSheet.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Confirm PIN",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 27
+        }
+      },
+      {
+        "comment": "",
+        "key": "Enter your PIN to permanently delete all albums and media from PhotoSafe.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 33
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete All",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 80
+        }
+      }
+    ]
+  },
+  "version": 1
+}

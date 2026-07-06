@@ -28,102 +28,169 @@ extension View {
 }
 
 struct PlayerView: View {
+    @Environment(\.dismiss) var dismiss
+    
     @State private var controller: AVPlayerViewController = AVPlayerViewController()
     @State private var is_controls_active: Bool = false
     @State private var player_value: Float = 0
     @State private var is_video_playing: Bool = true
-
-    let url: URL
+    @State private var url: URL?
+    @State private var timeObserverToken: Any?
+    
+    var media: SelectMediaEntity
+    var showDismiss: Bool = false
     var handleOnVideoEnd: (() -> Void)?
     
-    func add_time_observer() {
-        self.controller.player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.1, preferredTimescale: 800), queue: .main, using: { time in
-            let duration = self.controller.player?.currentItem?.duration.seconds ?? 1.0
-            self.player_value = Float(time.seconds / duration) //For Slider
-        })
+    func addTimeObserver() {
+        guard timeObserverToken == nil else { return }
+
+        timeObserverToken = controller.player?.addPeriodicTimeObserver(
+            forInterval: CMTime(seconds: 0.1, preferredTimescale: 800),
+            queue: .main
+        ) { time in
+            guard let duration = controller.player?.currentItem?.duration.seconds,
+                  duration.isFinite,
+                  duration > 0,
+                  time.seconds.isFinite else {
+                player_value = 0
+                return
+            }
+
+            player_value = Float(time.seconds / duration)
+        }
     }
     
-    func convert_seconds(_ seconds: Double) -> String {
-        let time_as_int = Int(seconds.isNaN ? 0 : seconds)
-        let hours = (time_as_int / 3600)
-        let minutes = (time_as_int % 3600) / 60
-        let seconds = (time_as_int % 3600) % 60
+    func removeTimeObserver() {
+        if let timeObserverToken {
+            controller.player?.removeTimeObserver(timeObserverToken)
+            self.timeObserverToken = nil
+        }
+    }
+    
+    func covertSecondsToReadableFormat(_ seconds: Double) -> String {
+        let totalSeconds = Int(seconds.isNaN ? 0 : seconds)
+        let hours = (totalSeconds / 3600)
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
         
-        let customFormatter = NumberFormatter()
-        customFormatter.maximumIntegerDigits = 2
-        customFormatter.minimumIntegerDigits = 2
-
-        let newSec = customFormatter.string(from: seconds as NSNumber) ?? "00"
-        let newMin = customFormatter.string(from: minutes as NSNumber) ?? "00"
-        return hours == 0 ? "\(newMin):\(newSec)" : "\(hours):\(newMin):\(newSec)"
+        return hours == 0
+                ? String(format: "%02d:%02d", minutes, seconds)
+                : String(format: "%d:%02d:%02d", hours, minutes, seconds)
     }
 
     var current_timestamp: String {
-        self.convert_seconds(self.controller.player?.currentTime().seconds ?? 0.0)
+        self.covertSecondsToReadableFormat(self.controller.player?.currentTime().seconds ?? 0.0)
     }
     
     var duration_timestamp: String {
-        self.convert_seconds(self.controller.player?.currentItem?.duration.seconds ?? 1.0)
+        self.covertSecondsToReadableFormat(self.controller.player?.currentItem?.duration.seconds ?? 1.0)
     }
     
     var body: some View {
         ZStack {
-            CustomVideoPlayer(url: self.url, controller: self.$controller)
-                .onAppear {
-                    self.add_time_observer()
-                    self.controller.player?.play()
-                    
-                    // Add oberser for if player finished 
-                }
-                .onDisappear {
-                    self.controller.player?.pause()
-                }
-                .onReceive(NotificationCenter.default.publisher(
-                    for: .AVPlayerItemDidPlayToEndTime,
-                    object: controller.player?.currentItem
-                )) { _ in
-                    if let handleOnVideoEnd {
-                        handleOnVideoEnd()
-                    }
-                }
+            Color.black.ignoresSafeArea()
             
-            Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    withAnimation {
-                        self.is_controls_active.toggle()
+            if let url {
+                CustomVideoPlayer(url: url, controller: self.$controller)
+                    .onAppear {
+                        self.addTimeObserver()
+                        self.controller.player?.play()
                     }
-                }
-
-            if self.is_controls_active {
-                VStack(spacing: 0) {
-                    playbackControls()
-                    
-                    HStack {
-                        Text(current_timestamp)
-                            .font(.caption)
-                            .foregroundStyle(.white)
-                            .bold()
+                    .onDisappear {
+                        self.controller.player?.pause()
+                        self.removeTimeObserver()
                         
-                        NewCustomProgressBar(
-                            value: self.player_value,
-                            isPlaying: self.is_video_playing,
-                            player_controller: self.$controller
-                        )
-        
-                        Text(self.duration_timestamp)
-                            .font(.caption)
-                            .foregroundStyle(.white)
-                            .bold()
+                        // Remove temp file
+//                        if let url {
+                        try? MediaFileVaultService.shared.deleteTemporaryPlaybackFile(at: url)
+                        self.url = nil
+//                        }
                     }
-                    .padding(.horizontal,8)
+                    .onReceive(NotificationCenter.default.publisher(
+                        for: .AVPlayerItemDidPlayToEndTime,
+                        object: controller.player?.currentItem
+                    )) { _ in
+                        if let handleOnVideoEnd {
+                            handleOnVideoEnd()
+                        }
+                    }
+                
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation {
+                            self.is_controls_active.toggle()
+                        }
+                    }
+
+                if self.is_controls_active {
+                    VStack(spacing: 0) {
+                        if showDismiss {
+                            Button {
+                                dismiss()
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .padding(9)
+                                    .foregroundStyle(Color.c1_text)
+                            }
+                            .applyLiquidGlassIfSupported(shape: .circle,color: Color.c1_accent)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.black.opacity(0.35))
+                            .padding(.top,9)
+                        }
+                        playbackControls()
+                        
+                        HStack {
+                            Text(current_timestamp)
+                                .font(.caption)
+                                .foregroundStyle(.white)
+                                .bold()
+                            
+                            NewCustomProgressBar(
+                                value: self.player_value,
+                                isPlaying: self.is_video_playing,
+                                player_controller: self.$controller
+                            )
+            
+                            Text(self.duration_timestamp)
+                                .font(.caption)
+                                .foregroundStyle(.white)
+                                .bold()
+                        }
+                        .padding(.horizontal,12)
+                        .padding(.bottom,9)
+                        .background(Color.black.opacity(0.35))
+                    }
+                    .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
                     .background(Color.black.opacity(0.35))
                 }
-                .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
-                .background(Color.black.opacity(0.35))
+            } else {
+                ProgressView()
             }
         }
-
+        .task(id: media.id) {
+            do {
+                guard let lastPathComponent = media.videoPath else {
+                    self.url = nil
+                    return
+                }
+                let encryptedURL = try MediaStoragePaths.encryptedVideoURL(
+                    from: lastPathComponent
+                )
+                let playbackURL = try await Task.detached(priority: .userInitiated) {
+                    try MediaFileVaultService.shared.decryptVideoFileToTemporaryURL(
+                        from: encryptedURL,
+                        id: media.id
+                    )
+                }.value
+                
+                self.url = playbackURL
+            } catch {
+                self.url = nil
+            }
+            
+        }
+        .ignoresSafeArea(edges: .bottom)
     }
     
     func playbackControls() -> some View {

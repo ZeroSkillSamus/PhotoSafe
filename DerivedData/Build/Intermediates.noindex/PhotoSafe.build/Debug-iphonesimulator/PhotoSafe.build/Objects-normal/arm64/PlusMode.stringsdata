@@ -1,0 +1,24 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/MainTabView/Components/PlusMode.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Import Photos",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 35
+        }
+      },
+      {
+        "comment": "",
+        "key": "New Album",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 51
+        }
+      }
+    ]
+  },
+  "version": 1
+}

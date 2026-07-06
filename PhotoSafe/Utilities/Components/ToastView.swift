@@ -73,3 +73,4 @@ struct ToastView: View {
              .transition(.move(edge: .bottom).combined(with: .opacity))
     }
 }
+

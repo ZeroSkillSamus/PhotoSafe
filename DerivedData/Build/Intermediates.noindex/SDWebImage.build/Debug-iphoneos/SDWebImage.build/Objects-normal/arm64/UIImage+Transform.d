@@ -1,0 +1,19 @@
+dependencies: \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/Darwin.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/UIImage+Transform.m \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/SDWebImage.build/Debug-iphoneos/SDWebImage.build/DerivedSources/resource_bundle_accessor.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/DarwinFoundation1.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/os.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/UIImage+Transform.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageCompat.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreGraphics.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreImage.framework/Modules/module.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/NSImage+Compatibility.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageGraphics.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDGraphicsImageRenderer.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/NSBezierPath+SDRoundedCorners.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDInternalMacros.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDmetamacros.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Accelerate.framework/Modules/module.modulemap

@@ -1,0 +1,79 @@
+{
+  "" : {
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager-primary.dia",
+    "emit-module-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager-primary-emit-module.dia",
+    "pch" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager-primary.swiftdeps"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/LazyPager/Sources/LazyPager/ClearFullScreenBackground.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground.dia",
+    "index-unit-output-path" : "/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground.o",
+    "llvm-bc" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground.bc",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground.swiftdeps",
+    "swiftmodule" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ClearFullScreenBackground~partial.swiftmodule"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/LazyPager/Sources/LazyPager/Collection+Extensions.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions.dia",
+    "index-unit-output-path" : "/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions.o",
+    "llvm-bc" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions.bc",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions.swiftdeps",
+    "swiftmodule" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Collection+Extensions~partial.swiftmodule"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/LazyPager/Sources/LazyPager/LazyPager.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager.dia",
+    "index-unit-output-path" : "/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager.o",
+    "llvm-bc" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager.bc",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager.swiftdeps",
+    "swiftmodule" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/LazyPager~partial.swiftmodule"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/LazyPager/Sources/LazyPager/Math.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math.dia",
+    "index-unit-output-path" : "/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math.o",
+    "llvm-bc" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math.bc",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math.swiftdeps",
+    "swiftmodule" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/Math~partial.swiftmodule"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/LazyPager/Sources/LazyPager/PagerView.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView.dia",
+    "index-unit-output-path" : "/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView.o",
+    "llvm-bc" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView.bc",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView.swiftdeps",
+    "swiftmodule" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/PagerView~partial.swiftmodule"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/LazyPager/Sources/LazyPager/ViewDataProvider.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider.dia",
+    "index-unit-output-path" : "/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider.o",
+    "llvm-bc" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider.bc",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider.swiftdeps",
+    "swiftmodule" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ViewDataProvider~partial.swiftmodule"
+  },
+  "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/LazyPager/Sources/LazyPager/ZoomableView.swift" : {
+    "const-values" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView.swiftconstvalues",
+    "dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView.d",
+    "diagnostics" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView.dia",
+    "index-unit-output-path" : "/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView.o",
+    "llvm-bc" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView.bc",
+    "object" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView.o",
+    "swift-dependencies" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView.swiftdeps",
+    "swiftmodule" : "/Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/LazyPager.build/Debug-iphonesimulator/LazyPager.build/Objects-normal/x86_64/ZoomableView~partial.swiftmodule"
+  }
+}

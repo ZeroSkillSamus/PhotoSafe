@@ -1,0 +1,64 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Lock/LockView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Photosafe",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 42
+        }
+      },
+      {
+        "comment": "",
+        "key": "Create a secure pin",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "PIN must be 6 characters long",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 63
+        }
+      },
+      {
+        "comment": "",
+        "key": "Incorrect PIN",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 76
+        }
+      },
+      {
+        "comment": "",
+        "key": "Please try again!",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 86
+        }
+      },
+      {
+        "comment": "",
+        "key": "Need Authorization",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 97
+        }
+      },
+      {
+        "comment": "",
+        "key": "Enter your PIN to unlock",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 107
+        }
+      }
+    ]
+  },
+  "version": 1
+}

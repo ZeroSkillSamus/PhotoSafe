@@ -16,7 +16,7 @@ enum MediaError: Error {
 
 // Define the blueprint for AlbumService
 protocol MediaServiceProtocol {
-    func save_media(to album: AlbumEntity, type: MediaType, imageData: Data, thumbnail: Data, videoPath: String?) throws -> MediaEntity
+    func save_media(to album: AlbumEntity, id: UUID, type: MediaType, imageData: Data, thumbnail: Data, videoPath: String?) throws -> MediaEntity
     func fetch_media(from album: AlbumEntity) -> [MediaEntity]
     func fetchAll() -> [MediaEntity]
     func delete(id: UUID) throws
@@ -29,6 +29,20 @@ protocol MediaServiceProtocol {
 }
 
 final class MediaService: MediaServiceProtocol {
+    private let context: NSManagedObjectContext
+    private let encryptionService: MediaEncryptionServiceProtocol
+    private let mediaFileVaultService: MediaFileVaultProtocol
+    
+    init(
+        context: NSManagedObjectContext = CoreDataManager.shared.container.viewContext,
+        encryptionService: MediaEncryptionServiceProtocol = MediaEncryptionService.shared,
+        mediaFileVaultService: MediaFileVaultProtocol = MediaFileVaultService.shared
+    ) {
+        self.context = context
+        self.encryptionService = encryptionService
+        self.mediaFileVaultService = mediaFileVaultService
+    }
+    
     private func fetchById(id: UUID) throws -> MediaEntity? {
         let request = MediaEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
@@ -61,28 +75,9 @@ final class MediaService: MediaServiceProtocol {
         }
     }
     
-    private let context: NSManagedObjectContext
-    
-    init(context: NSManagedObjectContext = CoreDataManager.shared.container.viewContext) {
-        self.context = context
-    }
-    
-//    func like_or_unlike(with status: Bool, for id: UUID) throws -> MediaEntity {
-//        do {
-//            guard let media = try self.context.fetch(MediaEntity.fetchRequest()).first(where: { $0.id == id }) else {
-//                throw MediaError.failedFetch
-//            }
-//            
-//            media.is_favorited = status
-//            try self.context.save()
-//            return media
-//        } catch (let error) {
-//            throw error
-//        }
-//    }
-    
     func save_media(
         to album: AlbumEntity,
+        id: UUID = UUID(),
         type: MediaType,
         imageData: Data,
         thumbnail: Data,
@@ -95,12 +90,12 @@ final class MediaService: MediaServiceProtocol {
         let media = MediaEntity(context: self.context)
         media.date_added = Date()
         media.album = album
-        media.image_data = imageData
+        media.image_data = try encryptionService.encrypt(imageData)
         media.type = type.rawValue
         media.video_path = videoPath
         media.is_favorited = false
-        media.thumbnail = thumbnail
-        media.id = UUID() 
+        media.thumbnail = try encryptionService.encrypt(thumbnail)
+        media.id = id
         
         try self.context.save()
         return media
@@ -120,9 +115,77 @@ final class MediaService: MediaServiceProtocol {
     
     func delete(id: UUID) throws {
         guard let media = try? self.context.fetch(MediaEntity.fetchRequest()).first(where: { $0.id == id }) else { return }
+        let encryptedVideoURL: URL?
+        if media.type == MediaType.Video.rawValue, let storedReference = media.video_path {
+            encryptedVideoURL = try? MediaStoragePaths.encryptedVideoURL(
+                from: storedReference
+            )
+        } else {
+            encryptedVideoURL = nil
+        }
         
         self.context.delete(media)
         try self.context.save()
+        
+        if let encryptedVideoURL {
+            try? mediaFileVaultService.deleteEncryptedVideo(at: encryptedVideoURL)
+        }
+    }
+    
+    @discardableResult
+    func migrateVideoPathsToFilenames() throws -> (
+        migrated: Int,
+        alreadyCurrent: Int,
+        missing: Int
+    ) {
+        let request = MediaEntity.fetchRequest()
+        request.predicate = NSPredicate(
+            format: "type == %@",
+            MediaType.Video.rawValue
+        )
+
+        let videos = try context.fetch(request)
+
+        var migrated = 0
+        var alreadyCurrent = 0
+        var missing = 0
+
+        for media in videos {
+            guard let storedReference = media.video_path,
+                  !storedReference.isEmpty else {
+                missing += 1
+                continue
+            }
+
+            guard let currentURL = try? MediaStoragePaths.encryptedVideoURL(
+                from: storedReference
+            ) else {
+                // Preserve the original reference for possible recovery.
+                missing += 1
+                continue
+            }
+
+            let filename = currentURL.lastPathComponent
+
+            if storedReference == filename {
+                alreadyCurrent += 1
+            } else {
+                media.video_path = filename
+                migrated += 1
+            }
+        }
+
+        guard context.hasChanges else {
+            return (migrated, alreadyCurrent, missing)
+        }
+
+        do {
+            try context.save()
+            return (migrated, alreadyCurrent, missing)
+        } catch {
+            context.rollback()
+            throw error
+        }
     }
     
     func move(id: UUID, to album: AlbumEntity) throws {
@@ -152,14 +215,15 @@ final class MediaService: MediaServiceProtocol {
             for media in mediaItems {
                 imageBytes += Int64(media.image_data.count)
                 thumbnailBytes += Int64(media.thumbnail.count)
-                if let videoPath = media.video_path,
-                   let url = URL(string: videoPath) {
-                    let path = url.isFileURL ? url.path : videoPath
-
-                    if let attributes = try? fileManager.attributesOfItem(atPath: path),
-                       let fileSize = attributes[.size] as? NSNumber {
+                if media.type == MediaType.Video.rawValue,
+                    let lastPathComponent = media.video_path,
+                    let videoUrl = try? MediaStoragePaths.encryptedVideoURL(
+                        from: lastPathComponent,
+                        fileManager: fileManager
+                    ),
+                    let attributes = try? fileManager.attributesOfItem(atPath: videoUrl.path),
+                    let fileSize = attributes[.size] as? NSNumber {
                         videoBytes += fileSize.int64Value
-                    }
                 }
             }
             

@@ -19,37 +19,36 @@ struct VideoFileTranferable: Transferable {
             try FileManager.default.copyItem(at: file.url, to: tempURL)
             return SentTransferredFile(tempURL)
         } importing: { received in
-            // 1. Get Application Support directory
-            let appSupportURL = FileManager.default.urls(
-                for: .applicationSupportDirectory,
-                in: .userDomainMask
-            ).first!
-            
-            // 2. Create Videos subdirectory if needed
-            let videosDir = appSupportURL.appendingPathComponent("Videos")
-            try? FileManager.default.createDirectory(
-                at: videosDir,
+            let fileManager = FileManager.default
+
+            let stagingDirectory = fileManager.temporaryDirectory
+                .appendingPathComponent(
+                    "PhotoSafeImports",
+                    isDirectory: true
+                )
+
+            try fileManager.createDirectory(
+                at: stagingDirectory,
                 withIntermediateDirectories: true
             )
-            
-            // 3. Create permanent destination URL
-            var permanentURL = videosDir
+
+            let temporaryURL = stagingDirectory
                 .appendingPathComponent(UUID().uuidString)
                 .appendingPathExtension("mov")
 
-            try FileManager.default.moveItem(at: received.file, to: permanentURL)
-
-            try FileManager.default.setAttributes(
-                [.protectionKey: FileProtectionType.complete],
-                ofItemAtPath: permanentURL.path
+            // Move the received file into app-controlled temporary storage.
+            try fileManager.moveItem(
+                at: received.file,
+                to: temporaryURL
             )
-            
-            // 6. Mark as non-temporary for persistence
-            var resourceValues = URLResourceValues()
-            resourceValues.isExcludedFromBackup = true
-            try? permanentURL.setResourceValues(resourceValues)
-            
-            return Self(url: permanentURL)
+
+            try fileManager.setAttributes(
+                [.protectionKey: FileProtectionType.complete],
+                ofItemAtPath: temporaryURL.path
+            )
+
+            // Temporary directories are already excluded from backup.
+            return Self(url: temporaryURL)
         }
     }
 }

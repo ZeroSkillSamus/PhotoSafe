@@ -23,8 +23,17 @@ protocol AlbumServiceProtocol {
 final class AlbumService: AlbumServiceProtocol {
     private let context: NSManagedObjectContext
     
-    init(context: NSManagedObjectContext = CoreDataManager.shared.container.viewContext) {
+    private let mediaFileVaultService: MediaFileVaultProtocol
+    private let encryptionService: MediaEncryptionServiceProtocol
+    
+    init(
+        context: NSManagedObjectContext = CoreDataManager.shared.container.viewContext,
+        mediaFileVaultService: MediaFileVaultProtocol = MediaFileVaultService.shared,
+        encryptionService: MediaEncryptionServiceProtocol = MediaEncryptionService.shared
+    ) {
         self.context = context
+        self.mediaFileVaultService = mediaFileVaultService
+        self.encryptionService = encryptionService
     }
     
     func change_image_upload_status(for album: AlbumEntity, with new: ImageDisplayType) throws {
@@ -46,13 +55,20 @@ final class AlbumService: AlbumServiceProtocol {
     }
     
     func change_photo(for album: AlbumEntity, with data: Data) throws {
-        album.thumbnail = data
+        album.thumbnail = try encryptionService.encrypt(data)
         try context.save()
     }
     
     func delete(album: AlbumEntity) throws {
+        // Fetch all videoUrls so we can delete them
+        let videoURLs = encryptedVideoURLs(in: album)
+        
         self.context.delete(album)
         try self.context.save()
+        
+        for videoURL in videoURLs {
+            try? self.mediaFileVaultService.deleteEncryptedVideo(at: videoURL)
+        }
     }
     
     func fetchAlbums() -> [AlbumEntity] {
@@ -62,7 +78,9 @@ final class AlbumService: AlbumServiceProtocol {
     func saveAlbum(name: String, thumbnail: Data?, password: String) throws {
         let albumEntity = AlbumEntity(context: context)
         albumEntity.name = name
-        albumEntity.thumbnail = thumbnail
+        if let thumbnail {
+            albumEntity.thumbnail = try encryptionService.encrypt(thumbnail)
+        }
         try setAlbumPassword(for: albumEntity, password)
         if thumbnail != nil {
             albumEntity.image_upload_status = .Upload
@@ -74,10 +92,17 @@ final class AlbumService: AlbumServiceProtocol {
     
     func deleteAll() throws {
         let albums = self.fetchAlbums()
+        var videoURLs: [URL] = []
+        
         for album in albums {
+            videoURLs.append(contentsOf: encryptedVideoURLs(in: album))
             self.context.delete(album)
         }
         try context.save()
+        
+        for videoURL in videoURLs {
+            try? self.mediaFileVaultService.deleteEncryptedVideo(at: videoURL)
+        }
     }
     
     private func setAlbumPassword(for albumEntity: AlbumEntity, _ password: String) throws {
@@ -90,5 +115,17 @@ final class AlbumService: AlbumServiceProtocol {
             albumEntity.passwordHash = hashPassword
             albumEntity.passwordSalt = salt
         }
+    }
+    
+    private func encryptedVideoURLs(in album: AlbumEntity) -> [URL] {
+        album.sorted_list?
+            .filter { $0.type == MediaType.Video.rawValue }
+            .compactMap { media -> URL? in
+                guard let lastPathComponent = media.video_path else { return nil }
+                let encryptedVideoURL = try? MediaStoragePaths.encryptedVideoURL(
+                    from: lastPathComponent
+                )
+                return encryptedVideoURL
+            } ?? []
     }
 }

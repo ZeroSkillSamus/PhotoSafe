@@ -1,0 +1,56 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Web/WebNavigationBar.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Enter url here...",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 56
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 54
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add to Bookmarks",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 113
+        }
+      },
+      {
+        "comment": "",
+        "key": "Add Bookmark to...",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "Saved this session",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 130
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear history and cookies",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 137
+        }
+      }
+    ]
+  },
+  "version": 1
+}

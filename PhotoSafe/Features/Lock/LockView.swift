@@ -81,7 +81,7 @@ struct LockView: View {
                                     design: .rounded
                                 )
                             )
-                            .foregroundStyle(Color.c1_text)
+                            .foregroundStyle(Color.red.opacity(0.7))
                         
                         Text("Please try again!")
                             .font(
@@ -92,7 +92,7 @@ struct LockView: View {
                                 )
                             )
                             .opacity(0.75)
-                            .foregroundStyle(Color.c1_text)
+                            .foregroundStyle(Color.red.opacity(0.7))
                     } else {
                         Text("Need Authorization")
                             .font(
@@ -118,22 +118,22 @@ struct LockView: View {
                 }
             }
             Spacer()
-            // Text Input
-            Text(self.defaultText)
-                .opacity(0.75)
-                .foregroundStyle(Color.c1_text)
-                .font(
-                    .system(
-                        size: self.numberInput.isEmpty ? 20 : 27,
-                        weight: .semibold,
-                        design: .rounded
-                    )
-                )
-                .frame(maxWidth: .infinity, maxHeight: 45)
-                .background(passwordAttempt > 0 ? Color.red : Color.c1_secondary)
-                .clipShape(RoundedRectangle(cornerRadius: 18))
-                .padding(.horizontal)
-                
+            
+            HStack(spacing: 20) {
+                ForEach(0..<6) { index in
+                    if self.numberInput.count > index {
+                        Circle()
+                            .fill()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.c1_primary)
+                    } else {
+                        Circle()
+                            .stroke()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.c1_primary)
+                    }
+                }
+            } 
             
             Spacer()
             

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct BottomTabNavigation: View {
+    private let mediaService = MediaService()
+    
     enum Tab: String {
         case favorites = "Favorites"
         case albums = "Albums"
@@ -15,10 +17,12 @@ struct BottomTabNavigation: View {
         case settings = "Settings"
     }
     
+    @EnvironmentObject private var authViewModel: AuthStorageViewModel
+    
     @StateObject private var album_VM: AlbumViewModel = AlbumViewModel()
     @StateObject private var favorite_VM: FavoriteViewModel = FavoriteViewModel()
     
-    @State private var current_tab: Tab = .favorites // Current Tab
+    @State private var current_tab: Tab = .albums // Current Tab
     @State private var path = NavigationPath()  // For NavigationStack
     @State private var display_sheet: Bool = false
     @State private var toggle_plus_mode: Bool = false
@@ -138,5 +142,28 @@ struct BottomTabNavigation: View {
             self.favorite_VM.setFavorites()
         }
         .background(self.toggle_plus_mode ? Color.red.opacity(0.25) : Color.orange)
+        .onChange(of: self.authViewModel.isUnlocked) { oldValue, newValue in
+            guard !oldValue, newValue else { return }
+
+            //MARK: - Needed to migrate from old method to new method
+//            do {
+//                let result = try mediaService.migrateVideoPathsToFilenames()
+//
+//                print("""
+//                Video migration:
+//                migrated: \(result.migrated)
+//                current: \(result.alreadyCurrent)
+//                missing: \(result.missing)
+//                """)
+//
+//                // Refresh copied SelectMediaEntity values after migration.
+//                favorite_VM.setFavorites()
+//            } catch {
+//                print("Video path migration failed: \(error)")
+//            }
+
+            current_tab = .albums
+            path = NavigationPath()
+        }
     }
 }

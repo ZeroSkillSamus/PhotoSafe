@@ -185,7 +185,7 @@ struct FavoritesView: View {
                     ScrollView {
                         LazyVGrid(columns: self.gridItemLayout, spacing: 5) {
                             ForEach(self.$favoritesViewModel.favoritesList,id:\.self) { $favorite in
-                                if let thumbnailImage = favorite.thumbnailImage {
+                                if let thumbnailImage = favorite.decryptedThumbnailImage {
                                     MediaImageGridView(
                                         selectModeActive: self.isSelectModeActive,
                                         thumbnail: thumbnailImage,

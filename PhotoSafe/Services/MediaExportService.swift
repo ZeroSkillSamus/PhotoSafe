@@ -43,34 +43,59 @@ struct MediaExportService: MediaExportServiceProtocol {
     }
     
     private func exportToPhotoLibrary(selected: SelectMediaEntity) async -> ToastItem {
-        return await withCheckedContinuation { continuation in
-            switch selected.type {
-            case MediaType.Photo.rawValue:
-                guard let fullImage = selected.fullImage else {
-                    continuation.resume(returning: ToastItem(message: "Failed to decode image for export", status: .failure))
-                    return
-                }
-                
+        switch selected.type {
+        case MediaType.Photo.rawValue:
+            guard let fullImage = selected.decryptedFullImage else {
+                return ToastItem(message: "Failed to decode image for export", status: .failure)
+            }
+
+            return await withCheckedContinuation { continuation in
                 mediaSavingService.savePhotoToUserLibrary(image: fullImage) { toast in
                     continuation.resume(returning: toast)
                 }
-            case MediaType.Video.rawValue:
-                guard let videoPath = selected.videoPath else {
-                    continuation.resume(returning: ToastItem(message: "Failed to locate video path for export", status: .failure))
-                    return
-                }
-                
-                mediaSavingService.saveVideoToUserLibrary(at: videoPath) { toast in
-                    continuation.resume(returning: toast)
-                }
-            case MediaType.GIF.rawValue:
-                mediaSavingService.saveGifToUserLibrary(data: selected.imageData) { toast in
-                    continuation.resume(returning: toast)
-                }
-            default:
-                continuation.resume(returning: ToastItem(message: "Unknown media type, can not export", status: .failure))
             }
+
+        case MediaType.Video.rawValue:
+            let decryptedVideoPath: URL
+            guard let lastPathComponent = selected.videoPath else {
+                return ToastItem(message: "Failed to locate video path for export", status: .failure)
+            }
+            
+            do {
+                let encryptedURL = try MediaStoragePaths.encryptedVideoURL(
+                    from: lastPathComponent
+                )
+                
+                decryptedVideoPath = try await Task.detached(priority: .userInitiated) {
+                    try MediaFileVaultService.shared.decryptVideoFileToTemporaryURL(
+                        from: encryptedURL,
+                        id: selected.id
+                    )
+                }.value
+            } catch {
+                return ToastItem(message: "Failed to export video", status: .failure)
+            }
+
+            return await withCheckedContinuation { continuation in
+                mediaSavingService.saveVideoToUserLibrary(at: decryptedVideoPath.path) { toast in
+                    try? MediaFileVaultService.shared.deleteTemporaryPlaybackFile(at: decryptedVideoPath)
+                    continuation.resume(returning: toast)
+                }
+            }
+
+        case MediaType.GIF.rawValue:
+            guard let decryptedImageData = selected.decryptedImageData else {
+                return ToastItem(message: "Failed to decrypt GIF for export", status: .failure)
+            }
+
+            return await withCheckedContinuation { continuation in
+                mediaSavingService.saveGifToUserLibrary(data: decryptedImageData) { toast in
+                    continuation.resume(returning: toast)
+                }
+            }
+
+        default:
+            return ToastItem(message: "Unknown media type, can not export", status: .failure)
         }
     }
-    
 }

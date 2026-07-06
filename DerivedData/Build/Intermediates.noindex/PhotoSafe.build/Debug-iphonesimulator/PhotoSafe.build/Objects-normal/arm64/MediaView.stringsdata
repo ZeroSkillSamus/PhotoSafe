@@ -1,0 +1,48 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Media/MediaView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Photos: %lld, Videos: %lld",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 61
+        }
+      },
+      {
+        "comment": "",
+        "key": "Select Media",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 175
+        }
+      },
+      {
+        "comment": "",
+        "key": "^[%lld Item](inflect: true) Selected",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 177
+        }
+      },
+      {
+        "comment": "",
+        "key": "Finish",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 162
+        }
+      },
+      {
+        "comment": "",
+        "key": "Select",
+        "location": {
+          "startingColumn": 66,
+          "startingLine": 162
+        }
+      }
+    ]
+  },
+  "version": 1
+}

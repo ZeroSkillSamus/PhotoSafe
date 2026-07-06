@@ -1,0 +1,25 @@
+Target dependency graph (11 targets)
+Target 'PhotoSafe' in project 'PhotoSafe'
+➜ Explicit dependency on target 'LazyPager' in project 'LazyPager'
+➜ Explicit dependency on target 'SDWebImageSwiftUI' in project 'SDWebImageSwiftUI'
+➜ Explicit dependency on target 'KeychainAccess' in project 'KeychainAccess'
+Target 'KeychainAccess' in project 'KeychainAccess'
+➜ Explicit dependency on target 'KeychainAccess' in project 'KeychainAccess'
+Target 'KeychainAccess' in project 'KeychainAccess' (no dependencies)
+Target 'SDWebImageSwiftUI' in project 'SDWebImageSwiftUI'
+➜ Explicit dependency on target 'SDWebImageSwiftUI' in project 'SDWebImageSwiftUI'
+➜ Explicit dependency on target 'SDWebImageSwiftUI_SDWebImageSwiftUI' in project 'SDWebImageSwiftUI'
+➜ Explicit dependency on target 'SDWebImage' in project 'SDWebImage'
+Target 'SDWebImageSwiftUI' in project 'SDWebImageSwiftUI'
+➜ Explicit dependency on target 'SDWebImageSwiftUI_SDWebImageSwiftUI' in project 'SDWebImageSwiftUI'
+➜ Explicit dependency on target 'SDWebImage' in project 'SDWebImage'
+Target 'SDWebImage' in project 'SDWebImage'
+➜ Explicit dependency on target 'SDWebImage' in project 'SDWebImage'
+➜ Explicit dependency on target 'SDWebImage_SDWebImage' in project 'SDWebImage'
+Target 'SDWebImage' in project 'SDWebImage'
+➜ Explicit dependency on target 'SDWebImage_SDWebImage' in project 'SDWebImage'
+Target 'SDWebImage_SDWebImage' in project 'SDWebImage' (no dependencies)
+Target 'SDWebImageSwiftUI_SDWebImageSwiftUI' in project 'SDWebImageSwiftUI' (no dependencies)
+Target 'LazyPager' in project 'LazyPager'
+➜ Explicit dependency on target 'LazyPager' in project 'LazyPager'
+Target 'LazyPager' in project 'LazyPager' (no dependencies)

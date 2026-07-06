@@ -245,9 +245,12 @@ struct AlbumEditView: View {
                         return
                     }
                     
-                    await MainActor.run {
+                    try await MainActor.run {
                         editSheetViewModel.selectedCoverData = imageData
                         editSheetViewModel.selectedCoverStatus = .Upload
+                        
+                        albumViewModel.change_upload_status(for: album, with: .Upload)
+                        try albumViewModel.change_image(for: album, with: imageData)
                         self.avatar = nil
                     }
                 } catch {

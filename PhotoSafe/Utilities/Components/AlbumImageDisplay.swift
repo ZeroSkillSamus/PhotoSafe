@@ -26,16 +26,26 @@ struct AlbumImageDisplay: View {
                 
     }
     
+    private func decryptedThumbnail(media: MediaEntity?) -> UIImage? {
+        guard let media else { return nil }
+        do {
+            let data = try MediaEncryptionService.shared.decrypt(media.thumbnail)
+            return UIImage(data: data)
+        } catch {
+            return nil
+        }
+    }
+    
     var body: some View {
         switch album.image_upload_status {
         case .First:
-            if let ui_image = album.fetch_first_thumbnail_image {
+            if let ui_image = decryptedThumbnail(media: album.firstMediaInAlbum) {
                 display_image_view(with: ui_image)
             } else {
                 display_image_view()
             }
         case .Last:
-            if let ui_image = album.fetch_last_thumbnail_image {
+            if let ui_image = decryptedThumbnail(media: album.lastMediaInAlbum) {
                 display_image_view(with: ui_image)
             } else {
                 display_image_view()

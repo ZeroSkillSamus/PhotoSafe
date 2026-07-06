@@ -21,21 +21,42 @@ class ImageCache {
     }
 
     // Key will be the UUID
-    static func set_image_and_return(for media_entity: MediaEntity) -> UIImage? {
-        if let ui_image = media_entity.full_image {
-            let key = media_entity.id.uuidString
-            self.image_only_cache.setObject(ui_image, forKey: key as NSString, cost: cost(for: ui_image))
-            return ui_image
+    static func setEncryptedImageAndReturn(
+        for mediaEntity: MediaEntity,
+        encryptionService: MediaEncryptionServiceProtocol = MediaEncryptionService.shared
+    ) -> UIImage? {
+        do {
+            let decryptedData = try encryptionService.decrypt(mediaEntity.image_data)
+
+            guard let uiImage = UIImage(data: decryptedData) else {
+                return nil
+            }
+
+            let key = mediaEntity.id.uuidString
+            self.image_only_cache.setObject(uiImage, forKey: key as NSString, cost: cost(for: uiImage))
+            return uiImage
+        } catch {
+            return nil
         }
-        return nil
     }
     
-    static func set_image_and_return(data: Data, key: String) -> UIImage? {
-        if let ui_image = UIImage(data: data) {
-            self.image_only_cache.setObject(ui_image, forKey: key as NSString, cost: cost(for: ui_image))
-            return ui_image
+    static func setEncryptedImageAndReturn(
+        data: Data,
+        key: String,
+        encryptionService: MediaEncryptionServiceProtocol = MediaEncryptionService.shared
+    ) -> UIImage? {
+        do {
+            let decryptedData = try encryptionService.decrypt(data)
+
+            guard let uiImage = UIImage(data: decryptedData) else {
+                return nil
+            }
+            
+            self.image_only_cache.setObject(uiImage, forKey: key as NSString, cost: cost(for: uiImage))
+            return uiImage
+        } catch {
+            return nil
         }
-        return nil
     }
 
     static func preloadImages(medias: [SelectMediaEntity]) {
@@ -43,7 +64,7 @@ class ImageCache {
             for media in medias {
                 if media.type == MediaType.Photo.rawValue {
                     if self.image_only_cache.object(forKey: media.id.uuidString as NSString) == nil,
-                       let ui_image = media.fullImage {
+                       let ui_image = media.decryptedFullImage {
                         self.image_only_cache.setObject(ui_image, forKey: media.id.uuidString as NSString, cost: cost(for: ui_image))
                     }
                 }

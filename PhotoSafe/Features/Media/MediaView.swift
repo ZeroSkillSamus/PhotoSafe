@@ -68,7 +68,7 @@ struct MediaView: View {
 
                 LazyVGrid(columns: gridItemLayout, spacing: 3) {
                     ForEach(self.$media_VM.medias) { $select_media in
-                        if let thumbnailImage = select_media.thumbnailImage {
+                        if let thumbnailImage = select_media.decryptedThumbnailImage {
                             MediaImageGridView(
                                 selectModeActive: self.is_select_mode_active,
                                 thumbnail: thumbnailImage,

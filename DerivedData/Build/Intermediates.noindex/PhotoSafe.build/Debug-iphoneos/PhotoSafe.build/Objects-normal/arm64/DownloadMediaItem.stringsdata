@@ -1,0 +1,48 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Models/DownloadMediaItem.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "^[%lld day](inflect: true) ago",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 38
+        }
+      },
+      {
+        "comment": "",
+        "key": "^[%lld hour](inflect: true) ago",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 40
+        }
+      },
+      {
+        "comment": "",
+        "key": "^[%lld min](inflect: true) ago",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 42
+        }
+      },
+      {
+        "comment": "",
+        "key": "^[%lld sec](inflect: true) ago",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 44
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 46
+        }
+      }
+    ]
+  },
+  "version": 1
+}

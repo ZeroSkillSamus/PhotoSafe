@@ -9,11 +9,12 @@ import SwiftUI
 import AVKit
 
 struct CustomVideoPlayer: UIViewControllerRepresentable {
-    let url: URL
+    let url: URL?
     @Binding var controller: AVPlayerViewController
     
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         //let controller = AVPlayerViewController()
+        guard let url else { return controller }
         self.controller.player = AVPlayer(url: url)
         self.controller.showsPlaybackControls = false
         self.controller.view.isUserInteractionEnabled = false

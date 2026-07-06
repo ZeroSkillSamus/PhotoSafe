@@ -1,0 +1,120 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Album/AlbumView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Enter Password For %@",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 60
+        }
+      },
+      {
+        "comment": "",
+        "key": "Enter Your Password",
+        "location": {
+          "startingColumn": 27,
+          "startingLine": 63
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 69
+        }
+      },
+      {
+        "comment": "",
+        "key": "No private collections yet",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "^[%lld private collection](inflect: true)",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 90
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 116
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 116
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit Mode",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 125
+        }
+      },
+      {
+        "comment": "",
+        "key": "Albums",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 125
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Edit",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "Create your first private album",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 168
+        }
+      },
+      {
+        "comment": "",
+        "key": "Tap + below to create an album or import media.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 173
+        }
+      },
+      {
+        "comment": "",
+        "key": "Albums keep photos, videos, and saved web media organized behind your PhotoSafe lock.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 178
+        }
+      }
+    ]
+  },
+  "version": 1
+}

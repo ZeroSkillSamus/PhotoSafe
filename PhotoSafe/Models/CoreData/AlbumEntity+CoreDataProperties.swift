@@ -57,25 +57,20 @@ extension AlbumEntity {
         return nil
     }
     
-    var fetch_first_thumbnail_image: UIImage? {
-        if let first = self.sorted_list?.first {
-            return first.thumbnail_image
-        }
-        return nil
+    var firstMediaInAlbum: MediaEntity? {
+        self.sorted_list?.first
     }
     
-    var fetch_last_thumbnail_image: UIImage? {
-        if let last = self.sorted_list?.last {
-            return last.thumbnail_image
-        }
-        return nil
+    var lastMediaInAlbum: MediaEntity? {
+        self.sorted_list?.last
     }
     
     var uploaded_thumbnail_image: UIImage? {
-        if let thumbnail {
-            return UIImage(data: thumbnail)
-        }
-        return nil
+        guard let thumbnail,
+              let decrypted = try? MediaEncryptionService.shared.decrypt(thumbnail) else {
+                return nil
+            }
+        return UIImage(data: decrypted)
     }
 
     var mediaCount: Int {

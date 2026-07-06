@@ -1,0 +1,72 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Favorites/FavoritesView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "Select",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "Tap items to select",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 101
+        }
+      },
+      {
+        "comment": "",
+        "key": "^[%lld item selected](inflect: true)",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "No favorites yet",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "^[%lld item](inflect: true)",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "Tap the heart on photos or videos you want to find faster.",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 169
+        }
+      },
+      {
+        "comment": "",
+        "key": "Your favorites will appear here for quick access.",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 174
+        }
+      }
+    ]
+  },
+  "version": 1
+}

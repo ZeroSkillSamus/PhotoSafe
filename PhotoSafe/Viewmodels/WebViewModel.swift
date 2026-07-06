@@ -114,7 +114,6 @@ class WebViewModel {
             mutableEntity.thumbnail = newEntity.thumbnail
             return mutableEntity
         }
-        //self.sessionHistory.firstIndex(where: { $0.id == id })
     }
     
     func goBack() {

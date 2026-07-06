@@ -22,6 +22,9 @@ final class MediaViewModel: ObservableObject {
     private let mp4DownloadService: VideoDownloaderProtocol
     private let hlsDownloadService: VideoDownloaderProtocol
     private let mediaExportService: MediaExportServiceProtocol
+    
+    private let mediaFileVaultService: MediaFileVaultProtocol = MediaFileVaultService.shared
+    
     private let userDefaults: UserDefaults
     
     @Published var medias: [SelectMediaEntity] = []
@@ -149,16 +152,16 @@ final class MediaViewModel: ObservableObject {
                         }
                     })
 
-                guard let location = try await permUrl else {
+                guard let temporaryPlaintextVideoURL = try await permUrl else {
                     return (ToastItem(message: "Failed to download", status: .failure), nil)
                 }
-
-                let fallbackData = UIImage(systemName: "play.rectangle.fill")!.pngData()!
-                let imageData = location.generateVideoThumbnail() ?? fallbackData
-                let thumbnail = UIImage(data: imageData)?.jpegData(compressionQuality: 0.5) ?? imageData
-
-                let entity = self.add_media(to: album, type: .Video, image_data: imageData, thumbnail: thumbnail, video_path: location.absoluteString)
-                return (ToastItem(message: "Successfully Downloaded HLS Video", status: .success), entity)
+                
+                guard let media = try self.saveVideoToCoreData(to: album, temporaryPlaintextVideoURL: temporaryPlaintextVideoURL) else {
+                    return (ToastItem(message: "Failed to download", status: .failure), nil)
+                }
+                
+                return (ToastItem(message: "Successfully Downloaded HLS Video", status: .success), media)
+//                return (ToastItem(message: "Successfully Downloaded HLS Video", status: .success), entity)
             } catch (let error) {
                 return (ToastItem(message: error.localizedDescription, status: .failure), nil)
             }
@@ -173,22 +176,12 @@ final class MediaViewModel: ObservableObject {
                 guard let permUrl else {
                     return (ToastItem(message: "Failed to download", status: .failure), nil)
                 }
-                if let image_data = permUrl.generateVideoThumbnail() {
-                    if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
-                       let entity = self.add_media(
-                            to: album,
-                            type: MediaType.Video,
-                            image_data: image_data,
-                            thumbnail: compressed_img,
-                            video_path: permUrl.absoluteString
-                        )
-                        return (ToastItem(message: "Successfully Downloaded MP4 Video", status: .success), entity)
-                    } else {
-                        return (ToastItem(message: "Failed to generate thumbnail", status: .failure), nil)
-                    }
-                } else {
-                    return (ToastItem(message: "Failed to download mp4 video", status: .failure), nil)
+                
+                guard let media = try self.saveVideoToCoreData(to: album, temporaryPlaintextVideoURL: permUrl) else {
+                    return (ToastItem(message: "Failed to download", status: .failure), nil)
                 }
+                
+                return (ToastItem(message: "Successfully Downloaded MP4 Video", status: .success), media)
             } catch (let error) {
                 return (ToastItem(message: error.localizedDescription, status: .failure), nil)
             }
@@ -243,33 +236,28 @@ final class MediaViewModel: ObservableObject {
             
             // Handles Saving Media to CoreData
             do {
-                if let video_url = try await item.loadTransferable(type: VideoFileTranferable.self)?.url {
-                    if let image_data = video_url.generateVideoThumbnail() {
-                        if let thumbnail = UIImage(data: image_data), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5) {
-                            let _ = self.add_media(
-                                to: album,
-                                type: MediaType.Video,
-                                image_data: image_data,
-                                thumbnail: compressed_img,
-                                video_path: video_url.absoluteString
-                            )
-                        }
-                    }
+                if let temporaryPlaintextVideoURL = try await item.loadTransferable(type: VideoFileTranferable.self)?.url {
+                    try saveVideoToCoreData(to: album, temporaryPlaintextVideoURL: temporaryPlaintextVideoURL)
                 } else if let image_data = try? await item.loadTransferable(type: Data.self) {
                     // Code determines if image is either a gif
                     let supported_types = item.supportedContentTypes
                     let isGIF = supported_types.contains(UTType.gif)
                     let type = isGIF ? MediaType.GIF : MediaType.Photo
-                    if let thumbnail = UIImage(data: image_data)?.thumbnail(), let compressed_img = thumbnail.jpegData(compressionQuality: 0.5)  {
-                        let _ = self.add_media(
-                            to: album,
-                            type: type,
-                            image_data: image_data,
-                            thumbnail: compressed_img
-                        )
-                    }
+                    guard let thumbnailImage = UIImage(data: image_data)?.thumbnail(),
+                          let thumbnailCompressed = thumbnailImage.jpegData(compressionQuality: 0.5) else {
+                              continue
+                          }
+                    
+                    let _ = self.add_media(
+                        to: album,
+                        type: type,
+                        image_data: image_data,
+                        thumbnail: thumbnailCompressed
+                    )
                 }
-            } catch {}
+            } catch {
+                
+            }
         }
         if shouldDeleteOriginals {  mediaSavingService.deleteAssets(asset_to_delete) } // Batch delete
         
@@ -329,6 +317,43 @@ final class MediaViewModel: ObservableObject {
         }
     }
     
+    @discardableResult
+    private func saveVideoToCoreData(to album: AlbumEntity, temporaryPlaintextVideoURL: URL) throws -> MediaEntity? {
+        defer {
+            try? mediaFileVaultService.deletePlainTextVideo(
+                at: temporaryPlaintextVideoURL
+            )
+        }
+        
+        let id = UUID()
+        
+        // Generate thumbnail and handle compression
+        guard let thumbnailImageData = temporaryPlaintextVideoURL.generateVideoThumbnail(),
+              let thumbnailImage = UIImage(data: thumbnailImageData),
+              let compressedImage = thumbnailImage.jpegData(compressionQuality: 0.5) else {
+            return nil
+        }
+        
+        // Encrypt Video File
+        let encryptedFilePath = try mediaFileVaultService.encryptVideoFile(at: temporaryPlaintextVideoURL, id: id)
+        let media = self.add_media(
+            to: album,
+            id: id,
+            type: MediaType.Video,
+            image_data: thumbnailImageData,
+            thumbnail: compressedImage,
+            video_path: encryptedFilePath.lastPathComponent
+        )
+        
+        // Failed to generate coredata for some entry
+        guard let media else {
+            try? mediaFileVaultService.deleteEncryptedVideo(at: encryptedFilePath)
+            return nil
+        }
+        
+        return media
+    }
+    
     private func canDeleteOriginals() async -> Bool {
         let currentStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 
@@ -354,8 +379,6 @@ final class MediaViewModel: ObservableObject {
     }
     
     private func detectVideoFormat(url: URL) async -> VideoFormat {
-        //guard let url = URL(string: urlString) else { return .unknown }
-
         // Fast path: check path extension (ignores query params)
         let ext = url.pathExtension.lowercased()
         if ext == "mp4" || ext == "mov" { return .mp4 }
@@ -379,12 +402,20 @@ final class MediaViewModel: ObservableObject {
     
     private func add_media(
         to album: AlbumEntity,
+        id: UUID = UUID(),
         type: MediaType,
         image_data: Data,
         thumbnail: Data,
         video_path: String? = nil
     ) -> MediaEntity? {
-        if let media_entity = try? self.service.save_media(to: album, type: type, imageData: image_data, thumbnail: thumbnail, videoPath: video_path) {
+        if let media_entity = try? self.service.save_media(
+            to: album,
+            id: id,
+            type: type,
+            imageData: image_data,
+            thumbnail: thumbnail,
+            videoPath: video_path
+        ) {
             let select_media = SelectMediaEntity(media: media_entity)
             self.medias.append(select_media) // add to list
             self.increment_alert_value()
@@ -408,8 +439,6 @@ final class MediaViewModel: ObservableObject {
     private func delete_from_medias(selected: SelectMediaEntity) {
         if let index = self.medias.firstIndex(of: selected) {
             self.medias.remove(at: index) //remove from list
-            
-            //self.medias_dict.removeValue(forKey: selected) // remove from dictionary
         }
     }
     

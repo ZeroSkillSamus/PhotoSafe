@@ -7,9 +7,12 @@
 
 //import SwiftKeychainWrapper
 import KeychainAccess
+import Foundation
 
 protocol KeychainServiceProtocol {
     func save(_ value: String, forKey key: String) throws
+    func save(_ value: Data, forKey key: String) throws
+    func getData(_ key: String) throws -> Data?
     func get(_ key: String) throws -> String?
     func delete(_ key: String) throws
     func removeAll() throws
@@ -26,7 +29,15 @@ final class KeyChainWrapperService: KeychainServiceProtocol {
             .synchronizable(false)
     }
     
+    func getData(_ key: String) throws -> Data? {
+        try keychain.getData(key)
+    }
+    
     func save(_ value: String, forKey key: String) throws {
+        try keychain.set(value, key: key)
+    }
+    
+    func save(_ value: Data, forKey key: String) throws {
         try keychain.set(value, key: key)
     }
 

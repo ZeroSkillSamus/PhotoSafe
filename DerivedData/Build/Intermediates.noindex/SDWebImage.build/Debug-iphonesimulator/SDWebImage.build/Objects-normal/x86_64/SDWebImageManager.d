@@ -1,0 +1,37 @@
+dependencies: \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/Darwin.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageManager.m \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/SDWebImage.build/Debug-iphonesimulator/SDWebImage.build/DerivedSources/resource_bundle_accessor.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/DarwinFoundation1.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/os.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageManager.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageCompat.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageOperation.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageCacheDefine.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageDefine.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageCoder.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/NSData+ImageContentType.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageFrame.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageLoader.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageTransformer.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/UIImage+Transform.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageCacheKeyFilter.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageCacheSerializer.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageOptionsProcessor.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageCache.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageCacheConfig.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDMemoryCache.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDDiskCache.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageDownloader.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageDownloaderConfig.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageDownloaderRequestModifier.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageDownloaderResponseModifier.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageDownloaderDecryptor.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/UIImage+Metadata.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDAssociatedObject.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageError.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDInternalMacros.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDmetamacros.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDCallbackQueue.h

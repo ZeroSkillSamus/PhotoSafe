@@ -1,0 +1,136 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/MainTabView/Components/CreateAlbumSheet.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 92
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "Album is locked when password is specified",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 135
+        }
+      },
+      {
+        "comment": "",
+        "key": "This album will use a lock cover",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 138
+        }
+      },
+      {
+        "comment": "",
+        "key": "Set album cover",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 158
+        }
+      },
+      {
+        "comment": "",
+        "key": "Optional",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 161
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cover Preview",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 191
+        }
+      },
+      {
+        "comment": "",
+        "key": "Album Name",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 244
+        }
+      },
+      {
+        "comment": "",
+        "key": "Enter album name",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 254
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld/%lld",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 263
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 252
+        }
+      },
+      {
+        "comment": "",
+        "key": "Password",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 280
+        }
+      },
+      {
+        "comment": "",
+        "key": "Optional",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 284
+        }
+      },
+      {
+        "comment": "",
+        "key": "Adding a password locks this album.",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 314
+        }
+      },
+      {
+        "comment": "",
+        "key": "PhotoSafe cannot recover album passwords. Store it somewhere safe.",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 321
+        }
+      },
+      {
+        "comment": "",
+        "key": "Confirm Password",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 335
+        }
+      }
+    ]
+  },
+  "version": 1
+}

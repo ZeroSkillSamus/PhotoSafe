@@ -20,13 +20,13 @@ extension MediaEntity {
         return NSFetchRequest<MediaEntity>(entityName: "MediaEntity")
     }
     
-    var full_image: UIImage? {
-        UIImage(data: image_data)
-    }
-    
-    var thumbnail_image: UIImage? {
-        UIImage(data: thumbnail)
-    }
+//    var full_image: UIImage? {
+//        UIImage(data: image_data)
+//    }
+//    
+//    var thumbnail_image: UIImage? {
+//        UIImage(data: thumbnail)
+//    }
     
     @NSManaged public var image_data: Data
     @NSManaged public var date_added: Date

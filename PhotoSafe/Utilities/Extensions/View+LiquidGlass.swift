@@ -11,7 +11,7 @@ extension View {
     @ViewBuilder
     func applyLiquidGlassIfSupported(
         shape: any Shape = .capsule,
-        color: Color = .primary,
+        color: Color = Color.c1_background,
         isInteractive: Bool = false
     ) -> some View {
         if #available(iOS 26.0, *) {

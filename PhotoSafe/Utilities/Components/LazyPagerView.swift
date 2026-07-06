@@ -70,7 +70,7 @@ struct LazyPagerView: View {
                       return
                   }
                   let decoded = await Task.detached(priority: .userInitiated) {
-                      ImageCache.set_image_and_return(data: imageData, key: key)
+                      ImageCache.setEncryptedImageAndReturn(data: imageData, key: key)
                   }.value
                   fullImage = decoded
               }
@@ -80,10 +80,10 @@ struct LazyPagerView: View {
     struct GifView: View {
         @State private var isAnimating: Bool = true
         
-        let element: SelectMediaEntity
+        let data: Data
         
         var body: some View {
-            AnimatedImage(data: element.imageData, isAnimating: self.$isAnimating)
+            AnimatedImage(data: data, isAnimating: self.$isAnimating)
                 .resizable()
                 .customLoopCount(0)
                 .scaledToFit()
@@ -137,15 +137,18 @@ struct LazyPagerView: View {
             switch element.type {
             case MediaType.Photo.rawValue:
                 AsyncPhotoView(
-                    thumbnail: element.thumbnailImage,
+                    thumbnail: element.decryptedThumbnailImage,
                     id: element.id,
                     imageData: element.imageData
                 )
             case MediaType.Video.rawValue:
-                if let thumbnail = element.thumbnailImage {
-                    if isDisplay, let path = element.videoPath, let url = URL(string: path) {
+                if let thumbnail = element.decryptedThumbnailImage {
+                    if isDisplay {
                         if self.windowedList[self.windowListIndex] == element { // needed to stop video from preloading
-                            PlayerView(url: url,handleOnVideoEnd: self.handleOnVideoEnd) 
+                            PlayerView(
+                                media: element,
+                                handleOnVideoEnd: self.handleOnVideoEnd
+                            )
                         }
                     } else {
                         image_view(thumbnail)
@@ -157,26 +160,29 @@ struct LazyPagerView: View {
                                 }
                             }
                     }
+                } else {
+                    // Default
                 }
             case MediaType.GIF.rawValue:
-                GifView(element: element)
+                if let decryptedData = element.decryptedImageData {
+                    GifView(data: decryptedData)
+                } else {
+                    EmptyView()
+                }
             default:
                 EmptyView()
             }
         }
-            .zoomable(min: 1, max: 5)
-            .onDismiss(backgroundOpacity: self.$backgroundOpacity) {
-                self.dismiss()
-            }
-            .onTap { withAnimation { userTapped.toggle() } }
-            .opacity(self.backgroundOpacity)
-            .frame(maxWidth:.infinity,maxHeight: .infinity)
-            .ignoresSafeArea(edges: [.bottom, .top])
-            .fullScreenCover(item: self.$videoToDisplay) { video in
-                if let videoPath = video.videoPath,
-                   let url = URL(string: videoPath) {
-                    VideoPlayerView(url: url)
-                }
-             }
+        .zoomable(min: 1, max: 5)
+        .onDismiss(backgroundOpacity: self.$backgroundOpacity) {
+            self.dismiss()
+        }
+        .onTap { withAnimation { userTapped.toggle() } }
+        .opacity(self.backgroundOpacity)
+        .frame(maxWidth:.infinity,maxHeight: .infinity)
+        .ignoresSafeArea(edges: [.bottom, .top])
+        .fullScreenCover(item: self.$videoToDisplay) { video in
+            PlayerView(media: video,showDismiss: true)
+        }
     }
 }

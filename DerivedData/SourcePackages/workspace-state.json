@@ -1,0 +1,81 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "keychainaccess",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/kishikawakatsumi/keychainaccess",
+          "name" : "keychainaccess"
+        },
+        "state" : {
+          "checkoutState" : {
+            "branch" : "master",
+            "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "keychainaccess"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "lazypager",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/gh123man/LazyPager",
+          "name" : "LazyPager"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "3601245191ffb0aa237ca408d7b4dd03b4d9d7eb",
+            "version" : "1.1.7"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "LazyPager"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "sdwebimage",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/SDWebImage/SDWebImage.git",
+          "name" : "SDWebImage"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "cac9a55a3ae92478a2c95042dcc8d9695d2129ca",
+            "version" : "5.21.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "SDWebImage"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "sdwebimageswiftui",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
+          "name" : "SDWebImageSwiftUI"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "451c6dfd5ecec2cf626d1d9ca81c2d4a60355172",
+            "version" : "3.1.3"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "SDWebImageSwiftUI"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

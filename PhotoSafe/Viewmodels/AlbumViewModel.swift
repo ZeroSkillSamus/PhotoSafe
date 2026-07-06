@@ -32,8 +32,8 @@ final class AlbumViewModel: ObservableObject {
         self.set_albums()
     }
     
-    func change_image(for album: AlbumEntity, with image_data: Data) {
-        try? self.service.change_photo(for: album, with: image_data)
+    func change_image(for album: AlbumEntity, with image_data: Data) throws {
+        try self.service.change_photo(for: album, with: image_data)
         self.set_albums()
     }
     

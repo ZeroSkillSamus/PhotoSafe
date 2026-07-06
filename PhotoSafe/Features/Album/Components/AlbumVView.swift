@@ -97,11 +97,9 @@ struct AlbumVDisplay: View {
                             try self.album_VM.delete(album: album)
                             self.toast = ToastItem(message: "Successfully Deleted", status: .success)
                             self.favoritesViewModel.setFavorites()
-                            if album_VM.albums.isEmpty {
-                                withAnimation {
-                                    self.isEditModeEnabled.toggle()
-                                }
-                            }
+                            withAnimation {
+                                self.isEditModeEnabled.toggle()
+                            } 
                         } catch {
                             self.toast = ToastItem(message: "Failed to delete \(album.name)", status: .failure)
                         }

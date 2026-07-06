@@ -10,15 +10,18 @@ import SwiftUI
 struct DownloadMediaItem: Hashable {
     let id: UUID
     let url: String
-    //var status: Status
     var downloadedAt: Date
     var albumDownloadedTo: String
     var domain: String?
     var thumbnail: Data?
     
     var thumbnailImage: UIImage? {
-        guard let thumbnail else { return nil }
-        return UIImage(data: thumbnail)
+        // Assume it was encrypted data passed in
+        guard let encryptedThumbnail = thumbnail,
+              let decryptedThumbnail = try? MediaEncryptionService.shared.decrypt(encryptedThumbnail) else {
+            return nil
+        }
+        return UIImage(data: decryptedThumbnail)
     }
     
     var timeSinceCreated: Text {

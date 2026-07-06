@@ -35,11 +35,26 @@ struct SelectMediaEntity: Hashable, Identifiable {
         self.thumbnail = media.thumbnail
     }
     
-    var thumbnailImage: UIImage? {
-        UIImage(data: thumbnail)
+    var decryptedThumbnailImage: UIImage? {
+        guard let decryptedThumbnailData else {
+            return nil
+        }
+        
+        return UIImage(data: decryptedThumbnailData)
     }
 
-    var fullImage: UIImage? {
-        UIImage(data: imageData)
+    var decryptedFullImage: UIImage? {
+        guard let decryptedImageData else {
+            return nil
+        }
+        return UIImage(data: decryptedImageData)
+    }
+    
+    var decryptedImageData: Data? {
+        try? MediaEncryptionService.shared.decrypt(imageData)
+    }
+    
+    private var decryptedThumbnailData: Data? {
+        try? MediaEncryptionService.shared.decrypt(thumbnail)
     }
 }

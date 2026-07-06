@@ -209,6 +209,9 @@ struct AlbumView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .animation(.easeInOut, value: self.album_VM.albums.isEmpty)
         .displayToast(self.$toast)
+        .onAppear {
+            self.album_VM.set_albums()
+        }
     }
 }
 

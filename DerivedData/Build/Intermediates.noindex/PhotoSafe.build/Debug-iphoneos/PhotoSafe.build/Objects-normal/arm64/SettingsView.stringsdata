@@ -1,0 +1,128 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Settings/SettingsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Security, browser, and export defaults",
+        "location": {
+          "startingColumn": 21,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete All Bookmarks?",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 183
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear all saved browser data?",
+        "location": {
+          "startingColumn": 13,
+          "startingLine": 195
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete All Media?",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 140
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete All Media",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 144
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 149
+        }
+      },
+      {
+        "comment": "",
+        "key": "This permanently removes all albums and saved media from PhotoSafe. This cannot be undone.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "Settings",
+        "location": {
+          "startingColumn": 14,
+          "startingLine": 213
+        }
+      },
+      {
+        "comment": "",
+        "key": "Delete All",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 184
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 190
+        }
+      },
+      {
+        "comment": "",
+        "key": "This permanently removes all saved bookmarks and bookmark folders. This cannot be undone.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 192
+        }
+      },
+      {
+        "comment": "",
+        "key": "Clear Cookies and Cache",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 199
+        }
+      },
+      {
+        "comment": "",
+        "key": "Cancel",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 203
+        }
+      },
+      {
+        "comment": "",
+        "key": "This will sign you out of websites and remove cached browser data.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 304
+        }
+      }
+    ]
+  },
+  "version": 1
+}

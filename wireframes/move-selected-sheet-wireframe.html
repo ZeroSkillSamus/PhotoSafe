@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhotoSafe Move Selected Sheet Wireframe</title>
+  <style>
+    :root {
+      --bg: #070a0d;
+      --surface: #2f294d;
+      --surface-2: #514b76;
+      --surface-3: #6a638e;
+      --accent: #9574c3;
+      --accent-strong: #aa8edf;
+      --text: #eef1f6;
+      --muted: rgba(238, 241, 246, 0.66);
+      --faint: rgba(238, 241, 246, 0.12);
+      --line: rgba(238, 241, 246, 0.14);
+      --dark-line: rgba(7, 10, 13, 0.2);
+      --cyan: #70bed1;
+      --safe: #73d99b;
+      --danger: #df6b78;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #12141a;
+      color: var(--text);
+      font-family: ui-rounded, "SF Pro Rounded", "SF Pro Display", system-ui, -apple-system, sans-serif;
+    }
+
+    button {
+      border: 0;
+      color: inherit;
+      font: inherit;
+    }
+
+    .page {
+      width: min(880px, 100%);
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .wireframes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(300px, 1fr));
+      gap: 28px;
+      align-items: start;
+    }
+
+    .frame-label {
+      max-width: 390px;
+      margin: 0 auto 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+    }
+
+    .frame-label strong {
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .frame-label span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+      text-align: right;
+    }
+
+    .phone {
+      width: min(390px, 100vw);
+      height: 844px;
+      max-height: calc(100vh - 94px);
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--bg);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      padding: 58px 16px 102px;
+      background:
+        radial-gradient(circle at 78% 12%, rgba(112, 190, 209, 0.12), transparent 28%),
+        linear-gradient(180deg, rgba(47, 41, 77, 0.26), transparent 42%),
+        var(--bg);
+    }
+
+    .status {
+      position: absolute;
+      top: 14px;
+      left: 0;
+      right: 0;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 34px;
+      font-size: 16px;
+      font-weight: 850;
+      z-index: 5;
+    }
+
+    .island {
+      position: absolute;
+      top: 9px;
+      left: 50%;
+      width: 126px;
+      height: 38px;
+      transform: translateX(-50%);
+      border-radius: 24px;
+      background: #000;
+      z-index: 6;
+    }
+
+    .signal {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.9;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--text);
+      opacity: 0.42;
+    }
+
+    .battery {
+      width: 28px;
+      height: 14px;
+      border: 2px solid var(--text);
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .battery::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: 2px;
+      background: var(--text);
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: -5px;
+      width: 3px;
+      height: 6px;
+      border-radius: 0 3px 3px 0;
+      background: var(--text);
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: start;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 54px;
+      line-height: 0.95;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .edit {
+      min-width: 72px;
+      height: 44px;
+      border-radius: 16px;
+      background: var(--accent);
+      color: rgba(238, 241, 246, 0.86);
+      font-size: 18px;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .album-card {
+      margin-top: 42px;
+      min-height: 108px;
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 10px 16px 10px 10px;
+      border-radius: 18px;
+      background: rgba(47, 41, 77, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(238, 241, 246, 0.06);
+    }
+
+    .thumb {
+      width: 86px;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 32% 38%, #ef3aa0 0 12%, transparent 13%),
+        radial-gradient(circle at 62% 26%, #d91a85 0 10%, transparent 11%),
+        radial-gradient(circle at 70% 66%, #f8d13e 0 9%, transparent 10%),
+        radial-gradient(circle at 36% 72%, #ba36de 0 8%, transparent 9%),
+        linear-gradient(135deg, #224e38, #c01f83 54%, #2d1237);
+    }
+
+    .thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 42%);
+    }
+
+    .album-copy strong,
+    .album-copy span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .album-copy strong {
+      font-size: 25px;
+      line-height: 1.05;
+      font-weight: 900;
+    }
+
+    .album-copy span {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .select-mode-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 88px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px 22px;
+      background: rgba(47, 41, 77, 0.86);
+      border-top: 1px solid rgba(238, 241, 246, 0.1);
+    }
+
+    .selected-copy {
+      min-width: 0;
+    }
+
+    .selected-copy strong,
+    .selected-copy span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .selected-copy strong {
+      font-size: 18px;
+      font-weight: 850;
+    }
+
+    .selected-copy span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .move-button {
+      height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      background: var(--accent);
+      font-size: 17px;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+    }
+
+    .scrim {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: end;
+      background:
+        linear-gradient(180deg, rgba(7, 10, 13, 0.34), rgba(7, 10, 13, 0.74)),
+        rgba(7, 10, 13, 0.3);
+      z-index: 10;
+    }
+
+    .sheet {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 16px 14px;
+      border-radius: 29px 29px 0 0;
+      background:
+        linear-gradient(180deg, rgba(106, 99, 142, 0.98), rgba(81, 75, 118, 0.99)),
+        var(--surface-2);
+      border: 1px solid rgba(238, 241, 246, 0.16);
+      border-bottom: 0;
+      box-shadow: 0 -24px 70px rgba(0, 0, 0, 0.58);
+    }
+
+    .compact .sheet {
+      height: 454px;
+    }
+
+    .expanded .scrim {
+      align-items: start;
+      padding-top: 48px;
+      background:
+        linear-gradient(180deg, rgba(7, 10, 13, 0.5), rgba(7, 10, 13, 0.8)),
+        rgba(7, 10, 13, 0.34);
+    }
+
+    .expanded .sheet {
+      height: calc(100% - 48px);
+      border-radius: 30px 30px 0 0;
+    }
+
+    .expanded .screen {
+      transform: scale(0.985);
+      transform-origin: center bottom;
+      opacity: 0.72;
+      filter: blur(1px);
+    }
+
+    .grabber {
+      width: 42px;
+      height: 5px;
+      align-self: center;
+      margin-bottom: 15px;
+      border-radius: 999px;
+      background: rgba(238, 241, 246, 0.42);
+    }
+
+    .sheet-head {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 42px;
+      gap: 8px;
+      align-items: center;
+      padding-bottom: 14px;
+    }
+
+    .icon-button {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(238, 241, 246, 0.1);
+      box-shadow: inset 0 0 0 1px rgba(238, 241, 246, 0.12);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .sheet-title {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .sheet-title h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: 0;
+      font-weight: 950;
+    }
+
+    .sheet-title p {
+      margin: 7px 0 0;
+      color: rgba(238, 241, 246, 0.72);
+      font-size: 14px;
+      line-height: 1.2;
+      font-weight: 720;
+    }
+
+    .new-album {
+      min-height: 72px;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 13px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(238, 241, 246, 0.12);
+      border: 1px solid rgba(238, 241, 246, 0.17);
+      margin-bottom: 18px;
+    }
+
+    .plus-mark {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: var(--accent-strong);
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    }
+
+    .row-title {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .row-subtitle {
+      display: block;
+      margin-top: 3px;
+      color: rgba(238, 241, 246, 0.68);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .chevron {
+      color: rgba(238, 241, 246, 0.86);
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .section-label {
+      margin: 0 0 9px 2px;
+      color: rgba(238, 241, 246, 0.62);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .album-list {
+      display: grid;
+      gap: 8px;
+      min-height: 0;
+      overflow: auto;
+      padding-bottom: 10px;
+    }
+
+    .destination {
+      min-height: 74px;
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr) auto;
+      gap: 13px;
+      align-items: center;
+      padding: 9px 10px;
+      border-radius: 17px;
+      background: rgba(47, 41, 77, 0.44);
+      border: 1px solid rgba(238, 241, 246, 0.08);
+    }
+
+    .destination.primary {
+      background: rgba(47, 41, 77, 0.62);
+    }
+
+    .destination.selected {
+      background: rgba(149, 116, 195, 0.38);
+      border-color: rgba(238, 241, 246, 0.22);
+    }
+
+    .destination .thumb {
+      width: 56px;
+      border-radius: 12px;
+    }
+
+    .thumb.alt {
+      background:
+        radial-gradient(circle at 64% 30%, #f4cc67 0 11%, transparent 12%),
+        radial-gradient(circle at 36% 58%, #b9e6f2 0 12%, transparent 13%),
+        linear-gradient(145deg, #141826, #5953a0 52%, #0f6176);
+    }
+
+    .thumb.empty {
+      display: grid;
+      place-items: center;
+      background: rgba(238, 241, 246, 0.88);
+    }
+
+    .thumb.empty::before {
+      content: "";
+      width: 27px;
+      height: 21px;
+      border: 3px solid rgba(7, 10, 13, 0.34);
+      transform: rotate(-10deg);
+      border-radius: 3px;
+    }
+
+    .thumb.empty::after {
+      content: "";
+      position: absolute;
+      width: 27px;
+      height: 21px;
+      border: 3px solid rgba(7, 10, 13, 0.24);
+      transform: translate(5px, -5px) rotate(10deg);
+      border-radius: 3px;
+      background: transparent;
+    }
+
+    .count-pill {
+      min-width: 38px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(238, 241, 246, 0.11);
+      color: rgba(238, 241, 246, 0.76);
+      font-size: 13px;
+      font-weight: 850;
+      padding: 0 10px;
+    }
+
+    .check-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--safe);
+      color: #101613;
+      font-size: 17px;
+      font-weight: 950;
+    }
+
+    .sheet-actions {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(7, 10, 13, 0.18);
+    }
+
+    .sheet-actions button {
+      height: 50px;
+      border-radius: 17px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .cancel {
+      background: rgba(238, 241, 246, 0.1);
+      color: rgba(238, 241, 246, 0.78);
+    }
+
+    .confirm {
+      background: var(--accent-strong);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    }
+
+    @media (max-height: 760px) {
+      .phone {
+        height: 100vh;
+        border-radius: 0;
+      }
+
+      .sheet {
+        max-height: calc(100vh - 48px);
+      }
+
+      .album-list {
+        max-height: 250px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 20px 12px;
+      }
+
+      .wireframes {
+        grid-template-columns: 1fr;
+      }
+
+      .phone {
+        height: min(844px, calc(100vh - 96px));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" aria-label="PhotoSafe dynamic move sheet wireframes">
+    <div class="wireframes">
+      <section>
+        <div class="frame-label">
+          <strong>Compact Detent</strong>
+          <span>Few albums</span>
+        </div>
+
+        <div class="phone compact" aria-label="Compact move sheet">
+          <div class="island" aria-hidden="true"></div>
+          <div class="status" aria-hidden="true">
+            <span>5:43</span>
+            <span class="signal">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="battery"></span>
+            </span>
+          </div>
+
+          <section class="screen">
+            <div class="top">
+              <div>
+                <h1>Albums</h1>
+                <div class="subtitle">3 private collections</div>
+              </div>
+              <button class="edit" type="button">Edit</button>
+            </div>
+
+            <article class="album-card">
+              <div class="thumb"></div>
+              <div class="album-copy">
+                <strong>Ggun</strong>
+                <span>0 items</span>
+              </div>
+            </article>
+
+            <div class="select-mode-bar">
+              <div class="selected-copy">
+                <strong>3 selected</strong>
+                <span>Ready to move</span>
+              </div>
+              <button class="move-button" type="button">Move</button>
+            </div>
+          </section>
+
+          <section class="scrim" aria-label="Move selected compact bottom sheet">
+            <div class="sheet">
+              <div class="grabber" aria-hidden="true"></div>
+
+              <header class="sheet-head">
+                <button class="icon-button" type="button" aria-label="Close">x</button>
+                <div class="sheet-title">
+                  <h2>Move 3 Items</h2>
+                  <p>Choose an album destination</p>
+                </div>
+                <button class="icon-button" type="button" aria-label="Search">S</button>
+              </header>
+
+              <button class="new-album" type="button">
+                <span class="plus-mark">+</span>
+                <span>
+                  <span class="row-title">New Album</span>
+                  <span class="row-subtitle">Create and move selected items</span>
+                </span>
+                <span class="chevron">&gt;</span>
+              </button>
+
+              <p class="section-label">Albums</p>
+
+              <div class="album-list">
+                <button class="destination selected" type="button">
+                  <span class="thumb"></span>
+                  <span>
+                    <span class="row-title">Ggun</span>
+                    <span class="row-subtitle">0 items</span>
+                  </span>
+                  <span class="check-mark">OK</span>
+                </button>
+
+                <button class="destination primary" type="button">
+                  <span class="thumb alt"></span>
+                  <span>
+                    <span class="row-title">Camera Imports</span>
+                    <span class="row-subtitle">28 items</span>
+                  </span>
+                  <span class="count-pill">28</span>
+                </button>
+              </div>
+
+              <div class="sheet-actions">
+                <button class="cancel" type="button">Cancel</button>
+                <button class="confirm" type="button">Move Here</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section>
+        <div class="frame-label">
+          <strong>Expanded Detent</strong>
+          <span>Many albums</span>
+        </div>
+
+        <div class="phone expanded" aria-label="Expanded move sheet">
+          <div class="island" aria-hidden="true"></div>
+          <div class="status" aria-hidden="true">
+            <span>5:43</span>
+            <span class="signal">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="battery"></span>
+            </span>
+          </div>
+
+          <section class="screen">
+            <div class="top">
+              <div>
+                <h1>Albums</h1>
+                <div class="subtitle">9 private collections</div>
+              </div>
+              <button class="edit" type="button">Edit</button>
+            </div>
+
+            <article class="album-card">
+              <div class="thumb"></div>
+              <div class="album-copy">
+                <strong>Ggun</strong>
+                <span>0 items</span>
+              </div>
+            </article>
+
+            <div class="select-mode-bar">
+              <div class="selected-copy">
+                <strong>3 selected</strong>
+                <span>Ready to move</span>
+              </div>
+              <button class="move-button" type="button">Move</button>
+            </div>
+          </section>
+
+          <section class="scrim" aria-label="Move selected expanded bottom sheet">
+            <div class="sheet">
+              <div class="grabber" aria-hidden="true"></div>
+
+              <header class="sheet-head">
+                <button class="icon-button" type="button" aria-label="Close">x</button>
+                <div class="sheet-title">
+                  <h2>Move 3 Items</h2>
+                  <p>Choose an album destination</p>
+                </div>
+                <button class="icon-button" type="button" aria-label="Search">S</button>
+              </header>
+
+              <button class="new-album" type="button">
+                <span class="plus-mark">+</span>
+                <span>
+                  <span class="row-title">New Album</span>
+                  <span class="row-subtitle">Create and move selected items</span>
+                </span>
+                <span class="chevron">&gt;</span>
+              </button>
+
+              <p class="section-label">Albums</p>
+
+              <div class="album-list">
+                <button class="destination selected" type="button">
+                  <span class="thumb"></span>
+                  <span>
+                    <span class="row-title">Ggun</span>
+                    <span class="row-subtitle">0 items</span>
+                  </span>
+                  <span class="check-mark">OK</span>
+                </button>
+
+                <button class="destination primary" type="button">
+                  <span class="thumb alt"></span>
+                  <span>
+                    <span class="row-title">Camera Imports</span>
+                    <span class="row-subtitle">28 items</span>
+                  </span>
+                  <span class="count-pill">28</span>
+                </button>
+
+                <button class="destination" type="button">
+                  <span class="thumb empty"></span>
+                  <span>
+                    <span class="row-title">Private Saves</span>
+                    <span class="row-subtitle">Empty album</span>
+                  </span>
+                  <span class="chevron">&gt;</span>
+                </button>
+
+                <button class="destination" type="button">
+                  <span class="thumb alt"></span>
+                  <span>
+                    <span class="row-title">Receipts</span>
+                    <span class="row-subtitle">12 items</span>
+                  </span>
+                  <span class="count-pill">12</span>
+                </button>
+
+                <button class="destination" type="button">
+                  <span class="thumb"></span>
+                  <span>
+                    <span class="row-title">Hidden Downloads</span>
+                    <span class="row-subtitle">43 items</span>
+                  </span>
+                  <span class="count-pill">43</span>
+                </button>
+
+                <button class="destination" type="button">
+                  <span class="thumb empty"></span>
+                  <span>
+                    <span class="row-title">Archive</span>
+                    <span class="row-subtitle">7 items</span>
+                  </span>
+                  <span class="count-pill">7</span>
+                </button>
+              </div>
+
+              <div class="sheet-actions">
+                <button class="cancel" type="button">Cancel</button>
+                <button class="confirm" type="button">Move Here</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

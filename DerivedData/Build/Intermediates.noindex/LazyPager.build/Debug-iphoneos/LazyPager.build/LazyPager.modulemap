@@ -1,0 +1,4 @@
+module LazyPager {
+header "LazyPager-Swift.h"
+export *
+}

@@ -1,0 +1,19 @@
+dependencies: \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/Darwin.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDAnimatedImagePlayer.m \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/Build/Intermediates.noindex/SDWebImage.build/Debug-iphonesimulator/SDWebImage.build/DerivedSources/resource_bundle_accessor.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/DarwinFoundation1.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/os.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDAnimatedImagePlayer.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDWebImageCompat.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageCoder.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/NSData+ImageContentType.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/SDImageFrame.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Core/NSImage+Compatibility.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDDisplayLink.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDDeviceHelper.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDImageFramePool.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDInternalMacros.h \
+  /Users/abrahammitchell/Desktop/PhotoSafe/DerivedData/SourcePackages/checkouts/SDWebImage/SDWebImage/Private/SDmetamacros.h

@@ -225,7 +225,9 @@ struct WebViewWrapper: View {
             self.displayMediaHistoryView()
         }
         .sheet(item: $webViewModel.pendingImageURL) { item in
-            MoveSheet { album in
+            MoveSheet(
+                itemCount: 1
+            ) { album in
                 Task {
                     let mediaId = UUID()
                     var historyEntry = DownloadMediaItem(

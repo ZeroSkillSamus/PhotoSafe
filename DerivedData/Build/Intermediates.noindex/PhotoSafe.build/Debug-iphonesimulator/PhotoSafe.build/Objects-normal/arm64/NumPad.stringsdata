@@ -1,0 +1,40 @@
+{
+  "source": "/Users/abrahammitchell/Desktop/PhotoSafe/PhotoSafe/Features/Lock/Components/NumPad.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Face ID Unavailable",
+        "location": {
+          "startingColumn": 16,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "Set Pin",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 30
+        }
+      },
+      {
+        "comment": "",
+        "key": "OK",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 63
+        }
+      },
+      {
+        "comment": "",
+        "key": "Use your PIN to unlock PhotoSafe.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 65
+        }
+      }
+    ]
+  },
+  "version": 1
+}

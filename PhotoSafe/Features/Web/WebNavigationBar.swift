@@ -11,7 +11,6 @@ struct WebNavigationBar: View {
     var webViewModel: WebViewModel
     var folderBookmarkViewModel: FolderBookmarkViewModel
     @Binding var isPresented: Bool
-    //@Binding var isInOverlayMode: Bool
     
     @State private var userInputText: String = ""
     @State private var userSubmitedText: String = ""
@@ -51,29 +50,34 @@ struct WebNavigationBar: View {
                 .applyLiquidGlassIfSupported(color: Color.c1_accent)
             }
             
-            TextField("Enter url here...", text: self.$userInputText)
-                .focused($isFocused)
-                .textFieldStyle(.plain)
-                .padding(6)
-                .truncationMode(.middle)
-                .background(Color.white.opacity(0.7))
-                .cornerRadius(8)
-                .foregroundStyle(Color.c1_background)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-                .onSubmit {
-                    self.userSubmitedText = self.userInputText
-                    self.webViewModel.update(url: URL(string: userSubmitedText))
-                    self.webViewModel.userNavigateTo(urlString: userSubmitedText)
-                    
-                    self.isFocused = false
-                    self.isPresented = false
-                }
-                .simultaneousGesture(TapGesture().onEnded {
-                    self.isFocused = true
-                    self.isPresented = true
-                })
-                .frame(maxWidth: .infinity)
+            TextField(
+                "",
+                text: self.$userInputText,
+                prompt: Text("Enter url here...")
+                    .foregroundStyle(Color.c1_background.opacity(0.75))
+            )
+            .focused($isFocused)
+            .textFieldStyle(.plain)
+            .padding(6)
+            .truncationMode(.middle)
+            .background(Color.white.opacity(0.7))
+            .cornerRadius(8)
+            .foregroundStyle(Color.c1_background)
+            .autocorrectionDisabled()
+            .textInputAutocapitalization(.never)
+            .onSubmit {
+                self.userSubmitedText = self.userInputText
+                self.webViewModel.update(url: URL(string: userSubmitedText))
+                self.webViewModel.userNavigateTo(urlString: userSubmitedText)
+                
+                self.isFocused = false
+                self.isPresented = false
+            }
+            .simultaneousGesture(TapGesture().onEnded {
+                self.isFocused = true
+                self.isPresented = true
+            })
+            .frame(maxWidth: .infinity)
 
             Spacer()
 
@@ -82,7 +86,7 @@ struct WebNavigationBar: View {
                     self.isFocused = false
                     self.isPresented = false
                 } label: {
-                    Text("X")
+                    Image(systemName: "xmark")
                         .font(.system(size: 20, weight: .semibold,design: .rounded))
                         .padding(11)
                         .foregroundStyle(Color.c1_text)
@@ -147,7 +151,7 @@ struct WebNavigationBar: View {
         .frame(height: 30)
         .padding(.horizontal)
         .padding(.vertical, 10)
-        .background(Color.c1_background)
+        .background(Color.c1_secondary)
         .onAppear {
             self.userInputText = self.webViewModel.currentUrl?.absoluteString ?? ""
         }

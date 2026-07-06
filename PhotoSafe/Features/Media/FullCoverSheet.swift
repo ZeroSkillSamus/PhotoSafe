@@ -236,7 +236,10 @@ struct FullCoverSheet: View {
         .frame(maxWidth: .infinity)
         .sheet(isPresented: self.$displayMoveSheet) {
             let currAlbumName = self.selecetedMedia.albumName
-            MoveSheet(curr_album_name: currAlbumName) { album in
+            MoveSheet(
+                curr_album_name: currAlbumName,
+                itemCount: 1
+            ) { album in
                 do {
                     // Get current id to be deleted and hold onto currentListIndex
                     guard let currentMediaId, let currentListIndex else {

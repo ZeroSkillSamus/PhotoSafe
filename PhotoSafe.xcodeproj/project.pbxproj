@@ -36,6 +36,7 @@
 		0248E9602D9B5C0700272924 /* CreateAlbumSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248E95F2D9B5C0700272924 /* CreateAlbumSheet.swift */; };
 		0248E9632D9B5CDC00272924 /* NumPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0248E9622D9B5CDC00272924 /* NumPad.swift */; };
 		025019B02DA1F2A000F7BCE6 /* MediaHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025019AF2DA1F2A000F7BCE6 /* MediaHandler.swift */; };
+		0260B54F30769B53003DEA27 /* MediaStoragePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0260B54E30769B4E003DEA27 /* MediaStoragePaths.swift */; };
 		027250D92D9B291C00280DB2 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250D82D9B291C00280DB2 /* CoreDataManager.swift */; };
 		027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250DB2D9B2A6E00280DB2 /* AlbumService.swift */; };
 		027250DF2D9B308D00280DB2 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027250DE2D9B308D00280DB2 /* MediaService.swift */; };
@@ -106,6 +107,8 @@
 		02EBCE322DA34C24004181A3 /* AlbumVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE312DA34C24004181A3 /* AlbumVView.swift */; };
 		02EBCE342DA34CA7004181A3 /* AlbumImageDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */; };
 		02ED9ACF2FF9F3A50008B0B5 /* MediaExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02ED9ACE2FF9F39F0008B0B5 /* MediaExportService.swift */; };
+		02ED9AD12FFB2BBB0008B0B5 /* MediaEncryptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02ED9AD02FFB2BBA0008B0B5 /* MediaEncryptionService.swift */; };
+		02ED9AD32FFB3E6B0008B0B5 /* MediaFileVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02ED9AD22FFB3E670008B0B5 /* MediaFileVaultService.swift */; };
 		02F3E5FC2DC1769D004FA2DE /* AutoScrollerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F3E5FA2DC1769D004FA2DE /* AutoScrollerView.swift */; };
 		02F3E5FD2DC1769D004FA2DE /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F3E5FB2DC1769D004FA2DE /* OptionsView.swift */; };
 /* End PBXBuildFile section */
@@ -181,6 +184,7 @@
 		0248E9622D9B5CDC00272924 /* NumPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumPad.swift; sourceTree = "<group>"; };
 		025019AF2DA1F2A000F7BCE6 /* MediaHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaHandler.swift; sourceTree = "<group>"; };
 		025019B12DA2FECF00F7BCE6 /* CustomAlert .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CustomAlert .swift"; sourceTree = "<group>"; };
+		0260B54E30769B4E003DEA27 /* MediaStoragePaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaStoragePaths.swift; sourceTree = "<group>"; };
 		027250D82D9B291C00280DB2 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		027250DB2D9B2A6E00280DB2 /* AlbumService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumService.swift; sourceTree = "<group>"; };
 		027250DE2D9B308D00280DB2 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
@@ -250,6 +254,8 @@
 		02EBCE312DA34C24004181A3 /* AlbumVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumVView.swift; sourceTree = "<group>"; };
 		02EBCE332DA34CA7004181A3 /* AlbumImageDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumImageDisplay.swift; sourceTree = "<group>"; };
 		02ED9ACE2FF9F39F0008B0B5 /* MediaExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaExportService.swift; sourceTree = "<group>"; };
+		02ED9AD02FFB2BBA0008B0B5 /* MediaEncryptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaEncryptionService.swift; sourceTree = "<group>"; };
+		02ED9AD22FFB3E670008B0B5 /* MediaFileVaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFileVaultService.swift; sourceTree = "<group>"; };
 		02F3E5FA2DC1769D004FA2DE /* AutoScrollerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AutoScrollerView.swift; sourceTree = "<group>"; };
 		02F3E5FB2DC1769D004FA2DE /* OptionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -501,6 +507,8 @@
 		027250DA2D9B2A5900280DB2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				02ED9AD22FFB3E670008B0B5 /* MediaFileVaultService.swift */,
+				02ED9AD02FFB2BBA0008B0B5 /* MediaEncryptionService.swift */,
 				02ED9ACE2FF9F39F0008B0B5 /* MediaExportService.swift */,
 				02B1E5962FE47B780033919A /* VideoDownloaderProtocol.swift */,
 				02A98DEE2FE087E2008E23B2 /* BookmarkService.swift */,
@@ -539,6 +547,7 @@
 		028C6F4A2DADE77F00BB8BB9 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0260B54E30769B4E003DEA27 /* MediaStoragePaths.swift */,
 				0279DCBC2FEB21560081BEE8 /* ToastView.swift */,
 				02A98DDA2FDB3A57008E23B2 /* LazyPagerView.swift */,
 				025019AF2DA1F2A000F7BCE6 /* MediaHandler.swift */,
@@ -795,6 +804,7 @@
 				02B1E58B2FE393920033919A /* DownloadMediaItem.swift in Sources */,
 				027250DC2D9B2A6E00280DB2 /* AlbumService.swift in Sources */,
 				0248E9552D9B4D0500272924 /* BottomHeader.swift in Sources */,
+				02ED9AD12FFB2BBB0008B0B5 /* MediaEncryptionService.swift in Sources */,
 				028C6F472DAB56C100BB8BB9 /* FavoriteViewModel.swift in Sources */,
 				028C6F3F2DA8903B00BB8BB9 /* EditSheetViewModel.swift in Sources */,
 				028C6F4C2DADEAD200BB8BB9 /* UniversalHeader.swift in Sources */,
@@ -806,6 +816,7 @@
 				02B1E5872FE23B980033919A /* FolderService.swift in Sources */,
 				02A98DCB2FD627B3008E23B2 /* AuthStorageService.swift in Sources */,
 				02A98DCC2FD627B3008E23B2 /* KeychainWrapperService.swift in Sources */,
+				02ED9AD32FFB3E6B0008B0B5 /* MediaFileVaultService.swift in Sources */,
 				02A98DEB2FE0825D008E23B2 /* FolderEntity+CoreDataProperties.swift in Sources */,
 				02ED9ACF2FF9F3A50008B0B5 /* MediaExportService.swift in Sources */,
 				028C6F4E2DADFCE400BB8BB9 /* ImageGridView.swift in Sources */,
@@ -841,6 +852,7 @@
 				02D801452DA5BA85002AE361 /* PlusMode.swift in Sources */,
 				020ED8672FF332FA000E7373 /* ConfirmPinSheet.swift in Sources */,
 				02B397012D96436B00952274 /* AlbumViewModel.swift in Sources */,
+				0260B54F30769B53003DEA27 /* MediaStoragePaths.swift in Sources */,
 				028C6F3D2DA72AB000BB8BB9 /* AlbumEditView.swift in Sources */,
 				02D801412DA5A82D002AE361 /* FavoritesView.swift in Sources */,
 				02A98DD02FD627D9008E23B2 /* AuthStorageViewModel.swift in Sources */,

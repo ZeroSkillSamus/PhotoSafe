@@ -75,7 +75,9 @@ struct PlusMode: View {
         .sheet(isPresented: self.$show_move_sheet, onDismiss: {
             //self.selected_media = []
         }, content: {
-            MoveSheet { album in
+            MoveSheet(
+                itemCount: self.selected_media.count
+            ) { album in
                 Task {
                     await self.media_VM.add_imported_photos(to: album, from: self.selected_media)
                     
@@ -86,18 +88,6 @@ struct PlusMode: View {
                 }
             }
         })
-//        .sheet(isPresented: self.$show_move_sheet) {
-//            MoveSheet(selectedMedia: self.$selected_media) { album in
-//                Task {
-//                    await self.media_VM.add_imported_photos(to: album, from: self.selected_media)
-//                    
-//                    await MainActor.run {
-//                        self.selected_media.removeAll()
-//                        self.albumViewModel.set_albums()
-//                    }
-//                }
-//            }
-//        }
         .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
         //.background(Color(red: 28/255, green: 28/255, blue: 30/255).opacity(0.75))
         .background(Color.c1_background.opacity(0.75))
@@ -126,7 +116,6 @@ struct PlusMode: View {
         }
         .onChange(of: self.media_VM.progress_alert) { oldValue, newValue in
             if oldValue && !newValue {
-                print("went from true to false")
                 self.selected_media = []
             }
         }
